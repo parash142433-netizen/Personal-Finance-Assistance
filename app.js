@@ -22,113 +22,76 @@ const WORKER_URL = "https://ledgr-finance-proxy.nafis-fpl-tools.workers.dev";
 // NOTE: salary=actual cash received; accrualSalary=bulk payments split evenly across the months they cover
 // savings=cash-flow net; normalizedSavings=accrual-based net (smoothed)
 const MONTHLY_DATA = [
-  { label: "Sep 2021", iso: "2021-09", spent: 0, income: 34317.14, salary: 34315.0, accrualSalary: 34315.0, savings: 34317.14, normalizedSavings: 34317.14, balance: 34317.14, tx: 2 },
-  { label: "Oct 2021", iso: "2021-10", spent: 3007.0, income: 29168.64, salary: 25096.0, accrualSalary: 25096.0, savings: 26161.64, normalizedSavings: 26161.64, balance: 60478.78, tx: 6 },
-  { label: "Nov 2021", iso: "2021-11", spent: 56283.0, income: 37030.86, salary: 23963.0, accrualSalary: 23963.0, savings: -19252.14, normalizedSavings: -19252.14, balance: 41226.64, tx: 15 },
-  { label: "Dec 2021", iso: "2021-12", spent: 19434.0, income: 76083.94, salary: 23988.0, accrualSalary: 23988.0, savings: 56649.94, normalizedSavings: 56649.94, balance: 97876.58, tx: 11 },
-  { label: "Jan 2022", iso: "2022-01", spent: 51439.0, income: 38063.0, salary: 28063.0, accrualSalary: 28063.0, savings: -13376.0, normalizedSavings: -13376.0, balance: 84500.58, tx: 15 },
-  { label: "Feb 2022", iso: "2022-02", spent: 2565.0, income: 53303.29, salary: 28103.0, accrualSalary: 28103.0, savings: 50738.29, normalizedSavings: 50738.29, balance: 135238.87, tx: 13 },
-  { label: "Mar 2022", iso: "2022-03", spent: 42970.0, income: 30244.56, salary: 28033.0, accrualSalary: 28033.0, savings: -12725.44, normalizedSavings: -12725.44, balance: 122513.43, tx: 13 },
-  { label: "Apr 2022", iso: "2022-04", spent: 13277.0, income: 57290.5, salary: 28073.0, accrualSalary: 28073.0, savings: 44013.5, normalizedSavings: 44013.5, balance: 166526.93, tx: 10 },
-  { label: "May 2022", iso: "2022-05", spent: 5186.0, income: 39419.36, salary: 27898.0, accrualSalary: 27898.0, savings: 34233.36, normalizedSavings: 34233.36, balance: 200760.29, tx: 8 },
-  { label: "Jun 2022", iso: "2022-06", spent: 63597.0, income: 83427.88, salary: 58093.0, accrualSalary: 58093.0, savings: 19830.88, normalizedSavings: 19830.88, balance: 220591.17, tx: 12 },
-  { label: "Jul 2022", iso: "2022-07", spent: 18921.0, income: 53092.48, salary: 26678.0, accrualSalary: 26678.0, savings: 34171.48, normalizedSavings: 34171.48, balance: 254762.65, tx: 11 },
-  { label: "Aug 2022", iso: "2022-08", spent: 307947.0, income: 82152.94, salary: 26843.0, accrualSalary: 26843.0, savings: -225794.06, normalizedSavings: -225794.06, balance: 28968.59, tx: 15 },
-  { label: "Sep 2022", iso: "2022-09", spent: 13395.0, income: 43057.04, salary: 26793.0, accrualSalary: 26793.0, savings: 29662.04, normalizedSavings: 29662.04, balance: 58630.63, tx: 10 },
-  { label: "Oct 2022", iso: "2022-10", spent: 27557.0, income: 60440.56, salary: 26628.0, accrualSalary: 26628.0, savings: 32883.56, normalizedSavings: 32883.56, balance: 91514.19, tx: 12 },
-  { label: "Nov 2022", iso: "2022-11", spent: 10327.0, income: 41793.59, salary: 26748.0, accrualSalary: 26748.0, savings: 31466.59, normalizedSavings: 31466.59, balance: 122980.78, tx: 9 },
-  { label: "Dec 2022", iso: "2022-12", spent: 28568.0, income: 115883.15, salary: 43363.0, accrualSalary: 43363.0, savings: 87315.15, normalizedSavings: 87315.15, balance: 210295.93, tx: 14 },
-  { label: "Jan 2023", iso: "2023-01", spent: 35082.0, income: 29190.28, salary: 0, accrualSalary: 0, savings: -5891.72, normalizedSavings: -5891.72, balance: 204404.21, tx: 14 },
-  { label: "Feb 2023", iso: "2023-02", spent: 24266.0, income: 86138.18, salary: 64790.0, accrualSalary: 64790.0, savings: 61872.18, normalizedSavings: 61872.18, balance: 266276.39, tx: 16 },
-  { label: "Mar 2023", iso: "2023-03", spent: 61740.0, income: 46900.0, salary: 0, accrualSalary: 0, savings: -14840.0, normalizedSavings: -14840.0, balance: 251436.39, tx: 12 },
-  { label: "Apr 2023", iso: "2023-04", spent: 74611.0, income: 98250.0, salary: 84750.0, accrualSalary: 84750.0, savings: 23639.0, normalizedSavings: 23639.0, balance: 275075.39, tx: 18 },
-  { label: "May 2023", iso: "2023-05", spent: 27775.0, income: 46901.92, salary: 32150.0, accrualSalary: 32150.0, savings: 19126.92, normalizedSavings: 19126.92, balance: 294202.31, tx: 12 },
-  { label: "Jun 2023", iso: "2023-06", spent: 8878.0, income: 61291.39, salary: 32236.0, accrualSalary: 32236.0, savings: 52413.39, normalizedSavings: 52413.39, balance: 346615.7, tx: 11 },
-  { label: "Jul 2023", iso: "2023-07", spent: 90466.0, income: 48907.61, salary: 30837.0, accrualSalary: 30837.0, savings: -41558.39, normalizedSavings: -41558.39, balance: 305057.31, tx: 17 },
-  { label: "Aug 2023", iso: "2023-08", spent: 31583.0, income: 40764.04, salary: 32147.0, accrualSalary: 32147.0, savings: 9181.04, normalizedSavings: 9181.04, balance: 314238.35, tx: 11 },
-  { label: "Sep 2023", iso: "2023-09", spent: 27688.0, income: 47516.39, salary: 31923.0, accrualSalary: 31923.0, savings: 19828.39, normalizedSavings: 19828.39, balance: 334066.74, tx: 15 },
-  { label: "Oct 2023", iso: "2023-10", spent: 65085.0, income: 62763.14, salary: 32195.0, accrualSalary: 32195.0, savings: -2321.86, normalizedSavings: -2321.86, balance: 331744.88, tx: 15 },
-  { label: "Nov 2023", iso: "2023-11", spent: 12020.0, income: 52871.74, salary: 32123.0, accrualSalary: 32123.0, savings: 40851.74, normalizedSavings: 40851.74, balance: 372596.62, tx: 10 },
-  { label: "Dec 2023", iso: "2023-12", spent: 47605.0, income: 66148.0, salary: 0, accrualSalary: 0, savings: 18543.0, normalizedSavings: 18543.0, balance: 391139.62, tx: 15 },
-  { label: "Jan 2024", iso: "2024-01", spent: 451940.0, income: 110682.0, salary: 92952.0, accrualSalary: 92952.0, savings: -341258.0, normalizedSavings: -341258.0, balance: 49881.62, tx: 24 },
-  { label: "Feb 2024", iso: "2024-02", spent: 7143.0, income: 48710.16, salary: 41164.0, accrualSalary: 41164.0, savings: 41567.16, normalizedSavings: 41567.16, balance: 91448.78, tx: 11 },
-  { label: "Mar 2024", iso: "2024-03", spent: 13703.0, income: 72840.67, salary: 67555.0, accrualSalary: 67555.0, savings: 59137.67, normalizedSavings: 59137.67, balance: 150586.45, tx: 13 },
-  { label: "Apr 2024", iso: "2024-04", spent: 41811.0, income: 51232.0, salary: 41185.0, accrualSalary: 41185.0, savings: 9421.0, normalizedSavings: 9421.0, balance: 160007.45, tx: 13 },
-  { label: "May 2024", iso: "2024-05", spent: 56764.0, income: 14457.53, salary: 0, accrualSalary: 0, savings: -42306.47, normalizedSavings: -42306.47, balance: 117700.98, tx: 17 },
-  { label: "Jun 2024", iso: "2024-06", spent: 55233.0, income: 148930.1, salary: 108836.0, accrualSalary: 108836.0, savings: 93697.1, normalizedSavings: 93697.1, balance: 211398.08, tx: 21 },
-  { label: "Jul 2024", iso: "2024-07", spent: 124379.0, income: 15936.0, salary: 0, accrualSalary: 0, savings: -108443.0, normalizedSavings: -108443.0, balance: 102955.08, tx: 16 },
-  { label: "Aug 2024", iso: "2024-08", spent: 40781.0, income: 58499.0, salary: 41807.0, accrualSalary: 41807.0, savings: 17718.0, normalizedSavings: 17718.0, balance: 120673.08, tx: 16 },
-  { label: "Sep 2024", iso: "2024-09", spent: 79848.0, income: 97543.0, salary: 82903.0, accrualSalary: 82903.0, savings: 17695.0, normalizedSavings: 17695.0, balance: 138368.08, tx: 18 },
-  { label: "Oct 2024", iso: "2024-10", spent: 51643.0, income: 82056.0, salary: 41310.0, accrualSalary: 41310.0, savings: 30413.0, normalizedSavings: 30413.0, balance: 168781.08, tx: 19 },
-  { label: "Nov 2024", iso: "2024-11", spent: 34880.0, income: 17082.0, salary: 0, accrualSalary: 0, savings: -17798.0, normalizedSavings: -17798.0, balance: 150983.08, tx: 14 },
-  { label: "Dec 2024", iso: "2024-12", spent: 75414.0, income: 171208.07, salary: 109031.0, accrualSalary: 109031.0, savings: 95794.07, normalizedSavings: 95794.07, balance: 246777.15, tx: 22 },
-  { label: "Jan 2025", iso: "2025-01", spent: 34171.0, income: 19414.03, salary: 0, accrualSalary: 0, savings: -14756.97, normalizedSavings: -14756.97, balance: 232020.18, tx: 17 },
-  { label: "Feb 2025", iso: "2025-02", spent: 10481.0, income: 113731.86, salary: 93840.0, accrualSalary: 93840.0, savings: 103250.86, normalizedSavings: 103250.86, balance: 335271.04, tx: 15 },
-  { label: "Mar 2025", iso: "2025-03", spent: 47959.0, income: 85229.41, salary: 46768.0, accrualSalary: 46768.0, savings: 37270.41, normalizedSavings: 37270.41, balance: 372541.45, tx: 17 },
-  { label: "Apr 2025", iso: "2025-04", spent: 347688.0, income: 102281.0, salary: 46895.0, accrualSalary: 46895.0, savings: -245407.0, normalizedSavings: -245407.0, balance: 127134.45, tx: 22 },
-  { label: "May 2025", iso: "2025-05", spent: 74350.0, income: 61952.0, salary: 0, accrualSalary: 0, savings: -12398.0, normalizedSavings: -12398.0, balance: 114736.45, tx: 25 },
-  { label: "Jun 2025", iso: "2025-06", spent: 26343.0, income: 106317.61, salary: 92818.0, accrualSalary: 92818.0, savings: 79974.61, normalizedSavings: 79974.61, balance: 194711.06, tx: 19 },
-  { label: "Jul 2025", iso: "2025-07", spent: 69014.0, income: 69845.37, salary: 46635.0, accrualSalary: 46635.0, savings: 831.37, normalizedSavings: 831.37, balance: 195542.43, tx: 23 },
-  { label: "Aug 2025", iso: "2025-08", spent: 28716.0, income: 332462.0, salary: 0, accrualSalary: 0, savings: 303746.0, normalizedSavings: 303746.0, balance: 499288.43, tx: 13 },
-  { label: "Sep 2025", iso: "2025-09", spent: 88285.0, income: 138471.0, salary: 92921.0, accrualSalary: 92921.0, savings: 50186.0, normalizedSavings: 50186.0, balance: 549474.43, tx: 31 },
-  { label: "Oct 2025", iso: "2025-10", spent: 459837.0, income: 70996.37, salary: 46841.0, accrualSalary: 46841.0, savings: -388840.63, normalizedSavings: -388840.63, balance: 160633.8, tx: 26 },
-  { label: "Nov 2025", iso: "2025-11", spent: 58299.45, income: 59293.0, salary: 46823.0, accrualSalary: 46823.0, savings: 993.55, normalizedSavings: 993.55, balance: 161627.35, tx: 36 },
-  { label: "Dec 2025", iso: "2025-12", spent: 21145.0, income: 267590.62, salary: 76443.0, accrualSalary: 76443.0, savings: 246445.62, normalizedSavings: 246445.62, balance: 408072.97, tx: 26 },
-  { label: "Jan 2026", iso: "2026-01", spent: 176465.0, income: 31668.87, salary: 0, accrualSalary: 0, savings: -144796.13, normalizedSavings: -144796.13, balance: 263276.84, tx: 20 },
-  { label: "Feb 2026", iso: "2026-02", spent: 50786.0, income: 63436.0, salary: 60936.0, accrualSalary: 60936.0, savings: 12650.0, normalizedSavings: 12650.0, balance: 275926.84, tx: 24 },
-  { label: "Mar 2026", iso: "2026-03", spent: 56346.0, income: 167818.0, salary: 156168.0, accrualSalary: 156168.0, savings: 111472.0, normalizedSavings: 111472.0, balance: 387398.84, tx: 25 },
-  { label: "Apr 2026", iso: "2026-04", spent: 196285.53, income: 201468.87, salary: 60900.0, accrualSalary: 60900.0, savings: 5183.34, normalizedSavings: 5183.34, balance: 392582.18, tx: 48 },
-  { label: "May 2026", iso: "2026-05", spent: 391577.59, income: 87720.0, salary: 0, accrualSalary: 0, savings: -303857.59, normalizedSavings: -303857.59, balance: 88724.59, tx: 28 },
-  { label: "Jun 2026", iso: "2026-06", spent: 47674.12, income: 134724.0, salary: 121374.0, accrualSalary: 121374.0, savings: 87049.88, normalizedSavings: 87049.88, balance: 175774.47, tx: 19 },
-  { label: "Jul 2026", iso: "2026-07", spent: 25600.0, income: 46240.37, salary: 0, accrualSalary: 0, savings: 20640.37, normalizedSavings: 20640.37, balance: 196414.84, tx: 10 }
+  { label:"Sep 2021", iso:"2021-09", spent:0, income:34317.14, salary:34315, accrualSalary:34315, savings:34317.14, normalizedSavings:34317.14, balance:34317.14, tx:2 },
+  { label:"Oct 2021", iso:"2021-10", spent:3007, income:29168.64, salary:25096, accrualSalary:25096, savings:26161.64, normalizedSavings:26161.64, balance:60478.78, tx:6 },
+  { label:"Nov 2021", iso:"2021-11", spent:56283, income:37030.86, salary:23963, accrualSalary:23963, savings:-19252.14, normalizedSavings:-19252.14, balance:41226.64, tx:15 },
+  { label:"Dec 2021", iso:"2021-12", spent:19434, income:76083.94, salary:23988, accrualSalary:23988, savings:56649.94, normalizedSavings:56649.94, balance:97876.58, tx:11 },
+  { label:"Jan 2022", iso:"2022-01", spent:51439, income:38063, salary:28063, accrualSalary:28063, savings:-13376, normalizedSavings:-13376, balance:84500.58, tx:15 },
+  { label:"Feb 2022", iso:"2022-02", spent:2565, income:53303.29, salary:28103, accrualSalary:28103, savings:50738.29, normalizedSavings:50738.29, balance:135238.87, tx:13 },
+  { label:"Mar 2022", iso:"2022-03", spent:42970, income:30244.56, salary:28033, accrualSalary:28033, savings:-12725.44, normalizedSavings:-12725.44, balance:122513.43, tx:13 },
+  { label:"Apr 2022", iso:"2022-04", spent:13277, income:57290.5, salary:28073, accrualSalary:28073, savings:44013.5, normalizedSavings:44013.5, balance:166526.93, tx:10 },
+  { label:"May 2022", iso:"2022-05", spent:5186, income:39419.36, salary:27898, accrualSalary:27898, savings:34233.36, normalizedSavings:34233.36, balance:200760.29, tx:10 },
+  { label:"Jun 2022", iso:"2022-06", spent:63597, income:83427.88, salary:58093, accrualSalary:58093, savings:19830.88, normalizedSavings:19830.88, balance:220591.17, tx:12 },
+  { label:"Jul 2022", iso:"2022-07", spent:18921, income:53092.48, salary:26678, accrualSalary:26678, savings:34171.48, normalizedSavings:34171.48, balance:254762.65, tx:16 },
+  { label:"Aug 2022", iso:"2022-08", spent:307947, income:82152.94, salary:26843, accrualSalary:26843, savings:-225794.06, normalizedSavings:-225794.06, balance:28968.59, tx:14 },
+  { label:"Sep 2022", iso:"2022-09", spent:13395, income:43057.04, salary:26793, accrualSalary:26793, savings:29662.04, normalizedSavings:29662.04, balance:58630.63, tx:8 },
+  { label:"Oct 2022", iso:"2022-10", spent:27557, income:60440.56, salary:26628, accrualSalary:26628, savings:32883.56, normalizedSavings:32883.56, balance:91514.19, tx:20 },
+  { label:"Nov 2022", iso:"2022-11", spent:10327, income:41793.59, salary:26748, accrualSalary:26748, savings:31466.59, normalizedSavings:31466.59, balance:122980.78, tx:12 },
+  { label:"Dec 2022", iso:"2022-12", spent:28568, income:115883.15, salary:43363, accrualSalary:43363, savings:87315.15, normalizedSavings:87315.15, balance:210295.93, tx:19 },
+  { label:"Jan 2023", iso:"2023-01", spent:35082, income:29190.28, salary:0, accrualSalary:0, savings:-5891.72, normalizedSavings:-5891.72, balance:204404.21, tx:18 },
+  { label:"Feb 2023", iso:"2023-02", spent:24266, income:86138.18, salary:64790, accrualSalary:64790, savings:61872.18, normalizedSavings:61872.18, balance:266276.39, tx:21 },
+  { label:"Mar 2023", iso:"2023-03", spent:61740, income:46900, salary:0, accrualSalary:0, savings:-14840, normalizedSavings:-14840, balance:251436.39, tx:22 },
+  { label:"Apr 2023", iso:"2023-04", spent:74611, income:98250, salary:84750, accrualSalary:84750, savings:23639, normalizedSavings:23639, balance:275075.39, tx:22 },
+  { label:"May 2023", iso:"2023-05", spent:27775, income:46901.92, salary:32150, accrualSalary:32150, savings:19126.92, normalizedSavings:19126.92, balance:294202.31, tx:16 },
+  { label:"Jun 2023", iso:"2023-06", spent:8878, income:61291.39, salary:32236, accrualSalary:32236, savings:52413.39, normalizedSavings:52413.39, balance:346615.7, tx:14 },
+  { label:"Jul 2023", iso:"2023-07", spent:90466, income:48907.61, salary:30837, accrualSalary:30837, savings:-41558.39, normalizedSavings:-41558.39, balance:305057.31, tx:12 },
+  { label:"Aug 2023", iso:"2023-08", spent:31583, income:40764.04, salary:32147, accrualSalary:32147, savings:9181.04, normalizedSavings:9181.04, balance:314238.35, tx:8 },
+  { label:"Sep 2023", iso:"2023-09", spent:27688, income:47516.39, salary:31923, accrualSalary:31923, savings:19828.39, normalizedSavings:19828.39, balance:334066.74, tx:10 },
+  { label:"Oct 2023", iso:"2023-10", spent:65085, income:62763.14, salary:32195, accrualSalary:32195, savings:-2321.86, normalizedSavings:-2321.86, balance:331744.88, tx:12 },
+  { label:"Nov 2023", iso:"2023-11", spent:12020, income:52871.74, salary:32123, accrualSalary:32123, savings:40851.74, normalizedSavings:40851.74, balance:372596.62, tx:16 },
+  { label:"Dec 2023", iso:"2023-12", spent:47605, income:66148, salary:0, accrualSalary:0, savings:18543, normalizedSavings:18543, balance:391139.62, tx:27 },
+  { label:"Jan 2024", iso:"2024-01", spent:451940, income:110682, salary:92952, accrualSalary:92952, savings:-341258, normalizedSavings:-341258, balance:49881.62, tx:21 },
+  { label:"Feb 2024", iso:"2024-02", spent:7143, income:48710.16, salary:41164, accrualSalary:41164, savings:41567.16, normalizedSavings:41567.16, balance:91448.78, tx:10 },
+  { label:"Mar 2024", iso:"2024-03", spent:13703, income:72840.67, salary:67555, accrualSalary:67555, savings:59137.67, normalizedSavings:59137.67, balance:150586.45, tx:14 },
+  { label:"Apr 2024", iso:"2024-04", spent:41811, income:51232, salary:41185, accrualSalary:41185, savings:9421, normalizedSavings:9421, balance:160007.45, tx:21 },
+  { label:"May 2024", iso:"2024-05", spent:56764, income:14457.53, salary:0, accrualSalary:0, savings:-42306.47, normalizedSavings:-42306.47, balance:117700.98, tx:14 },
+  { label:"Jun 2024", iso:"2024-06", spent:55233, income:148930.1, salary:108836, accrualSalary:108836, savings:93697.1, normalizedSavings:93697.1, balance:211398.08, tx:21 },
+  { label:"Jul 2024", iso:"2024-07", spent:124379, income:15936, salary:0, accrualSalary:0, savings:-108443, normalizedSavings:-108443, balance:102955.08, tx:14 },
+  { label:"Aug 2024", iso:"2024-08", spent:40781, income:58499, salary:41807, accrualSalary:41807, savings:17718, normalizedSavings:17718, balance:120673.08, tx:20 },
+  { label:"Sep 2024", iso:"2024-09", spent:79848, income:97543, salary:82903, accrualSalary:82903, savings:17695, normalizedSavings:17695, balance:138368.08, tx:25 },
+  { label:"Oct 2024", iso:"2024-10", spent:51643, income:82056, salary:41310, accrualSalary:41310, savings:30413, normalizedSavings:30413, balance:168781.08, tx:23 },
+  { label:"Nov 2024", iso:"2024-11", spent:34880, income:17082, salary:0, accrualSalary:0, savings:-17798, normalizedSavings:-17798, balance:150983.08, tx:18 },
+  { label:"Dec 2024", iso:"2024-12", spent:75414, income:171208.07, salary:109031, accrualSalary:109031, savings:95794.07, normalizedSavings:95794.07, balance:246777.15, tx:19 },
+  { label:"Jan 2025", iso:"2025-01", spent:34171, income:19414.03, salary:0, accrualSalary:0, savings:-14756.97, normalizedSavings:-14756.97, balance:232020.18, tx:20 },
+  { label:"Feb 2025", iso:"2025-02", spent:10481, income:113731.86, salary:93840, accrualSalary:93840, savings:103250.86, normalizedSavings:103250.86, balance:335271.04, tx:14 },
+  { label:"Mar 2025", iso:"2025-03", spent:47959, income:85229.41, salary:46768, accrualSalary:46768, savings:37270.41, normalizedSavings:37270.41, balance:372541.45, tx:15 },
+  { label:"Apr 2025", iso:"2025-04", spent:347688, income:102281, salary:46895, accrualSalary:46895, savings:-245407, normalizedSavings:-245407, balance:127134.45, tx:21 },
+  { label:"May 2025", iso:"2025-05", spent:74350, income:61952, salary:0, accrualSalary:0, savings:-12398, normalizedSavings:-12398, balance:114736.45, tx:17 },
+  { label:"Jun 2025", iso:"2025-06", spent:26343, income:106317.61, salary:92818, accrualSalary:92818, savings:79974.61, normalizedSavings:79974.61, balance:194711.06, tx:17 },
+  { label:"Jul 2025", iso:"2025-07", spent:69014, income:69845.37, salary:46635, accrualSalary:46635, savings:831.37, normalizedSavings:831.37, balance:195542.43, tx:15 },
+  { label:"Aug 2025", iso:"2025-08", spent:28716, income:332462, salary:0, accrualSalary:0, savings:303746, normalizedSavings:303746, balance:499288.43, tx:24 },
+  { label:"Sep 2025", iso:"2025-09", spent:88285, income:138471, salary:92921, accrualSalary:92921, savings:50186, normalizedSavings:50186, balance:549474.43, tx:22 },
+  { label:"Oct 2025", iso:"2025-10", spent:459837, income:70996.37, salary:46841, accrualSalary:46841, savings:-388840.63, normalizedSavings:-388840.63, balance:160633.8, tx:26 },
+  { label:"Nov 2025", iso:"2025-11", spent:58299.45, income:59293, salary:46823, accrualSalary:46823, savings:993.55, normalizedSavings:993.55, balance:161627.35, tx:36 },
+  { label:"Dec 2025", iso:"2025-12", spent:21145, income:267590.62, salary:76443, accrualSalary:76443, savings:246445.62, normalizedSavings:246445.62, balance:408072.97, tx:26 },
+  { label:"Jan 2026", iso:"2026-01", spent:176465, income:31668.87, salary:0, accrualSalary:0, savings:-144796.13, normalizedSavings:-144796.13, balance:263276.84, tx:20 },
+  { label:"Feb 2026", iso:"2026-02", spent:50786, income:63436, salary:60936, accrualSalary:60936, savings:12650, normalizedSavings:12650, balance:275926.84, tx:24 },
+  { label:"Mar 2026", iso:"2026-03", spent:56346, income:167818, salary:156168, accrualSalary:156168, savings:111472, normalizedSavings:111472, balance:387398.84, tx:25 },
+  { label:"Apr 2026", iso:"2026-04", spent:196285.53, income:201468.87, salary:60900, accrualSalary:60900, savings:5183.34, normalizedSavings:5183.34, balance:392582.18, tx:48 },
+  { label:"May 2026", iso:"2026-05", spent:391577.59, income:87720, salary:0, accrualSalary:0, savings:-303857.59, normalizedSavings:-303857.59, balance:88724.59, tx:28 },
+  { label:"Jun 2026", iso:"2026-06", spent:47674.12, income:134724, salary:121374, accrualSalary:121374, savings:87049.88, normalizedSavings:87049.88, balance:175774.47, tx:19 },
+  { label:"Jul 2026", iso:"2026-07", spent:125755.94, income:54818.87, salary:0, accrualSalary:0, savings:-70937.07, normalizedSavings:-70937.07, balance:104837.4, tx:34 }
 ];
 
 const YEARLY_DATA = {
-  '2021': { income: 176600.58, spent: 78724.0, savings: 97876.58, normalizedSavings: 97876.58, tx: 34 },
-  '2022': { income: 698168.35, spent: 585749.0, savings: 112419.35, normalizedSavings: 112419.35, tx: 142 },
-  '2023': { income: 687642.69, spent: 506799.0, savings: 180843.69, normalizedSavings: 180843.69, tx: 166 },
-  '2024': { income: 889176.53, spent: 1033539.0, savings: -144362.47, normalizedSavings: -144362.47, tx: 204 },
-  '2025': { income: 1427584.27, spent: 1266288.45, savings: 161295.82, normalizedSavings: 161295.82, tx: 270 },
-  '2026': { income: 733076.11, spent: 944734.24, savings: -211658.13, normalizedSavings: -211658.13, tx: 174 }
+  '2021': { income:176600.58, spent:78724, savings:97876.58, normalizedSavings:97876.58, tx:34 },
+  '2022': { income:698168.35, spent:585749, savings:112419.35, normalizedSavings:112419.35, tx:162 },
+  '2023': { income:687642.69, spent:506799, savings:180843.69, normalizedSavings:180843.69, tx:198 },
+  '2024': { income:889176.53, spent:1033539, savings:-144362.47, normalizedSavings:-144362.47, tx:220 },
+  '2025': { income:1427584.27, spent:1266288.45, savings:161295.82, normalizedSavings:161295.82, tx:253 },
+  '2026': { income:741654.61, spent:1044890.18, savings:-303235.57, normalizedSavings:-303235.57, tx:198 }
 };
 
-
-// ─────────────────────────────────────────────
-// LIVE DATA LOADER
-// ─────────────────────────────────────────────
-/**
- * Fetch fresh data from Cloudflare Worker and overwrite baked-in constants.
- * Silently falls back to baked-in data if WORKER_URL is null, offline, or fails.
- * Called once after DOMContentLoaded so the initial render uses baked-in data
- * (instant) and the live refresh happens in the background.
- */
-async function tryLoadLiveData() {
-  if (!WORKER_URL) return;
-  try {
-    const resp = await fetch(WORKER_URL, { cache: 'no-cache' });
-    if (!resp.ok) return;
-    const json = await resp.json();
-    if (!json.monthly_series || !json.yearly) return;
-
-    // Overwrite globals in-place
-    MONTHLY_DATA.length = 0;
-    json.monthly_series.forEach(r => MONTHLY_DATA.push(r));
-    Object.keys(YEARLY_DATA).forEach(k => delete YEARLY_DATA[k]);
-    Object.assign(YEARLY_DATA, json.yearly);
-
-    // Re-render with live data
-    buildTrendChart(activeRange);
-    buildSavingsRateChart();
-    buildBalanceChart();
-    buildNetSavingsChart();
-    buildYearlyChart();
-    buildTxChart();
-    buildYearlySavingsBar();
-    buildYearlyTable();
-    populateSummary();
-    console.info('[Ledgr] Live data refreshed from Worker.');
-  } catch (_) { /* offline or Worker unavailable — keep baked-in data */ }
-}
 
 // ─────────────────────────────────────────────
 // UTILITIES
