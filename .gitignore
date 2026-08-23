@@ -24,6 +24,8 @@ Thumbs.db
 
 # Node (Cloudflare Wrangler)
 node_modules/
+.wrangler/
+cloudflare/.wrangler/
 
 # Local Excel source — data lives in data/finance_data.json committed to repo
 *.xlsx
