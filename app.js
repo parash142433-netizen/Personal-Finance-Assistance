@@ -94,43 +94,6 @@ const YEARLY_DATA = {
 
 
 // ─────────────────────────────────────────────
-// LIVE DATA LOADER
-// ─────────────────────────────────────────────
-/**
- * Fetch fresh data from Cloudflare Worker and overwrite baked-in constants.
- * Silently falls back to baked-in data if WORKER_URL is null, offline, or fails.
- * Called once after DOMContentLoaded so the initial render uses baked-in data
- * (instant) and the live refresh happens in the background.
- */
-async function tryLoadLiveData() {
-  if (!WORKER_URL) return;
-  try {
-    const resp = await fetch(WORKER_URL, { cache: 'no-cache' });
-    if (!resp.ok) return;
-    const json = await resp.json();
-    if (!json.monthly_series || !json.yearly) return;
-
-    // Overwrite globals in-place
-    MONTHLY_DATA.length = 0;
-    json.monthly_series.forEach(r => MONTHLY_DATA.push(r));
-    Object.keys(YEARLY_DATA).forEach(k => delete YEARLY_DATA[k]);
-    Object.assign(YEARLY_DATA, json.yearly);
-
-    // Re-render with live data
-    buildTrendChart(activeRange);
-    buildSavingsRateChart();
-    buildBalanceChart();
-    buildNetSavingsChart();
-    buildYearlyChart();
-    buildTxChart();
-    buildYearlySavingsBar();
-    buildYearlyTable();
-    populateSummary();
-    console.info('[Ledgr] Live data refreshed from Worker.');
-  } catch (_) { /* offline or Worker unavailable — keep baked-in data */ }
-}
-
-// ─────────────────────────────────────────────
 // UTILITIES
 // ─────────────────────────────────────────────
 const fmt = (n, compact = false) => {

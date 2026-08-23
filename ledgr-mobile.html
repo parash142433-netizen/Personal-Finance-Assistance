@@ -1605,7 +1605,7 @@ body {
 // ─────────────────────────────────────────────
 // Set WORKER_URL to your Cloudflare Worker URL after deploying it.
 // Leave as null to always use baked-in data (local / offline use).
-const WORKER_URL = null; // e.g. 'https://ledgr-finance-proxy.your-name.workers.dev'
+const WORKER_URL = "https://ledgr-finance-proxy.nafis-fpl-tools.workers.dev";
 
 
 // ─────────────────────────────────────────────
@@ -1686,48 +1686,11 @@ const YEARLY_DATA = {
 
 
 // ─────────────────────────────────────────────
-// LIVE DATA LOADER
-// ─────────────────────────────────────────────
-/**
- * Fetch fresh data from Cloudflare Worker and overwrite baked-in constants.
- * Silently falls back to baked-in data if WORKER_URL is null, offline, or fails.
- * Called once after DOMContentLoaded so the initial render uses baked-in data
- * (instant) and the live refresh happens in the background.
- */
-async function tryLoadLiveData() {
-  if (!WORKER_URL) return;
-  try {
-    const resp = await fetch(WORKER_URL, { cache: 'no-cache' });
-    if (!resp.ok) return;
-    const json = await resp.json();
-    if (!json.monthly_series || !json.yearly) return;
-
-    // Overwrite globals in-place
-    MONTHLY_DATA.length = 0;
-    json.monthly_series.forEach(r => MONTHLY_DATA.push(r));
-    Object.keys(YEARLY_DATA).forEach(k => delete YEARLY_DATA[k]);
-    Object.assign(YEARLY_DATA, json.yearly);
-
-    // Re-render with live data
-    buildTrendChart(activeRange);
-    buildSavingsRateChart();
-    buildBalanceChart();
-    buildNetSavingsChart();
-    buildYearlyChart();
-    buildTxChart();
-    buildYearlySavingsBar();
-    buildYearlyTable();
-    populateSummary();
-    console.info('[Ledgr] Live data refreshed from Worker.');
-  } catch (_) { /* offline or Worker unavailable — keep baked-in data */ }
-}
-
-// ─────────────────────────────────────────────
 // UTILITIES
 // ─────────────────────────────────────────────
-const fmt = (n, compact=false) => {
-  if (compact && Math.abs(n) >= 100000) return '৳' + (n/100000).toFixed(1) + 'L';
-  if (compact && Math.abs(n) >= 1000)   return '৳' + (n/1000).toFixed(1) + 'K';
+const fmt = (n, compact = false) => {
+  if (compact && Math.abs(n) >= 100000) return '৳' + (n / 100000).toFixed(1) + 'L';
+  if (compact && Math.abs(n) >= 1000) return '৳' + (n / 1000).toFixed(1) + 'K';
   return '৳' + Math.round(n).toLocaleString('en-IN');
 };
 
@@ -1735,26 +1698,26 @@ function el(id) { return document.getElementById(id); }
 
 function setCurrentDate() {
   const d = new Date();
-  el('currentDate').textContent = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  el('currentDate').textContent = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard','analytics','calendar','budget','savings','debts','transactions','scheduled','summary','settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
-    const pg  = el(`page-${p}`);
+    const pg = el(`page-${p}`);
     const nav = el(`nav-${p}`);
-    if (pg)  pg.classList.toggle('active', p === page);
+    if (pg) pg.classList.toggle('active', p === page);
     if (nav) nav.classList.toggle('active', p === page);
   });
   el('topbarTitle').textContent = {
-    dashboard:'Dashboard', analytics:'Analytics', calendar:'Calendar View',
-    budget:'Budget Planner', savings:'Savings Goals', debts:'Debts & Loans',
-    transactions:'Transactions', scheduled:'Scheduled', summary:'Personal Summary',
-    settings:'Settings'
+    dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
+    budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
+    transactions: 'Transactions', scheduled: 'Scheduled', summary: 'Personal Summary',
+    settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
   closeSidebar();
@@ -1793,14 +1756,14 @@ Chart.defaults.color = '#8b8fa8';
 Chart.defaults.font.family = "'Inter', sans-serif";
 
 const COLORS = {
-  income:  '#10b981',
-  spent:   '#ef4444',
+  income: '#10b981',
+  spent: '#ef4444',
   savings: '#6366f1',
   balance: '#06b6d4',
-  gold:    '#f59e0b',
+  gold: '#f59e0b',
 };
 
-function lineDataset(label, data, color, fill=false) {
+function lineDataset(label, data, color, fill = false) {
   return {
     label, data,
     borderColor: color,
@@ -1824,11 +1787,11 @@ let trendChart = null;
 let activeRange = 'all';
 
 function getFilteredData(range) {
-  const n = { '6m':6, '1y':12, '2y':24 }[range];
+  const n = { '6m': 6, '1y': 12, '2y': 24 }[range];
   return n ? MONTHLY_DATA.slice(-n) : MONTHLY_DATA;
 }
 
-function buildTrendChart(range='all') {
+function buildTrendChart(range = 'all') {
   const data = getFilteredData(range);
   const labels = data.map(d => d.label);
 
@@ -1838,17 +1801,17 @@ function buildTrendChart(range='all') {
     data: {
       labels,
       datasets: [
-        lineDataset('Income',  data.map(d => d.income), COLORS.income,  true),
-        lineDataset('Spending',data.map(d => d.spent),  COLORS.spent,   true),
+        lineDataset('Income', data.map(d => d.income), COLORS.income, true),
+        lineDataset('Spending', data.map(d => d.spent), COLORS.spent, true),
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      plugins: { legend: { position:'top' }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
       scales: {
-        x: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { maxTicksLimit: 12, maxRotation: 45 } },
-        y: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
+        x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { maxTicksLimit: 12, maxRotation: 45 } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
       }
     }
   });
@@ -1864,12 +1827,12 @@ function buildSavingsRateChart() {
     type: 'doughnut',
     data: {
       labels: ['Positive months', 'Deficit months'],
-      datasets: [{ data:[positive, negative], backgroundColor:['#10b981cc','#ef4444cc'], borderWidth:0, hoverOffset:8 }]
+      datasets: [{ data: [positive, negative], backgroundColor: ['#10b981cc', '#ef4444cc'], borderWidth: 0, hoverOffset: 8 }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { position:'bottom' },
+        legend: { position: 'bottom' },
         tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} months` } }
       },
       cutout: '65%'
@@ -1887,10 +1850,10 @@ function buildBalanceChart() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display:false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
       scales: {
-        x: { grid: { display:false }, ticks: { maxTicksLimit: 10, maxRotation: 45 } },
-        y: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 45 } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
       }
     }
   });
@@ -1904,7 +1867,7 @@ function buildNetSavingsChart() {
     data: {
       labels,
       datasets: [{
-        label:'Net Savings',
+        label: 'Net Savings',
         data: savings,
         backgroundColor: savings.map(v => v >= 0 ? '#10b98188' : '#ef444488'),
         borderRadius: 3,
@@ -1912,10 +1875,10 @@ function buildNetSavingsChart() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend:{display:false}, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
       scales: {
-        x: { grid:{display:false}, ticks:{maxTicksLimit:10, maxRotation:45} },
-        y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback: v => fmt(v,true)} }
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 45 } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
       }
     }
   });
@@ -1927,20 +1890,20 @@ function buildNetSavingsChart() {
 function buildYearlyChart() {
   const years = Object.keys(YEARLY_DATA);
   new Chart(el('yearlyChart'), {
-    type:'bar',
-    data:{
+    type: 'bar',
+    data: {
       labels: years,
-      datasets:[
-        barDataset('Income',  years.map(y=>YEARLY_DATA[y].income),  COLORS.income),
-        barDataset('Spending',years.map(y=>YEARLY_DATA[y].spent),   COLORS.spent),
+      datasets: [
+        barDataset('Income', years.map(y => YEARLY_DATA[y].income), COLORS.income),
+        barDataset('Spending', years.map(y => YEARLY_DATA[y].spent), COLORS.spent),
       ]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{position:'top'}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw) } } },
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,.04)'}},
-        y:{grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback: v=>fmt(v,true)}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.04)' } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
       }
     }
   });
@@ -1949,17 +1912,17 @@ function buildYearlyChart() {
 function buildTxChart() {
   const labels = MONTHLY_DATA.map(d => d.label);
   new Chart(el('txChart'), {
-    type:'bar',
-    data:{
+    type: 'bar',
+    data: {
       labels,
-      datasets:[barDataset('Transactions', MONTHLY_DATA.map(d=>d.tx), COLORS.savings)]
+      datasets: [barDataset('Transactions', MONTHLY_DATA.map(d => d.tx), COLORS.savings)]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:{display:false}, ticks:{maxTicksLimit:10, maxRotation:45}},
-        y:{grid:{color:'rgba(255,255,255,.04)'}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 45 } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' } }
       }
     }
   });
@@ -1967,24 +1930,24 @@ function buildTxChart() {
 
 function buildYearlySavingsBar() {
   const years = Object.keys(YEARLY_DATA);
-  const savings = years.map(y=>YEARLY_DATA[y].savings);
+  const savings = years.map(y => YEARLY_DATA[y].savings);
   new Chart(el('yearlySavingsBar'), {
-    type:'bar',
-    data:{
-      labels:years,
-      datasets:[{
-        label:'Net Savings',
-        data:savings,
-        backgroundColor:savings.map(v=>v>=0?'#10b98188':'#ef444488'),
-        borderRadius:6
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Net Savings',
+        data: savings,
+        backgroundColor: savings.map(v => v >= 0 ? '#10b98188' : '#ef444488'),
+        borderRadius: 6
       }]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,.04)'}},
-        y:{grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback:v=>fmt(v,true)}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.04)' } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
       }
     }
   });
@@ -1993,15 +1956,15 @@ function buildYearlySavingsBar() {
 function buildYearlyTable() {
   const tbody = el('yearlyTableBody');
   Object.entries(YEARLY_DATA).forEach(([yr, d]) => {
-    const rate = d.income ? ((d.savings/d.income)*100).toFixed(1) : 'N/A';
-    const cls  = d.savings >= 0 ? 'green' : 'red';
+    const rate = d.income ? ((d.savings / d.income) * 100).toFixed(1) : 'N/A';
+    const cls = d.savings >= 0 ? 'green' : 'red';
     tbody.insertAdjacentHTML('beforeend', `
       <tr>
         <td>${yr}</td>
-        <td>${Math.ceil(MONTHLY_DATA.filter(m=>m.iso.startsWith(yr)).length)}</td>
+        <td>${Math.ceil(MONTHLY_DATA.filter(m => m.iso.startsWith(yr)).length)}</td>
         <td>${fmt(d.income)}</td>
         <td>${fmt(d.spent)}</td>
-        <td class="${cls}">${d.savings>=0?'+':''}${fmt(d.savings)}</td>
+        <td class="${cls}">${d.savings >= 0 ? '+' : ''}${fmt(d.savings)}</td>
         <td>${d.tx}</td>
         <td class="${cls}">${rate}%</td>
       </tr>`);
@@ -2014,15 +1977,15 @@ function buildYearlyTable() {
 let calDate = new Date(2026, 6); // July 2026 (last month with data)
 
 function renderCalendar() {
-  const year  = calDate.getFullYear();
+  const year = calDate.getFullYear();
   const month = calDate.getMonth();
-  const key   = `${year}-${String(month+1).padStart(2,'0')}`;
+  const key = `${year}-${String(month + 1).padStart(2, '0')}`;
   const monthData = MONTHLY_DATA.find(d => d.iso === key);
 
-  el('calMonthLabel').textContent = calDate.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+  el('calMonthLabel').textContent = calDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
-  const firstDay  = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
   const today = new Date();
 
   const grid = el('calendarGrid');
@@ -2030,25 +1993,25 @@ function renderCalendar() {
 
   // blank cells before 1st
   for (let i = 0; i < firstDay; i++) {
-    grid.insertAdjacentHTML('beforeend','<div class="cal-cell empty"></div>');
+    grid.insertAdjacentHTML('beforeend', '<div class="cal-cell empty"></div>');
   }
 
   // Simulate daily spend distribution (uniform if data exists)
   const dailySpend = monthData ? monthData.spent / daysInMonth : 0;
-  const maxSpend   = monthData ? monthData.spent : 1;
+  const maxSpend = monthData ? monthData.spent : 1;
 
   for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+    const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
     // Simulate some variation
-    const variationFactor = [0.4,0.2,1.2,0.8,0.6,1.5,0.3][(d+month)%7];
+    const variationFactor = [0.4, 0.2, 1.2, 0.8, 0.6, 1.5, 0.3][(d + month) % 7];
     const spend = dailySpend * variationFactor;
-    const heat  = monthData ? Math.min(4, Math.floor((spend / (maxSpend * variationFactor / daysInMonth)) * 4)) : 0;
-    const bg    = ['var(--bg-card2)','rgba(99,102,241,.25)','rgba(99,102,241,.45)','rgba(99,102,241,.65)','rgba(99,102,241,.9)'][heat];
+    const heat = monthData ? Math.min(4, Math.floor((spend / (maxSpend * variationFactor / daysInMonth)) * 4)) : 0;
+    const bg = ['var(--bg-card2)', 'rgba(99,102,241,.25)', 'rgba(99,102,241,.45)', 'rgba(99,102,241,.65)', 'rgba(99,102,241,.9)'][heat];
     const textColor = heat >= 3 ? '#fff' : 'var(--text-primary)';
     grid.insertAdjacentHTML('beforeend', `
-      <div class="cal-cell h${heat}${isToday?' today':''}"
+      <div class="cal-cell h${heat}${isToday ? ' today' : ''}"
            style="background:${bg};color:${textColor}"
-           title="${d} ${calDate.toLocaleDateString('en-US',{month:'short'})}: ~${fmt(spend,true)}">${d}</div>`);
+           title="${d} ${calDate.toLocaleDateString('en-US', { month: 'short' })}: ~${fmt(spend, true)}">${d}</div>`);
   }
 
   // Summary
@@ -2057,7 +2020,7 @@ function renderCalendar() {
     sum.innerHTML = `
       <div><span style="color:var(--text-muted)">Income</span><br><strong style="color:var(--green)">${fmt(monthData.income)}</strong></div>
       <div><span style="color:var(--text-muted)">Spent</span><br><strong style="color:var(--red)">${fmt(monthData.spent)}</strong></div>
-      <div><span style="color:var(--text-muted)">Net Savings</span><br><strong style="color:${monthData.savings>=0?'var(--green)':'var(--red)'}">${fmt(monthData.savings)}</strong></div>
+      <div><span style="color:var(--text-muted)">Net Savings</span><br><strong style="color:${monthData.savings >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(monthData.savings)}</strong></div>
       <div><span style="color:var(--text-muted)">Transactions</span><br><strong>${monthData.tx}</strong></div>
       <div><span style="color:var(--text-muted)">Balance</span><br><strong style="color:var(--teal)">${fmt(monthData.balance)}</strong></div>`;
   } else {
@@ -2067,11 +2030,11 @@ function renderCalendar() {
 
 function initCalendar() {
   el('calPrev').addEventListener('click', () => {
-    calDate = new Date(calDate.getFullYear(), calDate.getMonth()-1);
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1);
     renderCalendar();
   });
   el('calNext').addEventListener('click', () => {
-    calDate = new Date(calDate.getFullYear(), calDate.getMonth()+1);
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1);
     renderCalendar();
   });
   renderCalendar();
@@ -2083,7 +2046,7 @@ function initCalendar() {
 // accrualMode: true = show normalizedSavings (smoothed), false = show raw cash savings
 let accrualMode = false;
 
-function renderTxTable(search='', filter='all', year='all') {
+function renderTxTable(search = '', filter = 'all', year = 'all') {
   let data = [...MONTHLY_DATA].reverse();
   if (search) data = data.filter(d => d.label.toLowerCase().includes(search.toLowerCase()));
   // Filter by whichever savings field is active
@@ -2094,24 +2057,24 @@ function renderTxTable(search='', filter='all', year='all') {
   const tbody = el('txTableBody');
   tbody.innerHTML = data.map(d => {
     const isDeferred = d.salary === 0 && d.accrualSalary === 0 ? false :
-                       (d.salary === 0 || Math.abs(d.accrualSalary - d.salary) > 1000);
+      (d.salary === 0 || Math.abs(d.accrualSalary - d.salary) > 1000);
     const savingsVal = accrualMode ? d.normalizedSavings : d.savings;
-    const salaryVal  = accrualMode ? d.accrualSalary     : d.salary;
-    const deferTag   = isDeferred && accrualMode
+    const salaryVal = accrualMode ? d.accrualSalary : d.salary;
+    const deferTag = isDeferred && accrualMode
       ? `<span class="badge badge-blue" title="Salary smoothed: was credited as bulk payment">~Accrual</span> `
       : (isDeferred && !accrualMode)
-      ? `<span class="badge badge-orange" title="Salary credited in a different month (bulk payment)">Deferred</span> `
-      : '';
+        ? `<span class="badge badge-orange" title="Salary credited in a different month (bulk payment)">Deferred</span> `
+        : '';
     return `
     <tr class="${isDeferred ? 'row-deferred' : ''}">
       <td><strong>${d.label}</strong></td>
       <td class="green">${fmt(d.income)}</td>
       <td>${salaryVal ? fmt(salaryVal) : '<span style="color:var(--text-muted)">—</span>'} ${deferTag}</td>
       <td class="red">${fmt(d.spent)}</td>
-      <td class="${savingsVal>=0?'green':'red'}">${savingsVal>=0?'+':''}${fmt(savingsVal)}</td>
+      <td class="${savingsVal >= 0 ? 'green' : 'red'}">${savingsVal >= 0 ? '+' : ''}${fmt(savingsVal)}</td>
       <td>${d.tx}</td>
       <td style="color:var(--teal)">${fmt(d.balance)}</td>
-      <td><span class="badge ${savingsVal>=0?'badge-green':'badge-red'}">${savingsVal>=0?'Saved':'Deficit'}</span></td>
+      <td><span class="badge ${savingsVal >= 0 ? 'badge-green' : 'badge-red'}">${savingsVal >= 0 ? 'Saved' : 'Deficit'}</span></td>
     </tr>`;
   }).join('');
 }
@@ -2139,24 +2102,24 @@ function initTransactions() {
 // ─────────────────────────────────────────────
 // LOCAL STORAGE HELPERS
 // ─────────────────────────────────────────────
-function lsGet(key, def=[]) {
-  try { return JSON.parse(localStorage.getItem('ledgr_'+key)) ?? def; } catch { return def; }
+function lsGet(key, def = []) {
+  try { return JSON.parse(localStorage.getItem('ledgr_' + key)) ?? def; } catch { return def; }
 }
-function lsSet(key, val) { localStorage.setItem('ledgr_'+key, JSON.stringify(val)); }
+function lsSet(key, val) { localStorage.setItem('ledgr_' + key, JSON.stringify(val)); }
 
 // ─────────────────────────────────────────────
 // BUDGET
 // ─────────────────────────────────────────────
 let budgets = lsGet('budgets', [
-  { cat:'Housing', limit:30000, spent:20000, icon:'🏠' },
-  { cat:'Food',    limit:15000, spent:12500, icon:'🍜' },
-  { cat:'Transport',limit:5000, spent:3200,  icon:'🚗' },
-  { cat:'Shopping', limit:10000,spent:8100,  icon:'🛍️' },
+  { cat: 'Housing', limit: 30000, spent: 20000, icon: '🏠' },
+  { cat: 'Food', limit: 15000, spent: 12500, icon: '🍜' },
+  { cat: 'Transport', limit: 5000, spent: 3200, icon: '🚗' },
+  { cat: 'Shopping', limit: 10000, spent: 8100, icon: '🛍️' },
 ]);
 
 function renderBudgets() {
   el('budgetList').innerHTML = budgets.map((b, i) => {
-    const pct  = Math.min(100, (b.spent/b.limit)*100);
+    const pct = Math.min(100, (b.spent / b.limit) * 100);
     const over = b.spent > b.limit;
     return `
       <div class="budget-item">
@@ -2165,7 +2128,7 @@ function renderBudgets() {
           <div class="budget-amounts">${fmt(b.spent)} / ${fmt(b.limit)} · ${pct.toFixed(0)}%</div>
         </div>
         <div class="progress-bar">
-          <div class="progress-fill ${over?'over':''}" style="width:${pct}%"></div>
+          <div class="progress-fill ${over ? 'over' : ''}" style="width:${pct}%"></div>
         </div>
       </div>`;
   }).join('');
@@ -2176,9 +2139,9 @@ function initBudget() {
   el('addBudgetBtn').addEventListener('click', () => el('budgetModal').classList.remove('hidden'));
   el('cancelBudget').addEventListener('click', () => el('budgetModal').classList.add('hidden'));
   el('saveBudget').addEventListener('click', () => {
-    const cat   = el('budgetCatInput').value.trim();
+    const cat = el('budgetCatInput').value.trim();
     const limit = parseFloat(el('budgetLimitInput').value) || 0;
-    const icon  = el('budgetIconInput').value.trim() || '💳';
+    const icon = el('budgetIconInput').value.trim() || '💳';
     if (cat && limit) {
       budgets.push({ cat, limit, spent: 0, icon });
       lsSet('budgets', budgets);
@@ -2193,22 +2156,22 @@ function initBudget() {
 // SAVINGS GOALS
 // ─────────────────────────────────────────────
 let goals = lsGet('goals', [
-  { name:'Emergency Fund', target:200000, current:50000,  deadline:'2026-12-31', emoji:'🛡️' },
-  { name:'Laptop Upgrade',  target:80000,  current:30000,  deadline:'2026-11-01', emoji:'💻' },
-  { name:'Vacation',        target:150000, current:20000,  deadline:'2027-03-01', emoji:'✈️' },
+  { name: 'Emergency Fund', target: 200000, current: 50000, deadline: '2026-12-31', emoji: '🛡️' },
+  { name: 'Laptop Upgrade', target: 80000, current: 30000, deadline: '2026-11-01', emoji: '💻' },
+  { name: 'Vacation', target: 150000, current: 20000, deadline: '2027-03-01', emoji: '✈️' },
 ]);
 
 function renderGoals() {
   el('goalsGrid').innerHTML = goals.map((g, i) => {
-    const pct = Math.min(100, (g.current/g.target)*100);
+    const pct = Math.min(100, (g.current / g.target) * 100);
     return `
       <div class="goal-card">
-        <div class="goal-icon">${g.emoji||'🎯'}</div>
+        <div class="goal-icon">${g.emoji || '🎯'}</div>
         <div class="goal-name">${g.name}</div>
         <div class="goal-amounts">${fmt(g.current)} saved of ${fmt(g.target)}</div>
         <div class="goal-pct">${pct.toFixed(0)}%</div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-        ${g.deadline ? `<div class="goal-deadline">🗓️ Target: ${new Date(g.deadline).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div>` : ''}
+        ${g.deadline ? `<div class="goal-deadline">🗓️ Target: ${new Date(g.deadline).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>` : ''}
       </div>`;
   }).join('');
 }
@@ -2218,16 +2181,16 @@ function initSavings() {
   el('addGoalBtn').addEventListener('click', () => el('goalModal').classList.remove('hidden'));
   el('cancelGoal').addEventListener('click', () => el('goalModal').classList.add('hidden'));
   el('saveGoal').addEventListener('click', () => {
-    const name     = el('goalNameInput').value.trim();
-    const target   = parseFloat(el('goalTargetInput').value) || 0;
-    const current  = parseFloat(el('goalCurrentInput').value) || 0;
+    const name = el('goalNameInput').value.trim();
+    const target = parseFloat(el('goalTargetInput').value) || 0;
+    const current = parseFloat(el('goalCurrentInput').value) || 0;
     const deadline = el('goalDeadlineInput').value;
     if (name && target) {
-      goals.push({ name, target, current, deadline, emoji:'🎯' });
+      goals.push({ name, target, current, deadline, emoji: '🎯' });
       lsSet('goals', goals);
       renderGoals();
       el('goalModal').classList.add('hidden');
-      ['goalNameInput','goalTargetInput','goalCurrentInput','goalDeadlineInput'].forEach(id => el(id).value='');
+      ['goalNameInput', 'goalTargetInput', 'goalCurrentInput', 'goalDeadlineInput'].forEach(id => el(id).value = '');
     }
   });
 }
@@ -2236,8 +2199,8 @@ function initSavings() {
 // DEBTS
 // ─────────────────────────────────────────────
 let debts = lsGet('debts', [
-  { type:'owe',  person:'Credit Card', amount:15000, due:'2026-09-01', note:'Monthly payment' },
-  { type:'owed', person:'Rahim Bhai',  amount:5000,  due:'2026-10-15', note:'Borrowed for event' },
+  { type: 'owe', person: 'Credit Card', amount: 15000, due: '2026-09-01', note: 'Monthly payment' },
+  { type: 'owed', person: 'Rahim Bhai', amount: 5000, due: '2026-10-15', note: 'Borrowed for event' },
 ]);
 let debtTab = 'owe';
 
@@ -2248,9 +2211,9 @@ function renderDebts() {
       <div class="debt-item">
         <div>
           <div class="debt-person">${d.person}</div>
-          <div class="debt-meta">${d.note} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'N/A'}</div>
+          <div class="debt-meta">${d.note} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</div>
         </div>
-        <div class="debt-amount ${d.type==='owe'?'red':'green'}">${fmt(d.amount)}</div>
+        <div class="debt-amount ${d.type === 'owe' ? 'red' : 'green'}">${fmt(d.amount)}</div>
       </div>`).join('') || `<p style="color:var(--text-muted);padding:1rem">No entries yet.</p>`;
 }
 
@@ -2270,14 +2233,14 @@ function initDebts() {
   el('saveDebt').addEventListener('click', () => {
     const person = el('debtPersonInput').value.trim();
     const amount = parseFloat(el('debtAmountInput').value) || 0;
-    const due    = el('debtDueInput').value;
-    const note   = el('debtNoteInput').value.trim();
+    const due = el('debtDueInput').value;
+    const note = el('debtNoteInput').value.trim();
     if (person && amount) {
-      debts.push({ type:debtTab, person, amount, due, note });
+      debts.push({ type: debtTab, person, amount, due, note });
       lsSet('debts', debts);
       renderDebts();
       el('debtModal').classList.add('hidden');
-      ['debtPersonInput','debtAmountInput','debtDueInput','debtNoteInput'].forEach(id => el(id).value='');
+      ['debtPersonInput', 'debtAmountInput', 'debtDueInput', 'debtNoteInput'].forEach(id => el(id).value = '');
     }
   });
 }
@@ -2286,23 +2249,23 @@ function initDebts() {
 // SCHEDULED TRANSACTIONS
 // ─────────────────────────────────────────────
 let scheduled = lsGet('scheduled', [
-  { name:'Salary',     amount:60000, type:'income',  freq:'monthly', due:'2026-09-01' },
-  { name:'Rent',       amount:25000, type:'expense', freq:'monthly', due:'2026-09-05' },
-  { name:'Internet',   amount:800,   type:'expense', freq:'monthly', due:'2026-09-10' },
-  { name:'Netflix',    amount:1500,  type:'expense', freq:'monthly', due:'2026-09-15' },
+  { name: 'Salary', amount: 60000, type: 'income', freq: 'monthly', due: '2026-09-01' },
+  { name: 'Rent', amount: 25000, type: 'expense', freq: 'monthly', due: '2026-09-05' },
+  { name: 'Internet', amount: 800, type: 'expense', freq: 'monthly', due: '2026-09-10' },
+  { name: 'Netflix', amount: 1500, type: 'expense', freq: 'monthly', due: '2026-09-15' },
 ]);
 
 function renderScheduled() {
   el('scheduledList').innerHTML = scheduled.map((s, i) => `
     <div class="sched-item">
       <div class="sched-left">
-        <div class="sched-icon ${s.type}">${s.type==='income'?'📥':'📤'}</div>
+        <div class="sched-icon ${s.type}">${s.type === 'income' ? '📥' : '📤'}</div>
         <div>
           <div class="sched-name">${s.name}</div>
-          <div class="sched-meta">${s.freq.charAt(0).toUpperCase()+s.freq.slice(1)} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'N/A'}</div>
+          <div class="sched-meta">${s.freq.charAt(0).toUpperCase() + s.freq.slice(1)} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}</div>
         </div>
       </div>
-      <div class="sched-amount ${s.type==='income'?'green':'red'}">${s.type==='income'?'+':'–'}${fmt(s.amount)}</div>
+      <div class="sched-amount ${s.type === 'income' ? 'green' : 'red'}">${s.type === 'income' ? '+' : '–'}${fmt(s.amount)}</div>
     </div>`).join('');
 }
 
@@ -2311,17 +2274,17 @@ function initScheduled() {
   el('addScheduledBtn').addEventListener('click', () => el('scheduledModal').classList.remove('hidden'));
   el('cancelScheduled').addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
   el('saveScheduled').addEventListener('click', () => {
-    const name   = el('schedNameInput').value.trim();
+    const name = el('schedNameInput').value.trim();
     const amount = parseFloat(el('schedAmountInput').value) || 0;
-    const type   = el('schedTypeInput').value;
-    const freq   = el('schedFreqInput').value;
-    const due    = el('schedDueInput').value;
+    const type = el('schedTypeInput').value;
+    const freq = el('schedFreqInput').value;
+    const due = el('schedDueInput').value;
     if (name && amount) {
       scheduled.push({ name, amount, type, freq, due });
       lsSet('scheduled', scheduled);
       renderScheduled();
       el('scheduledModal').classList.add('hidden');
-      ['schedNameInput','schedAmountInput','schedDueInput'].forEach(id => el(id).value='');
+      ['schedNameInput', 'schedAmountInput', 'schedDueInput'].forEach(id => el(id).value = '');
     }
   });
 }
@@ -2346,7 +2309,7 @@ function initSettings() {
   el('exportCSVBtn').addEventListener('click', exportCSV);
   el('clearDataBtn').addEventListener('click', () => {
     if (confirm('Clear all locally stored data (budgets, goals, debts, scheduled)?')) {
-      ['budgets','goals','debts','scheduled'].forEach(k => localStorage.removeItem('ledgr_'+k));
+      ['budgets', 'goals', 'debts', 'scheduled'].forEach(k => localStorage.removeItem('ledgr_' + k));
       location.reload();
     }
   });
@@ -2373,8 +2336,8 @@ function exportCSV() {
   const rows = MONTHLY_DATA.map(d =>
     `${d.label},${d.income},${d.salary},${d.accrualSalary},${d.spent},${d.savings},${d.normalizedSavings},${d.tx},${d.balance}`
   ).join('\n');
-  const blob = new Blob([header+rows], { type:'text/csv' });
-  const a = Object.assign(document.createElement('a'), { href:URL.createObjectURL(blob), download:'ledgr_export.csv' });
+  const blob = new Blob([header + rows], { type: 'text/csv' });
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'ledgr_export.csv' });
   a.click();
 }
 
