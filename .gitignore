@@ -1,0 +1,29 @@
+# Environment variables and secrets
+.env
+credentials.json
+token.json
+
+# Temporary/intermediate files
+.tmp/
+*.tmp
+
+# Python cache & virtual environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# IDE & OS files
+# .vscode/ is intentionally tracked (contains tasks.json for team use)
+.idea/
+.DS_Store
+Thumbs.db
+
+# Node (Cloudflare Wrangler)
+node_modules/
+
+# Local Excel source — data lives in data/finance_data.json committed to repo
+*.xlsx

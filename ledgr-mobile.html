@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ledgr — Personal Finance Dashboard</title>
+  <meta name="description" content="Your personal finance dashboard — 5-year expenditure analysis, budget tracking, savings goals, and debt management." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+/* ─────────────────────────────────────────────
+   LEDGR — PERSONAL FINANCE DASHBOARD
+   styles.css
+───────────────────────────────────────────── */
+
+/* ── TOKENS ── */
+:root {
+  --accent:          #6366f1;
+  --accent-hover:    #4f52d9;
+  --accent-glow:     rgba(99,102,241,.25);
+  --bg:              #0a0b14;
+  --bg-surface:      #111220;
+  --bg-card:         #181929;
+  --bg-card2:        #1e2035;
+  --border:          rgba(255,255,255,.07);
+  --border-hover:    rgba(255,255,255,.15);
+  --text-primary:    #f1f2ff;
+  --text-secondary:  #8b8fa8;
+  --text-muted:      #4d5068;
+  --green:           #10b981;
+  --red:             #ef4444;
+  --gold:            #f59e0b;
+  --blue:            #3b82f6;
+  --purple:          #a855f7;
+  --teal:            #06b6d4;
+  --sidebar-w:       240px;
+  --topbar-h:        64px;
+  --radius:          14px;
+  --radius-sm:       8px;
+  --shadow:          0 4px 32px rgba(0,0,0,.4);
+  --transition:      all .22s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-card2); border-radius: 99px; }
+
+/* ─────────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.brand-left {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.sidebar-close-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.sidebar-close-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-card);
+}
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+}
+.sidebar-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.brand-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.brand-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -.02em;
+}
+
+.nav-list { list-style: none; padding: .75rem 0; flex: 1; overflow-y: auto; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 1.25rem;
+  margin: .1rem .6rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: .875rem;
+  font-weight: 500;
+  transition: var(--transition);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.nav-item.active {
+  background: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid rgba(99,102,241,.3);
+}
+.nav-item.active .nav-icon { filter: none; }
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+.dark-mode-btn {
+  width: 100%;
+  padding: .6rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: .8rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.dark-mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ─────────────────────────────────────────────
+   MAIN CONTENT
+───────────────────────────────────────────── */
+.main-content {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  height: var(--topbar-h);
+  background: rgba(10,11,20,.85);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 1.75rem;
+  gap: 1rem;
+  z-index: 50;
+}
+.hamburger {
+  display: none;
+  background: none; border: none;
+  color: var(--text-primary); font-size: 1.25rem; cursor: pointer;
+}
+.topbar-title {
+  font-size: 1rem; font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+.topbar-actions { display: flex; align-items: center; gap: .75rem; }
+.btn-icon {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem;
+  transition: var(--transition);
+}
+.btn-icon:hover { border-color: var(--accent); }
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .85rem; color: #fff;
+}
+
+/* ── PAGES ── */
+.page { display: none; padding: 1.75rem 2rem 3rem; animation: fadeIn .3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.page-header { margin-bottom: 1.75rem; }
+.page-header h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; }
+.subtitle { color: var(--text-secondary); font-size: .875rem; margin-top: .35rem; }
+
+/* ─────────────────────────────────────────────
+   KPI CARDS
+───────────────────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.kpi-card:hover::before { opacity: 1; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.accent-blue  { border-top: 2px solid var(--blue);   }
+.accent-green { border-top: 2px solid var(--green);  }
+.accent-red   { border-top: 2px solid var(--red);    }
+.accent-purple{ border-top: 2px solid var(--purple); }
+
+.kpi-icon { font-size: 1.75rem; }
+.kpi-label { font-size: .75rem; color: var(--text-secondary); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.kpi-value { font-size: 1.5rem; font-weight: 800; margin: .25rem 0 .1rem; letter-spacing: -.03em; }
+.kpi-sub   { font-size: .72rem; color: var(--text-muted); }
+
+/* ─────────────────────────────────────────────
+   CHART CARDS
+───────────────────────────────────────────── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.charts-row .chart-card:only-child { grid-column: 1 / -1; }
+
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: var(--transition);
+}
+.chart-card:hover { border-color: var(--border-hover); }
+.chart-card.wide { grid-column: 1 / -1; }
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.chart-header h3 { font-size: .95rem; font-weight: 700; }
+.chart-wrap { position: relative; height: 220px; }
+.chart-card.wide .chart-wrap { height: 260px; }
+
+.chart-filters { display: flex; gap: .35rem; }
+.filter-btn {
+  padding: .3rem .75rem;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-secondary);
+  font-size: .75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.filter-btn.active, .filter-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.chart-legend-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: .75rem;
+  font-size: .75rem;
+  color: var(--text-secondary);
+}
+.cl-item { display: flex; align-items: center; gap: .4rem; }
+.cl-dot { width: 10px; height: 10px; border-radius: 50%; }
+.cl-dot.green { background: var(--green); }
+.cl-dot.red   { background: var(--red);   }
+
+/* ─────────────────────────────────────────────
+   INSIGHTS GRID
+───────────────────────────────────────────── */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.insight-card {
+  border-radius: var(--radius);
+  padding: 1.2rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.insight-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.insight-icon { font-size: 2rem; }
+.insight-label { font-size: .72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+.insight-value { font-size: 1rem; font-weight: 700; margin: .2rem 0 .1rem; }
+.insight-sub   { font-size: .75rem; color: var(--text-muted); }
+
+.highlight-gold   { background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(245,158,11,.04)); border-color: rgba(245,158,11,.3); }
+.highlight-red    { background: linear-gradient(135deg, rgba(239,68,68,.12),  rgba(239,68,68,.04));  border-color: rgba(239,68,68,.3);  }
+.highlight-blue   { background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(59,130,246,.04)); border-color: rgba(59,130,246,.3); }
+.highlight-green  { background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(16,185,129,.04)); border-color: rgba(16,185,129,.3); }
+.highlight-purple { background: linear-gradient(135deg, rgba(168,85,247,.12), rgba(168,85,247,.04)); border-color: rgba(168,85,247,.3); }
+.highlight-teal   { background: linear-gradient(135deg, rgba(6,182,212,.12),  rgba(6,182,212,.04));  border-color: rgba(6,182,212,.3);  }
+
+/* ─────────────────────────────────────────────
+   TABLE
+───────────────────────────────────────────── */
+.table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+.table-card::-webkit-scrollbar { height: 6px; }
+.table-card::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 99px; }
+.table-card .chart-header { padding: 1.25rem 1.25rem 0; }
+.data-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .82rem;
+}
+.data-table th {
+  background: var(--bg-card2);
+  padding: .75rem 1rem;
+  text-align: left;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: .75rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.data-table td {
+  padding: .7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,.02); }
+.data-table .green { color: var(--green); font-weight: 600; }
+.data-table .red   { color: var(--red);   font-weight: 600; }
+.badge {
+  display: inline-block;
+  padding: .15rem .6rem;
+  border-radius: 99px;
+  font-size: .7rem;
+  font-weight: 600;
+}
+.badge-green  { background: rgba(16,185,129,.15); color: var(--green); }
+.badge-red    { background: rgba(239,68,68,.15);  color: var(--red);   }
+.badge-blue   { background: rgba(99,102,241,.18); color: #818cf8; }
+.badge-orange { background: rgba(245,158,11,.18); color: #fbbf24; }
+
+/* Deferred-salary row highlight */
+.row-deferred td:not(:first-child) { opacity: .85; }
+.row-deferred { border-left: 3px solid rgba(245,158,11,.45); }
+
+/* Accrual toggle active state */
+#accrualToggleBtn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ─────────────────────────────────────────────
+   TX CONTROLS
+───────────────────────────────────────────── */
+.tx-controls {
+  display: flex;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.search-input, .select-input {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: .6rem 1rem;
+  font-size: .875rem;
+  outline: none;
+  transition: var(--transition);
+}
+.search-input { flex: 1; min-width: 200px; }
+.search-input:focus, .select-input:focus { border-color: var(--accent); }
+
+/* ─────────────────────────────────────────────
+   CALENDAR
+───────────────────────────────────────────── */
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.cal-month-label { font-size: 1.1rem; font-weight: 700; flex: 1; text-align: center; }
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .75rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.legend-cells { display: flex; gap: .25rem; }
+.heat-cell {
+  width: 20px; height: 20px;
+  border-radius: 4px;
+}
+.h0 { background: var(--bg-card2); }
+.h1 { background: rgba(99,102,241,.25); }
+.h2 { background: rgba(99,102,241,.45); }
+.h3 { background: rgba(99,102,241,.65); }
+.h4 { background: rgba(99,102,241,.9);  }
+
+.calendar-grid-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.cal-day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .35rem;
+  margin-bottom: .5rem;
+}
+.cal-day-headers div {
+  text-align: center;
+  font-size: .72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: .25rem;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .35rem;
+}
+.cal-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 500;
+  cursor: default;
+  transition: var(--transition);
+  position: relative;
+}
+.cal-cell:hover { transform: scale(1.05); }
+.cal-cell.empty { background: transparent; }
+.cal-cell.today { box-shadow: 0 0 0 2px var(--accent); }
+.cal-month-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  gap: 2rem;
+  font-size: .875rem;
+}
+
+/* ─────────────────────────────────────────────
+   BUDGET
+───────────────────────────────────────────── */
+.budget-header-actions { margin-bottom: 1rem; }
+.budget-list { display: flex; flex-direction: column; gap: .75rem; }
+.budget-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+}
+.budget-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .6rem;
+}
+.budget-name { display: flex; align-items: center; gap: .5rem; font-weight: 600; }
+.budget-amounts { font-size: .8rem; color: var(--text-secondary); }
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-card2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), #8b5cf6);
+  transition: width .5s ease;
+}
+.progress-fill.over { background: var(--red); }
+
+/* ─────────────────────────────────────────────
+   SAVINGS GOALS
+───────────────────────────────────────────── */
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.goal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: var(--transition);
+}
+.goal-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.goal-icon { font-size: 2rem; margin-bottom: .75rem; }
+.goal-name { font-weight: 700; margin-bottom: .25rem; }
+.goal-amounts { font-size: .8rem; color: var(--text-secondary); margin-bottom: .75rem; }
+.goal-pct { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin-bottom: .5rem; }
+.goal-deadline { font-size: .72rem; color: var(--text-muted); margin-top: .5rem; }
+
+/* ─────────────────────────────────────────────
+   DEBTS
+───────────────────────────────────────────── */
+.debt-tabs { display: flex; gap: .5rem; margin-bottom: 0; }
+.tab-btn {
+  padding: .5rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: .875rem;
+  transition: var(--transition);
+}
+.tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.debt-list { display: flex; flex-direction: column; gap: .75rem; }
+.debt-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.debt-person { font-weight: 700; }
+.debt-meta { font-size: .78rem; color: var(--text-secondary); }
+.debt-amount { font-size: 1.1rem; font-weight: 800; }
+
+/* ─────────────────────────────────────────────
+   SCHEDULED
+───────────────────────────────────────────── */
+.scheduled-list { display: flex; flex-direction: column; gap: .75rem; }
+.sched-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sched-left { display: flex; align-items: center; gap: .75rem; }
+.sched-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.sched-icon.income { background: rgba(16,185,129,.15); }
+.sched-icon.expense{ background: rgba(239,68,68,.15);  }
+.sched-name { font-weight: 600; }
+.sched-meta { font-size: .75rem; color: var(--text-secondary); }
+.sched-amount { font-weight: 700; font-size: 1rem; }
+
+/* ─────────────────────────────────────────────
+   SUMMARY PAGE
+───────────────────────────────────────────── */
+.summary-hero {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+.summary-stat { flex: 1; text-align: center; }
+.ss-value { font-size: 1.75rem; font-weight: 900; letter-spacing: -.04em; }
+.ss-value.red { color: var(--red); }
+.ss-label { font-size: .78rem; color: var(--text-secondary); margin-top: .25rem; }
+.summary-divider {
+  width: 1px; align-self: stretch;
+  background: var(--border);
+  margin: 0 1.5rem;
+}
+
+.narrative-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.narrative-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: var(--transition);
+}
+.narrative-card:hover { border-color: var(--border-hover); }
+.narrative-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .75rem; }
+.narrative-card p { font-size: .83rem; color: var(--text-secondary); line-height: 1.6; }
+.narrative-card ul { padding-left: 1.1rem; }
+.narrative-card li { font-size: .83rem; color: var(--text-secondary); margin-bottom: .4rem; line-height: 1.5; }
+
+/* ─────────────────────────────────────────────
+   SETTINGS
+───────────────────────────────────────────── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.settings-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.settings-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 1rem; }
+.settings-card label {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  font-size: .8rem;
+  color: var(--text-secondary);
+  margin-bottom: .75rem;
+}
+.toggle-label { flex-direction: row; justify-content: space-between; align-items: center; }
+.toggle {
+  width: 44px; height: 24px;
+  appearance: none;
+  background: var(--bg-card2);
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: var(--transition);
+}
+.toggle:checked { background: var(--accent); }
+.toggle:checked::after { left: 23px; background: #fff; }
+.settings-note { font-size: .8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5; }
+.color-options { display: flex; gap: .5rem; margin-top: .5rem; }
+.color-swatch {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+.color-swatch.active, .color-swatch:hover { border-color: #fff; transform: scale(1.1); }
+.color-swatch[data-color="#6366f1"] { background: #6366f1; }
+.color-swatch[data-color="#10b981"] { background: #10b981; }
+.color-swatch[data-color="#f59e0b"] { background: #f59e0b; }
+.color-swatch[data-color="#ef4444"] { background: #ef4444; }
+.color-swatch[data-color="#06b6d4"] { background: #06b6d4; }
+
+#page-insights .table-card { margin-top: 2rem; }
+
+/* ─────────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────────── */
+.btn-primary {
+  padding: .6rem 1.25rem;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-weight: 600;
+  font-size: .875rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
+#addGoalBtn, #addScheduledBtn { margin-bottom: 1.5rem; }
+#addDebtBtn { margin: 1rem 0; }
+.btn-secondary {
+  padding: .6rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: .875rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-secondary.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ─────────────────────────────────────────────
+   MODALS
+───────────────────────────────────────────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn .2s ease;
+}
+.modal.hidden { display: none; }
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  width: 440px;
+  max-width: 94vw;
+}
+.modal-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; }
+.modal-card label {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  font-size: .8rem;
+  color: var(--text-secondary);
+  margin-bottom: .85rem;
+}
+.modal-card input, .modal-card select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: .6rem .875rem;
+  font-size: .875rem;
+  outline: none;
+  transition: var(--transition);
+}
+.modal-card input:focus, .modal-card select:focus { border-color: var(--accent); }
+.modal-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.25rem; }
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-grid           { grid-template-columns: repeat(2, 1fr); }
+  .narrative-cards    { grid-template-columns: repeat(2, 1fr); }
+  .settings-grid      { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .charts-row         { grid-template-columns: 1fr; }
+  .insights-grid      { grid-template-columns: repeat(2, 1fr); }
+  .goals-grid         { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: 4px 0 32px rgba(0,0,0,.6);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-close-btn {
+    display: flex;
+  }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  .topbar {
+    padding: 0 1rem;
+    gap: .75rem;
+  }
+  .hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .page {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .page-header h1 {
+    font-size: 1.45rem;
+  }
+  .page-header .subtitle {
+    font-size: .82rem;
+  }
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+  }
+  .kpi-card {
+    padding: 1rem;
+    gap: .75rem;
+  }
+  .kpi-icon {
+    font-size: 1.4rem;
+    width: 40px;
+    height: 40px;
+  }
+  .kpi-value {
+    font-size: 1.25rem;
+  }
+  .kpi-label {
+    font-size: .7rem;
+  }
+  .kpi-sub {
+    font-size: .68rem;
+  }
+  .insights-grid {
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+  .insight-card {
+    padding: 1rem 1.1rem;
+  }
+  .chart-header {
+    flex-wrap: wrap;
+    gap: .6rem;
+  }
+  .chart-wrap {
+    height: 230px;
+  }
+  .chart-card.wide .chart-wrap {
+    height: 240px;
+  }
+  .tx-controls {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+  .tx-controls .search-input {
+    width: 100%;
+    min-width: 100%;
+  }
+  .tx-controls select,
+  .tx-controls button {
+    min-height: 40px;
+  }
+  .calendar-controls {
+    gap: .5rem;
+  }
+  .cal-month-label {
+    font-size: 1rem;
+  }
+  .calendar-grid-wrap {
+    padding: .85rem .5rem;
+  }
+  .cal-day-headers div {
+    font-size: .65rem;
+    padding: .15rem;
+  }
+  .cal-cell {
+    font-size: .75rem;
+    border-radius: 4px;
+  }
+  .cal-month-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .85rem;
+    padding: 1rem;
+  }
+  .goals-grid {
+    grid-template-columns: 1fr;
+  }
+  .summary-hero {
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    gap: 1.25rem;
+  }
+  .summary-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+  .ss-value {
+    font-size: 1.45rem;
+  }
+  .narrative-cards {
+    grid-template-columns: 1fr;
+  }
+  .modal-card {
+    padding: 1.35rem 1.15rem;
+  }
+  /* Sticky first column on horizontal table scroll */
+  .data-table th:first-child,
+  .data-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    box-shadow: 2px 0 8px rgba(0,0,0,.35);
+  }
+  .data-table td:first-child {
+    background: var(--bg-card);
+    opacity: 1 !important;
+  }
+  .data-table th:first-child {
+    background: var(--bg-card2);
+    z-index: 3;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .kpi-card {
+    padding: 1rem 1.15rem;
+  }
+  .kpi-value {
+    font-size: 1.4rem;
+  }
+  .tx-controls select,
+  .tx-controls button {
+    width: 100%;
+  }
+  .cal-month-summary {
+    grid-template-columns: 1fr;
+    gap: .6rem;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════  SIDEBAR  ══════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-left">
+      <span class="brand-icon">₹</span>
+      <span class="brand-name">Ledgr</span>
+    </div>
+    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">✕</button>
+  </div>
+
+  <ul class="nav-list">
+    <li class="nav-item active" data-page="dashboard" id="nav-dashboard">
+      <span class="nav-icon">⬡</span><span class="nav-label">Dashboard</span>
+    </li>
+    <li class="nav-item" data-page="analytics" id="nav-analytics">
+      <span class="nav-icon">📈</span><span class="nav-label">Analytics</span>
+    </li>
+    <li class="nav-item" data-page="calendar" id="nav-calendar">
+      <span class="nav-icon">📅</span><span class="nav-label">Calendar View</span>
+    </li>
+    <li class="nav-item" data-page="budget" id="nav-budget">
+      <span class="nav-icon">🎯</span><span class="nav-label">Budget</span>
+    </li>
+    <li class="nav-item" data-page="savings" id="nav-savings">
+      <span class="nav-icon">💰</span><span class="nav-label">Savings Goals</span>
+    </li>
+    <li class="nav-item" data-page="debts" id="nav-debts">
+      <span class="nav-icon">🤝</span><span class="nav-label">Debts & Loans</span>
+    </li>
+    <li class="nav-item" data-page="transactions" id="nav-transactions">
+      <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
+    </li>
+    <li class="nav-item" data-page="scheduled" id="nav-scheduled">
+      <span class="nav-icon">🔁</span><span class="nav-label">Scheduled</span>
+    </li>
+    <li class="nav-item" data-page="summary" id="nav-summary">
+      <span class="nav-icon">📊</span><span class="nav-label">Personal Summary</span>
+    </li>
+    <li class="nav-item" data-page="settings" id="nav-settings">
+      <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <button class="dark-mode-btn" id="darkModeBtn">🌙 Dark Mode</button>
+  </div>
+</nav>
+
+<!-- Sidebar mobile backdrop overlay -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ══════════════════════════  MAIN  ══════════════════════════ -->
+<main class="main-content" id="mainContent">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn-icon" title="Notifications">🔔</button>
+      <div class="avatar">N</div>
+    </div>
+  </header>
+
+  <!-- ── PAGE: DASHBOARD ── -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <h1>Good afternoon, Nasif 👋</h1>
+      <p class="subtitle">Here's your financial snapshot · <span id="currentDate"></span></p>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-icon">💼</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Current Balance</div>
+          <div class="kpi-value" id="kpi-balance">৳196,414</div>
+          <div class="kpi-sub">As of July 2026</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-green">
+        <div class="kpi-icon">📥</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Income (5 yr)</div>
+          <div class="kpi-value">৳38.9L</div>
+          <div class="kpi-sub">Avg ৳65,997/mo</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-red">
+        <div class="kpi-icon">📤</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Spent (5 yr)</div>
+          <div class="kpi-value">৳40.3L</div>
+          <div class="kpi-sub">Avg ৳68,222/mo</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-purple">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Transactions</div>
+          <div class="kpi-value">1,012</div>
+          <div class="kpi-sub">Across 59 months</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>Income vs Spending Trend</h3>
+          <div class="chart-filters">
+            <button class="filter-btn active" data-range="all">All</button>
+            <button class="filter-btn" data-range="2y">2Y</button>
+            <button class="filter-btn" data-range="1y">1Y</button>
+            <button class="filter-btn" data-range="6m">6M</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Savings Rate</h3></div>
+        <div class="chart-wrap">
+          <canvas id="savingsRateChart"></canvas>
+        </div>
+        <div class="chart-legend-row">
+          <div class="cl-item"><span class="cl-dot green"></span>Positive months: 35</div>
+          <div class="cl-item"><span class="cl-dot red"></span>Negative months: 24</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance & Net savings -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><h3>Running Balance</h3></div>
+        <div class="chart-wrap">
+          <canvas id="balanceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Monthly Net Savings</h3></div>
+        <div class="chart-wrap">
+          <canvas id="netSavingsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick insights -->
+    <div class="insights-grid">
+      <div class="insight-card highlight-gold">
+        <div class="insight-icon">🏆</div>
+        <div class="insight-body">
+          <div class="insight-label">Best Month</div>
+          <div class="insight-value">August 2025</div>
+          <div class="insight-sub">৳3,03,746 saved</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-red">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-body">
+          <div class="insight-label">Worst Month</div>
+          <div class="insight-value">October 2025</div>
+          <div class="insight-sub">–৳3,88,841 (net loss)</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-blue">
+        <div class="insight-icon">💸</div>
+        <div class="insight-body">
+          <div class="insight-label">Highest Spend</div>
+          <div class="insight-value">October 2025</div>
+          <div class="insight-sub">৳4,59,837 spent</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-green">
+        <div class="insight-icon">📈</div>
+        <div class="insight-body">
+          <div class="insight-label">Highest Income</div>
+          <div class="insight-value">August 2025</div>
+          <div class="insight-sub">৳3,32,462 received</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-purple">
+        <div class="insight-icon">🔥</div>
+        <div class="insight-body">
+          <div class="insight-label">Busiest Month</div>
+          <div class="insight-value">April 2026</div>
+          <div class="insight-sub">48 transactions</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-teal">
+        <div class="insight-icon">📅</div>
+        <div class="insight-body">
+          <div class="insight-label">Tracking Period</div>
+          <div class="insight-value">Sep 2021 – Jul 2026</div>
+          <div class="insight-sub">59 months of history</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: ANALYTICS ── -->
+  <section class="page" id="page-analytics">
+    <div class="page-header">
+      <h1>Analytics</h1>
+      <p class="subtitle">Deep-dive into your financial data</p>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>Year-by-Year Comparison</h3>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="yearlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><h3>Transactions per Month</h3></div>
+        <div class="chart-wrap">
+          <canvas id="txChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Yearly Savings Breakdown</h3></div>
+        <div class="chart-wrap">
+          <canvas id="yearlySavingsBar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yearly table -->
+    <div class="table-card">
+      <div class="chart-header"><h3>Annual Summary Table</h3></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Year</th><th>Months</th><th>Total Income</th><th>Total Spent</th><th>Net Savings</th><th>Transactions</th><th>Savings Rate</th></tr>
+        </thead>
+        <tbody id="yearlyTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: CALENDAR VIEW ── -->
+  <section class="page" id="page-calendar">
+    <div class="page-header">
+      <h1>Calendar View</h1>
+      <p class="subtitle">Visualise spending by date — powered by Ledgr-style heat mapping</p>
+    </div>
+    <div class="calendar-controls">
+      <button class="btn-secondary" id="calPrev">← Prev</button>
+      <span class="cal-month-label" id="calMonthLabel"></span>
+      <button class="btn-secondary" id="calNext">Next →</button>
+    </div>
+    <div class="calendar-legend">
+      <span>Low spend</span>
+      <div class="legend-cells">
+        <div class="heat-cell h0"></div>
+        <div class="heat-cell h1"></div>
+        <div class="heat-cell h2"></div>
+        <div class="heat-cell h3"></div>
+        <div class="heat-cell h4"></div>
+      </div>
+      <span>High spend</span>
+    </div>
+    <div class="calendar-grid-wrap">
+      <div class="cal-day-headers">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+    <div class="cal-month-summary" id="calMonthSummary"></div>
+  </section>
+
+  <!-- ── PAGE: BUDGET ── -->
+  <section class="page" id="page-budget">
+    <div class="page-header">
+      <h1>Budget Planner</h1>
+      <p class="subtitle">Set monthly spending limits by category</p>
+    </div>
+    <div class="budget-header-actions">
+      <button class="btn-primary" id="addBudgetBtn">+ Add Budget</button>
+    </div>
+    <div class="budget-list" id="budgetList"></div>
+    <div class="modal hidden" id="budgetModal">
+      <div class="modal-card">
+        <h3>New Budget Category</h3>
+        <label>Category Name<input type="text" id="budgetCatInput" placeholder="e.g. Groceries" /></label>
+        <label>Monthly Limit (৳)<input type="number" id="budgetLimitInput" placeholder="15000" /></label>
+        <label>Icon<input type="text" id="budgetIconInput" placeholder="🛒" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelBudget">Cancel</button>
+          <button class="btn-primary" id="saveBudget">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SAVINGS ── -->
+  <section class="page" id="page-savings">
+    <div class="page-header">
+      <h1>Savings Goals</h1>
+      <p class="subtitle">Create and track your financial targets</p>
+    </div>
+    <button class="btn-primary" id="addGoalBtn">+ New Goal</button>
+    <div class="goals-grid" id="goalsGrid"></div>
+    <div class="modal hidden" id="goalModal">
+      <div class="modal-card">
+        <h3>New Savings Goal</h3>
+        <label>Goal Name<input type="text" id="goalNameInput" placeholder="e.g. Emergency Fund" /></label>
+        <label>Target Amount (৳)<input type="number" id="goalTargetInput" placeholder="100000" /></label>
+        <label>Current Saved (৳)<input type="number" id="goalCurrentInput" placeholder="0" /></label>
+        <label>Deadline<input type="date" id="goalDeadlineInput" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelGoal">Cancel</button>
+          <button class="btn-primary" id="saveGoal">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: DEBTS ── -->
+  <section class="page" id="page-debts">
+    <div class="page-header">
+      <h1>Debts & Loans</h1>
+      <p class="subtitle">Track money you owe or are owed</p>
+    </div>
+    <div class="debt-tabs">
+      <button class="tab-btn active" data-tab="owe">I Owe</button>
+      <button class="tab-btn" data-tab="owed">Owed to Me</button>
+    </div>
+    <button class="btn-primary" id="addDebtBtn">+ Add Entry</button>
+    <div class="debt-list" id="debtList"></div>
+    <div class="modal hidden" id="debtModal">
+      <div class="modal-card">
+        <h3>New Debt Entry</h3>
+        <label>Person / Institution<input type="text" id="debtPersonInput" placeholder="e.g. Karim Bhai" /></label>
+        <label>Amount (৳)<input type="number" id="debtAmountInput" placeholder="5000" /></label>
+        <label>Due Date<input type="date" id="debtDueInput" /></label>
+        <label>Note<input type="text" id="debtNoteInput" placeholder="Optional note" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelDebt">Cancel</button>
+          <button class="btn-primary" id="saveDebt">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: TRANSACTIONS ── -->
+  <section class="page" id="page-transactions">
+    <div class="page-header">
+      <h1>Transaction History</h1>
+      <p class="subtitle">Browse all monthly records — Sep 2021 to Jul 2026</p>
+    </div>
+    <div class="tx-controls">
+      <input type="text" id="txSearch" placeholder="🔍 Search month..." class="search-input" title="Search month" aria-label="Search month" />
+      <select id="txFilter" class="select-input" title="Filter by status" aria-label="Filter by status">
+        <option value="all">All months</option>
+        <option value="positive">Savings months</option>
+        <option value="negative">Deficit months</option>
+      </select>
+      <select id="txYear" class="select-input" title="Filter by year" aria-label="Filter by year">
+        <option value="all">All years</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+      </select>
+      <button id="accrualToggleBtn" class="btn-secondary" title="Toggle between cash-flow and accrual-smoothed salary view">📈 Accrual View</button>
+    </div>
+    <div class="table-card">
+      <table class="data-table" id="txTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Income</th>
+            <th>Salary</th>
+            <th>Spent</th>
+            <th>Net Savings</th>
+            <th>Tx Count</th>
+            <th>Ending Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="txTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SCHEDULED ── -->
+  <section class="page" id="page-scheduled">
+    <div class="page-header">
+      <h1>Scheduled Transactions</h1>
+      <p class="subtitle">Automate recurring income and expenses</p>
+    </div>
+    <button class="btn-primary" id="addScheduledBtn">+ Add Recurring</button>
+    <div class="scheduled-list" id="scheduledList"></div>
+    <div class="modal hidden" id="scheduledModal">
+      <div class="modal-card">
+        <h3>Recurring Transaction</h3>
+        <label>Name<input type="text" id="schedNameInput" placeholder="e.g. Rent" /></label>
+        <label>Amount (৳)<input type="number" id="schedAmountInput" /></label>
+        <label>Type
+          <select id="schedTypeInput">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </label>
+        <label>Frequency
+          <select id="schedFreqInput">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </label>
+        <label>Next Due<input type="date" id="schedDueInput" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelScheduled">Cancel</button>
+          <button class="btn-primary" id="saveScheduled">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: PERSONAL SUMMARY ── -->
+  <section class="page" id="page-summary">
+    <div class="page-header">
+      <h1>Personal Financial Summary</h1>
+      <p class="subtitle">A narrative of your 5-year financial journey (Sep 2021 – Jul 2026)</p>
+    </div>
+
+    <div class="summary-hero">
+      <div class="summary-stat">
+        <div class="ss-value">৳38,98,020</div>
+        <div class="ss-label">Total Lifetime Income</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value">৳40,26,030</div>
+        <div class="ss-label">Total Lifetime Spending</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value red">–৳1,28,011</div>
+        <div class="ss-label">Net 5-Year Position</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value">৳1,96,415</div>
+        <div class="ss-label">Current Balance</div>
+      </div>
+    </div>
+
+    <div class="narrative-cards">
+      <div class="narrative-card">
+        <h3>🚀 Your Journey Began</h3>
+        <p>You started tracking in <strong>September 2021</strong> with just ৳34,317 in hand. Over the next 59 months you logged <strong>1,012 transactions</strong>, creating one of the most detailed personal financial records possible.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>📈 Income Growth Story</h3>
+        <p>Your average monthly income grew from ~৳36,000 in 2021–22 to over <strong>৳97,000/month in 2025</strong>. Total salary earned across 5 years: <strong>৳24.6 lakh</strong>, with additional income from other sources.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>⚡ Spending Spikes</h3>
+        <p>Three dramatic spending events stand out: <strong>Jan 2024</strong> (৳4.5L), <strong>Oct 2025</strong> (৳4.6L), and <strong>May 2026</strong> (৳3.9L) — each likely representing a major life purchase or event. These three months alone account for <strong>32% of total lifetime spending</strong>.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>💰 Your Best Financial Periods</h3>
+        <p><strong>August 2025</strong> was your single best month — ৳3.32L income with only ৳28.7K spent, netting you <strong>৳3,03,746</strong>. Your best year was <strong>2025</strong> with ৳14.1L income, though heavy spending kept overall net at –৳14,457.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>📉 Challenging Months</h3>
+        <p>24 out of 59 months (41%) ended with a deficit. The toughest was <strong>October 2025</strong> with a –৳3,88,841 swing. High-spend months without matching income appear to be tied to major purchases, suggesting lumpy spending behavior.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>🎯 Key Takeaways & Recommendations</h3>
+        <ul>
+          <li>Build a dedicated <strong>3-month emergency fund</strong> (~৳2L based on avg spending)</li>
+          <li>Your income is <strong>irregular</strong> — consider smoothing salary via systematic savings</li>
+          <li>Average savings rate is <strong>–3.3%</strong> — target positive savings each month</li>
+          <li>Your 2026 trajectory is positive with strong March (৳1.1L savings) and June (৳87K savings)</li>
+          <li>Transaction volume is rising — <strong>April 2026's 48 transactions</strong> shows increased financial activity</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Year-by-year narrative table -->
+    <div class="table-card">
+      <div class="chart-header"><h3>Year-by-Year Personal Report</h3></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Year</th><th>Income</th><th>Spent</th><th>Net</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2021 (4 mo)</td><td>৳1,76,601</td><td>৳78,724</td><td class="green">+৳97,877</td><td>🟢 Strong Start</td></tr>
+          <tr><td>2022 (12 mo)</td><td>৳4,89,059</td><td>৳5,10,047</td><td class="red">–৳20,988</td><td>🔴 Slight Deficit</td></tr>
+          <tr><td>2023 (12 mo)</td><td>৳6,05,671</td><td>৳5,59,394</td><td class="green">+৳46,277</td><td>🟢 Recovery Year</td></tr>
+          <tr><td>2024 (12 mo)</td><td>৳8,88,102</td><td>৳9,74,783</td><td class="red">–₳86,681</td><td>🔴 Big-ticket spending</td></tr>
+          <tr><td>2025 (12 mo)</td><td>৳14,06,552</td><td>৳14,20,993</td><td class="red">–৳14,441</td><td>🟡 Nearly breakeven</td></tr>
+          <tr><td>2026 (7 mo)</td><td>৳7,33,076</td><td>৳9,44,734</td><td class="red">–৳2,11,657</td><td>🟡 Recovering in H2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SETTINGS ── -->
+  <section class="page" id="page-settings">
+    <div class="page-header">
+      <h1>Settings</h1>
+      <p class="subtitle">Preferences & account configuration</p>
+    </div>
+    <div class="settings-grid">
+      <div class="settings-card">
+        <h3>🌍 Currency & Region</h3>
+        <label>Currency<select class="select-input"><option>BDT (৳)</option><option>USD ($)</option><option>EUR (€)</option></select></label>
+        <label>Date Format<select class="select-input"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select></label>
+      </div>
+      <div class="settings-card">
+        <h3>🎨 Appearance</h3>
+        <label class="toggle-label">Dark Mode<input type="checkbox" id="darkToggle" class="toggle" /></label>
+        <label>Accent Color
+          <div class="color-options">
+            <div class="color-swatch active" data-color="#6366f1"></div>
+            <div class="color-swatch" data-color="#10b981"></div>
+            <div class="color-swatch" data-color="#f59e0b"></div>
+            <div class="color-swatch" data-color="#ef4444"></div>
+            <div class="color-swatch" data-color="#06b6d4"></div>
+          </div>
+        </label>
+      </div>
+      <div class="settings-card">
+        <h3>🔒 Privacy & Data</h3>
+        <p class="settings-note">All your data is stored locally in your browser. Nothing is sent to external servers.</p>
+        <button class="btn-secondary" id="exportCSVBtn">📤 Export as CSV</button>
+        <button class="btn-secondary danger" id="clearDataBtn">🗑️ Clear All Data</button>
+      </div>
+      <div class="settings-card">
+        <h3>🔔 Notifications</h3>
+        <label class="toggle-label">Budget alerts<input type="checkbox" class="toggle" checked /></label>
+        <label class="toggle-label">Monthly summary<input type="checkbox" class="toggle" checked /></label>
+        <label class="toggle-label">Scheduled reminders<input type="checkbox" class="toggle" /></label>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ══════════════════════════════════════════════
+   LEDGR — app.js
+   Data is auto-injected from data/finance_data.json
+   by the CI pipeline (execution/inject_data.py).
+   At runtime the app also tries to fetch fresh data
+   from the Cloudflare Worker for instant updates.
+══════════════════════════════════════════════ */
+
+'use strict';
+
+// ─────────────────────────────────────────────
+// LIVE DATA CONFIG
+// ─────────────────────────────────────────────
+// Set WORKER_URL to your Cloudflare Worker URL after deploying it.
+// Leave as null to always use baked-in data (local / offline use).
+const WORKER_URL = null; // e.g. 'https://ledgr-finance-proxy.your-name.workers.dev'
+
+
+// ─────────────────────────────────────────────
+// DATA: auto-generated from data/finance_data.json
+// ─────────────────────────────────────────────
+// NOTE: salary=actual cash received; accrualSalary=bulk payments split evenly across the months they cover
+// savings=cash-flow net; normalizedSavings=accrual-based net (smoothed)
+const MONTHLY_DATA = [
+  { label:"Sep 2021", iso:"2021-09", spent:0, income:34317.14, salary:34315.0, accrualSalary:34315.0, savings:34317.14, normalizedSavings:34317.14, balance:34317.14, tx:2 },
+  { label:"Oct 2021", iso:"2021-10", spent:3007.0, income:29168.64, salary:25096.0, accrualSalary:25096.0, savings:26161.64, normalizedSavings:26161.64, balance:60478.78, tx:6 },
+  { label:"Nov 2021", iso:"2021-11", spent:56283.0, income:37030.86, salary:23963.0, accrualSalary:23963.0, savings:-19252.14, normalizedSavings:-19252.14, balance:41226.64, tx:15 },
+  { label:"Dec 2021", iso:"2021-12", spent:19434.0, income:76083.94, salary:23988.0, accrualSalary:23988.0, savings:56649.94, normalizedSavings:56649.94, balance:97876.58, tx:11 },
+  { label:"Jan 2022", iso:"2022-01", spent:51439.0, income:38063.0, salary:28063.0, accrualSalary:28063.0, savings:-13376.0, normalizedSavings:-13376.0, balance:84500.58, tx:15 },
+  { label:"Feb 2022", iso:"2022-02", spent:2565.0, income:53303.29, salary:28103.0, accrualSalary:28103.0, savings:50738.29, normalizedSavings:50738.29, balance:135238.87, tx:13 },
+  { label:"Mar 2022", iso:"2022-03", spent:42970.0, income:30244.56, salary:28033.0, accrualSalary:28033.0, savings:-12725.44, normalizedSavings:-12725.44, balance:122513.43, tx:13 },
+  { label:"Apr 2022", iso:"2022-04", spent:13277.0, income:57290.5, salary:28073.0, accrualSalary:28073.0, savings:44013.5, normalizedSavings:44013.5, balance:166526.93, tx:10 },
+  { label:"May 2022", iso:"2022-05", spent:5186.0, income:39419.36, salary:27898.0, accrualSalary:27898.0, savings:34233.36, normalizedSavings:34233.36, balance:200760.29, tx:8 },
+  { label:"Jun 2022", iso:"2022-06", spent:63597.0, income:83427.88, salary:58093.0, accrualSalary:58093.0, savings:19830.88, normalizedSavings:19830.88, balance:220591.17, tx:12 },
+  { label:"Jul 2022", iso:"2022-07", spent:18921.0, income:53092.48, salary:26678.0, accrualSalary:26678.0, savings:34171.48, normalizedSavings:34171.48, balance:254762.65, tx:11 },
+  { label:"Aug 2022", iso:"2022-08", spent:307947.0, income:82152.94, salary:26843.0, accrualSalary:26843.0, savings:-225794.06, normalizedSavings:-225794.06, balance:28968.59, tx:15 },
+  { label:"Sep 2022", iso:"2022-09", spent:13395.0, income:43057.04, salary:26793.0, accrualSalary:26793.0, savings:29662.04, normalizedSavings:29662.04, balance:58630.63, tx:10 },
+  { label:"Oct 2022", iso:"2022-10", spent:27557.0, income:60440.56, salary:26628.0, accrualSalary:26628.0, savings:32883.56, normalizedSavings:32883.56, balance:91514.19, tx:12 },
+  { label:"Nov 2022", iso:"2022-11", spent:10327.0, income:41793.59, salary:26748.0, accrualSalary:26748.0, savings:31466.59, normalizedSavings:31466.59, balance:122980.78, tx:9 },
+  { label:"Dec 2022", iso:"2022-12", spent:28568.0, income:115883.15, salary:43363.0, accrualSalary:43363.0, savings:87315.15, normalizedSavings:87315.15, balance:210295.93, tx:14 },
+  { label:"Jan 2023", iso:"2023-01", spent:35082.0, income:29190.28, salary:0, accrualSalary:0, savings:-5891.72, normalizedSavings:-5891.72, balance:204404.21, tx:14 },
+  { label:"Feb 2023", iso:"2023-02", spent:24266.0, income:86138.18, salary:64790.0, accrualSalary:64790.0, savings:61872.18, normalizedSavings:61872.18, balance:266276.39, tx:16 },
+  { label:"Mar 2023", iso:"2023-03", spent:61740.0, income:46900.0, salary:0, accrualSalary:0, savings:-14840.0, normalizedSavings:-14840.0, balance:251436.39, tx:12 },
+  { label:"Apr 2023", iso:"2023-04", spent:74611.0, income:98250.0, salary:84750.0, accrualSalary:84750.0, savings:23639.0, normalizedSavings:23639.0, balance:275075.39, tx:18 },
+  { label:"May 2023", iso:"2023-05", spent:27775.0, income:46901.92, salary:32150.0, accrualSalary:32150.0, savings:19126.92, normalizedSavings:19126.92, balance:294202.31, tx:12 },
+  { label:"Jun 2023", iso:"2023-06", spent:8878.0, income:61291.39, salary:32236.0, accrualSalary:32236.0, savings:52413.39, normalizedSavings:52413.39, balance:346615.7, tx:11 },
+  { label:"Jul 2023", iso:"2023-07", spent:90466.0, income:48907.61, salary:30837.0, accrualSalary:30837.0, savings:-41558.39, normalizedSavings:-41558.39, balance:305057.31, tx:17 },
+  { label:"Aug 2023", iso:"2023-08", spent:31583.0, income:40764.04, salary:32147.0, accrualSalary:32147.0, savings:9181.04, normalizedSavings:9181.04, balance:314238.35, tx:11 },
+  { label:"Sep 2023", iso:"2023-09", spent:27688.0, income:47516.39, salary:31923.0, accrualSalary:31923.0, savings:19828.39, normalizedSavings:19828.39, balance:334066.74, tx:15 },
+  { label:"Oct 2023", iso:"2023-10", spent:65085.0, income:62763.14, salary:32195.0, accrualSalary:32195.0, savings:-2321.86, normalizedSavings:-2321.86, balance:331744.88, tx:15 },
+  { label:"Nov 2023", iso:"2023-11", spent:12020.0, income:52871.74, salary:32123.0, accrualSalary:32123.0, savings:40851.74, normalizedSavings:40851.74, balance:372596.62, tx:10 },
+  { label:"Dec 2023", iso:"2023-12", spent:47605.0, income:66148.0, salary:0, accrualSalary:0, savings:18543.0, normalizedSavings:18543.0, balance:391139.62, tx:15 },
+  { label:"Jan 2024", iso:"2024-01", spent:451940.0, income:110682.0, salary:92952.0, accrualSalary:92952.0, savings:-341258.0, normalizedSavings:-341258.0, balance:49881.62, tx:24 },
+  { label:"Feb 2024", iso:"2024-02", spent:7143.0, income:48710.16, salary:41164.0, accrualSalary:41164.0, savings:41567.16, normalizedSavings:41567.16, balance:91448.78, tx:11 },
+  { label:"Mar 2024", iso:"2024-03", spent:13703.0, income:72840.67, salary:67555.0, accrualSalary:67555.0, savings:59137.67, normalizedSavings:59137.67, balance:150586.45, tx:13 },
+  { label:"Apr 2024", iso:"2024-04", spent:41811.0, income:51232.0, salary:41185.0, accrualSalary:41185.0, savings:9421.0, normalizedSavings:9421.0, balance:160007.45, tx:13 },
+  { label:"May 2024", iso:"2024-05", spent:56764.0, income:14457.53, salary:0, accrualSalary:0, savings:-42306.47, normalizedSavings:-42306.47, balance:117700.98, tx:17 },
+  { label:"Jun 2024", iso:"2024-06", spent:55233.0, income:148930.1, salary:108836.0, accrualSalary:108836.0, savings:93697.1, normalizedSavings:93697.1, balance:211398.08, tx:21 },
+  { label:"Jul 2024", iso:"2024-07", spent:124379.0, income:15936.0, salary:0, accrualSalary:0, savings:-108443.0, normalizedSavings:-108443.0, balance:102955.08, tx:16 },
+  { label:"Aug 2024", iso:"2024-08", spent:40781.0, income:58499.0, salary:41807.0, accrualSalary:41807.0, savings:17718.0, normalizedSavings:17718.0, balance:120673.08, tx:16 },
+  { label:"Sep 2024", iso:"2024-09", spent:79848.0, income:97543.0, salary:82903.0, accrualSalary:82903.0, savings:17695.0, normalizedSavings:17695.0, balance:138368.08, tx:18 },
+  { label:"Oct 2024", iso:"2024-10", spent:51643.0, income:82056.0, salary:41310.0, accrualSalary:41310.0, savings:30413.0, normalizedSavings:30413.0, balance:168781.08, tx:19 },
+  { label:"Nov 2024", iso:"2024-11", spent:34880.0, income:17082.0, salary:0, accrualSalary:0, savings:-17798.0, normalizedSavings:-17798.0, balance:150983.08, tx:14 },
+  { label:"Dec 2024", iso:"2024-12", spent:75414.0, income:171208.07, salary:109031.0, accrualSalary:109031.0, savings:95794.07, normalizedSavings:95794.07, balance:246777.15, tx:22 },
+  { label:"Jan 2025", iso:"2025-01", spent:34171.0, income:19414.03, salary:0, accrualSalary:0, savings:-14756.97, normalizedSavings:-14756.97, balance:232020.18, tx:17 },
+  { label:"Feb 2025", iso:"2025-02", spent:10481.0, income:113731.86, salary:93840.0, accrualSalary:93840.0, savings:103250.86, normalizedSavings:103250.86, balance:335271.04, tx:15 },
+  { label:"Mar 2025", iso:"2025-03", spent:47959.0, income:85229.41, salary:46768.0, accrualSalary:46768.0, savings:37270.41, normalizedSavings:37270.41, balance:372541.45, tx:17 },
+  { label:"Apr 2025", iso:"2025-04", spent:347688.0, income:102281.0, salary:46895.0, accrualSalary:46895.0, savings:-245407.0, normalizedSavings:-245407.0, balance:127134.45, tx:22 },
+  { label:"May 2025", iso:"2025-05", spent:74350.0, income:61952.0, salary:0, accrualSalary:0, savings:-12398.0, normalizedSavings:-12398.0, balance:114736.45, tx:25 },
+  { label:"Jun 2025", iso:"2025-06", spent:26343.0, income:106317.61, salary:92818.0, accrualSalary:92818.0, savings:79974.61, normalizedSavings:79974.61, balance:194711.06, tx:19 },
+  { label:"Jul 2025", iso:"2025-07", spent:69014.0, income:69845.37, salary:46635.0, accrualSalary:46635.0, savings:831.37, normalizedSavings:831.37, balance:195542.43, tx:23 },
+  { label:"Aug 2025", iso:"2025-08", spent:28716.0, income:332462.0, salary:0, accrualSalary:0, savings:303746.0, normalizedSavings:303746.0, balance:499288.43, tx:13 },
+  { label:"Sep 2025", iso:"2025-09", spent:88285.0, income:138471.0, salary:92921.0, accrualSalary:92921.0, savings:50186.0, normalizedSavings:50186.0, balance:549474.43, tx:31 },
+  { label:"Oct 2025", iso:"2025-10", spent:459837.0, income:70996.37, salary:46841.0, accrualSalary:46841.0, savings:-388840.63, normalizedSavings:-388840.63, balance:160633.8, tx:26 },
+  { label:"Nov 2025", iso:"2025-11", spent:58299.45, income:59293.0, salary:46823.0, accrualSalary:46823.0, savings:993.55, normalizedSavings:993.55, balance:161627.35, tx:36 },
+  { label:"Dec 2025", iso:"2025-12", spent:21145.0, income:267590.62, salary:76443.0, accrualSalary:76443.0, savings:246445.62, normalizedSavings:246445.62, balance:408072.97, tx:26 },
+  { label:"Jan 2026", iso:"2026-01", spent:176465.0, income:31668.87, salary:0, accrualSalary:0, savings:-144796.13, normalizedSavings:-144796.13, balance:263276.84, tx:20 },
+  { label:"Feb 2026", iso:"2026-02", spent:50786.0, income:63436.0, salary:60936.0, accrualSalary:60936.0, savings:12650.0, normalizedSavings:12650.0, balance:275926.84, tx:24 },
+  { label:"Mar 2026", iso:"2026-03", spent:56346.0, income:167818.0, salary:156168.0, accrualSalary:156168.0, savings:111472.0, normalizedSavings:111472.0, balance:387398.84, tx:25 },
+  { label:"Apr 2026", iso:"2026-04", spent:196285.53, income:201468.87, salary:60900.0, accrualSalary:60900.0, savings:5183.34, normalizedSavings:5183.34, balance:392582.18, tx:48 },
+  { label:"May 2026", iso:"2026-05", spent:391577.59, income:87720.0, salary:0, accrualSalary:0, savings:-303857.59, normalizedSavings:-303857.59, balance:88724.59, tx:28 },
+  { label:"Jun 2026", iso:"2026-06", spent:47674.12, income:134724.0, salary:121374.0, accrualSalary:121374.0, savings:87049.88, normalizedSavings:87049.88, balance:175774.47, tx:19 },
+  { label:"Jul 2026", iso:"2026-07", spent:25600.0, income:46240.37, salary:0, accrualSalary:0, savings:20640.37, normalizedSavings:20640.37, balance:196414.84, tx:10 }
+];
+
+const YEARLY_DATA = {
+  '2021': { income:176600.58, spent:78724.0, savings:97876.58, normalizedSavings:97876.58, tx:34 },
+  '2022': { income:698168.35, spent:585749.0, savings:112419.35, normalizedSavings:112419.35, tx:142 },
+  '2023': { income:687642.69, spent:506799.0, savings:180843.69, normalizedSavings:180843.69, tx:166 },
+  '2024': { income:889176.53, spent:1033539.0, savings:-144362.47, normalizedSavings:-144362.47, tx:204 },
+  '2025': { income:1427584.27, spent:1266288.45, savings:161295.82, normalizedSavings:161295.82, tx:270 },
+  '2026': { income:733076.11, spent:944734.24, savings:-211658.13, normalizedSavings:-211658.13, tx:174 }
+};
+
+
+// ─────────────────────────────────────────────
+// LIVE DATA LOADER
+// ─────────────────────────────────────────────
+/**
+ * Fetch fresh data from Cloudflare Worker and overwrite baked-in constants.
+ * Silently falls back to baked-in data if WORKER_URL is null, offline, or fails.
+ * Called once after DOMContentLoaded so the initial render uses baked-in data
+ * (instant) and the live refresh happens in the background.
+ */
+async function tryLoadLiveData() {
+  if (!WORKER_URL) return;
+  try {
+    const resp = await fetch(WORKER_URL, { cache: 'no-cache' });
+    if (!resp.ok) return;
+    const json = await resp.json();
+    if (!json.monthly_series || !json.yearly) return;
+
+    // Overwrite globals in-place
+    MONTHLY_DATA.length = 0;
+    json.monthly_series.forEach(r => MONTHLY_DATA.push(r));
+    Object.keys(YEARLY_DATA).forEach(k => delete YEARLY_DATA[k]);
+    Object.assign(YEARLY_DATA, json.yearly);
+
+    // Re-render with live data
+    buildTrendChart(activeRange);
+    buildSavingsRateChart();
+    buildBalanceChart();
+    buildNetSavingsChart();
+    buildYearlyChart();
+    buildTxChart();
+    buildYearlySavingsBar();
+    buildYearlyTable();
+    populateSummary();
+    console.info('[Ledgr] Live data refreshed from Worker.');
+  } catch (_) { /* offline or Worker unavailable — keep baked-in data */ }
+}
+
+// ─────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────
+const fmt = (n, compact=false) => {
+  if (compact && Math.abs(n) >= 100000) return '৳' + (n/100000).toFixed(1) + 'L';
+  if (compact && Math.abs(n) >= 1000)   return '৳' + (n/1000).toFixed(1) + 'K';
+  return '৳' + Math.round(n).toLocaleString('en-IN');
+};
+
+function el(id) { return document.getElementById(id); }
+
+function setCurrentDate() {
+  const d = new Date();
+  el('currentDate').textContent = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+const PAGES = ['dashboard','analytics','calendar','budget','savings','debts','transactions','scheduled','summary','settings'];
+
+function navigate(page) {
+  PAGES.forEach(p => {
+    const pg  = el(`page-${p}`);
+    const nav = el(`nav-${p}`);
+    if (pg)  pg.classList.toggle('active', p === page);
+    if (nav) nav.classList.toggle('active', p === page);
+  });
+  el('topbarTitle').textContent = {
+    dashboard:'Dashboard', analytics:'Analytics', calendar:'Calendar View',
+    budget:'Budget Planner', savings:'Savings Goals', debts:'Debts & Loans',
+    transactions:'Transactions', scheduled:'Scheduled', summary:'Personal Summary',
+    settings:'Settings'
+  }[page] || page;
+  // Close sidebar & backdrop on mobile navigation
+  closeSidebar();
+}
+
+function closeSidebar() {
+  const sidebar = el('sidebar');
+  const backdrop = el('sidebarBackdrop');
+  if (sidebar) sidebar.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+}
+
+function toggleSidebar() {
+  const sidebar = el('sidebar');
+  const backdrop = el('sidebarBackdrop');
+  if (sidebar) {
+    const isOpen = sidebar.classList.toggle('open');
+    if (backdrop) backdrop.classList.toggle('open', isOpen);
+  }
+}
+
+function initNav() {
+  PAGES.forEach(p => {
+    const nav = el(`nav-${p}`);
+    if (nav) nav.addEventListener('click', () => navigate(p));
+  });
+  el('hamburger')?.addEventListener('click', toggleSidebar);
+  el('sidebarCloseBtn')?.addEventListener('click', closeSidebar);
+  el('sidebarBackdrop')?.addEventListener('click', closeSidebar);
+}
+
+// ─────────────────────────────────────────────
+// CHART HELPERS
+// ─────────────────────────────────────────────
+Chart.defaults.color = '#8b8fa8';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+const COLORS = {
+  income:  '#10b981',
+  spent:   '#ef4444',
+  savings: '#6366f1',
+  balance: '#06b6d4',
+  gold:    '#f59e0b',
+};
+
+function lineDataset(label, data, color, fill=false) {
+  return {
+    label, data,
+    borderColor: color,
+    backgroundColor: fill ? color + '18' : 'transparent',
+    fill,
+    borderWidth: 2,
+    pointRadius: 0,
+    pointHoverRadius: 5,
+    tension: 0.4,
+  };
+}
+
+function barDataset(label, data, color) {
+  return { label, data, backgroundColor: color + 'cc', borderRadius: 4, borderSkipped: false };
+}
+
+// ─────────────────────────────────────────────
+// RANGE FILTER
+// ─────────────────────────────────────────────
+let trendChart = null;
+let activeRange = 'all';
+
+function getFilteredData(range) {
+  const n = { '6m':6, '1y':12, '2y':24 }[range];
+  return n ? MONTHLY_DATA.slice(-n) : MONTHLY_DATA;
+}
+
+function buildTrendChart(range='all') {
+  const data = getFilteredData(range);
+  const labels = data.map(d => d.label);
+
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(el('trendChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        lineDataset('Income',  data.map(d => d.income), COLORS.income,  true),
+        lineDataset('Spending',data.map(d => d.spent),  COLORS.spent,   true),
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: { legend: { position:'top' }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { maxTicksLimit: 12, maxRotation: 45 } },
+        y: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// DASHBOARD CHARTS
+// ─────────────────────────────────────────────
+function buildSavingsRateChart() {
+  const positive = MONTHLY_DATA.filter(d => d.savings >= 0).length;
+  const negative = MONTHLY_DATA.length - positive;
+  new Chart(el('savingsRateChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Positive months', 'Deficit months'],
+      datasets: [{ data:[positive, negative], backgroundColor:['#10b981cc','#ef4444cc'], borderWidth:0, hoverOffset:8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom' },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} months` } }
+      },
+      cutout: '65%'
+    }
+  });
+}
+
+function buildBalanceChart() {
+  const labels = MONTHLY_DATA.map(d => d.label);
+  new Chart(el('balanceChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [lineDataset('Balance', MONTHLY_DATA.map(d => d.balance), COLORS.balance, true)]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display:false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { grid: { display:false }, ticks: { maxTicksLimit: 10, maxRotation: 45 } },
+        y: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v, true) } }
+      }
+    }
+  });
+}
+
+function buildNetSavingsChart() {
+  const labels = MONTHLY_DATA.map(d => d.label);
+  const savings = MONTHLY_DATA.map(d => d.savings);
+  new Chart(el('netSavingsChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label:'Net Savings',
+        data: savings,
+        backgroundColor: savings.map(v => v >= 0 ? '#10b98188' : '#ef444488'),
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{maxTicksLimit:10, maxRotation:45} },
+        y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback: v => fmt(v,true)} }
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS CHARTS
+// ─────────────────────────────────────────────
+function buildYearlyChart() {
+  const years = Object.keys(YEARLY_DATA);
+  new Chart(el('yearlyChart'), {
+    type:'bar',
+    data:{
+      labels: years,
+      datasets:[
+        barDataset('Income',  years.map(y=>YEARLY_DATA[y].income),  COLORS.income),
+        barDataset('Spending',years.map(y=>YEARLY_DATA[y].spent),   COLORS.spent),
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'top'}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw) } } },
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'}},
+        y:{grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback: v=>fmt(v,true)}}
+      }
+    }
+  });
+}
+
+function buildTxChart() {
+  const labels = MONTHLY_DATA.map(d => d.label);
+  new Chart(el('txChart'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[barDataset('Transactions', MONTHLY_DATA.map(d=>d.tx), COLORS.savings)]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false}, ticks:{maxTicksLimit:10, maxRotation:45}},
+        y:{grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+
+function buildYearlySavingsBar() {
+  const years = Object.keys(YEARLY_DATA);
+  const savings = years.map(y=>YEARLY_DATA[y].savings);
+  new Chart(el('yearlySavingsBar'), {
+    type:'bar',
+    data:{
+      labels:years,
+      datasets:[{
+        label:'Net Savings',
+        data:savings,
+        backgroundColor:savings.map(v=>v>=0?'#10b98188':'#ef444488'),
+        borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'}},
+        y:{grid:{color:'rgba(255,255,255,.04)'}, ticks:{callback:v=>fmt(v,true)}}
+      }
+    }
+  });
+}
+
+function buildYearlyTable() {
+  const tbody = el('yearlyTableBody');
+  Object.entries(YEARLY_DATA).forEach(([yr, d]) => {
+    const rate = d.income ? ((d.savings/d.income)*100).toFixed(1) : 'N/A';
+    const cls  = d.savings >= 0 ? 'green' : 'red';
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${yr}</td>
+        <td>${Math.ceil(MONTHLY_DATA.filter(m=>m.iso.startsWith(yr)).length)}</td>
+        <td>${fmt(d.income)}</td>
+        <td>${fmt(d.spent)}</td>
+        <td class="${cls}">${d.savings>=0?'+':''}${fmt(d.savings)}</td>
+        <td>${d.tx}</td>
+        <td class="${cls}">${rate}%</td>
+      </tr>`);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CALENDAR VIEW
+// ─────────────────────────────────────────────
+let calDate = new Date(2026, 6); // July 2026 (last month with data)
+
+function renderCalendar() {
+  const year  = calDate.getFullYear();
+  const month = calDate.getMonth();
+  const key   = `${year}-${String(month+1).padStart(2,'0')}`;
+  const monthData = MONTHLY_DATA.find(d => d.iso === key);
+
+  el('calMonthLabel').textContent = calDate.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+
+  const firstDay  = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date();
+
+  const grid = el('calendarGrid');
+  grid.innerHTML = '';
+
+  // blank cells before 1st
+  for (let i = 0; i < firstDay; i++) {
+    grid.insertAdjacentHTML('beforeend','<div class="cal-cell empty"></div>');
+  }
+
+  // Simulate daily spend distribution (uniform if data exists)
+  const dailySpend = monthData ? monthData.spent / daysInMonth : 0;
+  const maxSpend   = monthData ? monthData.spent : 1;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+    // Simulate some variation
+    const variationFactor = [0.4,0.2,1.2,0.8,0.6,1.5,0.3][(d+month)%7];
+    const spend = dailySpend * variationFactor;
+    const heat  = monthData ? Math.min(4, Math.floor((spend / (maxSpend * variationFactor / daysInMonth)) * 4)) : 0;
+    const bg    = ['var(--bg-card2)','rgba(99,102,241,.25)','rgba(99,102,241,.45)','rgba(99,102,241,.65)','rgba(99,102,241,.9)'][heat];
+    const textColor = heat >= 3 ? '#fff' : 'var(--text-primary)';
+    grid.insertAdjacentHTML('beforeend', `
+      <div class="cal-cell h${heat}${isToday?' today':''}"
+           style="background:${bg};color:${textColor}"
+           title="${d} ${calDate.toLocaleDateString('en-US',{month:'short'})}: ~${fmt(spend,true)}">${d}</div>`);
+  }
+
+  // Summary
+  const sum = el('calMonthSummary');
+  if (monthData) {
+    sum.innerHTML = `
+      <div><span style="color:var(--text-muted)">Income</span><br><strong style="color:var(--green)">${fmt(monthData.income)}</strong></div>
+      <div><span style="color:var(--text-muted)">Spent</span><br><strong style="color:var(--red)">${fmt(monthData.spent)}</strong></div>
+      <div><span style="color:var(--text-muted)">Net Savings</span><br><strong style="color:${monthData.savings>=0?'var(--green)':'var(--red)'}">${fmt(monthData.savings)}</strong></div>
+      <div><span style="color:var(--text-muted)">Transactions</span><br><strong>${monthData.tx}</strong></div>
+      <div><span style="color:var(--text-muted)">Balance</span><br><strong style="color:var(--teal)">${fmt(monthData.balance)}</strong></div>`;
+  } else {
+    sum.innerHTML = `<p style="color:var(--text-muted)">No data for this month in the dataset.</p>`;
+  }
+}
+
+function initCalendar() {
+  el('calPrev').addEventListener('click', () => {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth()-1);
+    renderCalendar();
+  });
+  el('calNext').addEventListener('click', () => {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth()+1);
+    renderCalendar();
+  });
+  renderCalendar();
+}
+
+// ─────────────────────────────────────────────
+// TRANSACTIONS TABLE
+// ─────────────────────────────────────────────
+// accrualMode: true = show normalizedSavings (smoothed), false = show raw cash savings
+let accrualMode = false;
+
+function renderTxTable(search='', filter='all', year='all') {
+  let data = [...MONTHLY_DATA].reverse();
+  if (search) data = data.filter(d => d.label.toLowerCase().includes(search.toLowerCase()));
+  // Filter by whichever savings field is active
+  if (filter === 'positive') data = data.filter(d => (accrualMode ? d.normalizedSavings : d.savings) >= 0);
+  if (filter === 'negative') data = data.filter(d => (accrualMode ? d.normalizedSavings : d.savings) < 0);
+  if (year !== 'all') data = data.filter(d => d.iso.startsWith(year));
+
+  const tbody = el('txTableBody');
+  tbody.innerHTML = data.map(d => {
+    const isDeferred = d.salary === 0 && d.accrualSalary === 0 ? false :
+                       (d.salary === 0 || Math.abs(d.accrualSalary - d.salary) > 1000);
+    const savingsVal = accrualMode ? d.normalizedSavings : d.savings;
+    const salaryVal  = accrualMode ? d.accrualSalary     : d.salary;
+    const deferTag   = isDeferred && accrualMode
+      ? `<span class="badge badge-blue" title="Salary smoothed: was credited as bulk payment">~Accrual</span> `
+      : (isDeferred && !accrualMode)
+      ? `<span class="badge badge-orange" title="Salary credited in a different month (bulk payment)">Deferred</span> `
+      : '';
+    return `
+    <tr class="${isDeferred ? 'row-deferred' : ''}">
+      <td><strong>${d.label}</strong></td>
+      <td class="green">${fmt(d.income)}</td>
+      <td>${salaryVal ? fmt(salaryVal) : '<span style="color:var(--text-muted)">—</span>'} ${deferTag}</td>
+      <td class="red">${fmt(d.spent)}</td>
+      <td class="${savingsVal>=0?'green':'red'}">${savingsVal>=0?'+':''}${fmt(savingsVal)}</td>
+      <td>${d.tx}</td>
+      <td style="color:var(--teal)">${fmt(d.balance)}</td>
+      <td><span class="badge ${savingsVal>=0?'badge-green':'badge-red'}">${savingsVal>=0?'Saved':'Deficit'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function initTransactions() {
+  renderTxTable();
+  const search = el('txSearch'), filter = el('txFilter'), year = el('txYear');
+  const update = () => renderTxTable(search.value, filter.value, year.value);
+  search.addEventListener('input', update);
+  filter.addEventListener('change', update);
+  year.addEventListener('change', update);
+
+  // Accrual toggle button
+  const toggleBtn = el('accrualToggleBtn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      accrualMode = !accrualMode;
+      toggleBtn.textContent = accrualMode ? '📊 Cash Flow View' : '📈 Accrual View';
+      toggleBtn.classList.toggle('active', accrualMode);
+      update();
+    });
+  }
+}
+
+// ─────────────────────────────────────────────
+// LOCAL STORAGE HELPERS
+// ─────────────────────────────────────────────
+function lsGet(key, def=[]) {
+  try { return JSON.parse(localStorage.getItem('ledgr_'+key)) ?? def; } catch { return def; }
+}
+function lsSet(key, val) { localStorage.setItem('ledgr_'+key, JSON.stringify(val)); }
+
+// ─────────────────────────────────────────────
+// BUDGET
+// ─────────────────────────────────────────────
+let budgets = lsGet('budgets', [
+  { cat:'Housing', limit:30000, spent:20000, icon:'🏠' },
+  { cat:'Food',    limit:15000, spent:12500, icon:'🍜' },
+  { cat:'Transport',limit:5000, spent:3200,  icon:'🚗' },
+  { cat:'Shopping', limit:10000,spent:8100,  icon:'🛍️' },
+]);
+
+function renderBudgets() {
+  el('budgetList').innerHTML = budgets.map((b, i) => {
+    const pct  = Math.min(100, (b.spent/b.limit)*100);
+    const over = b.spent > b.limit;
+    return `
+      <div class="budget-item">
+        <div class="budget-item-header">
+          <div class="budget-name">${b.icon} ${b.cat}</div>
+          <div class="budget-amounts">${fmt(b.spent)} / ${fmt(b.limit)} · ${pct.toFixed(0)}%</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill ${over?'over':''}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function initBudget() {
+  renderBudgets();
+  el('addBudgetBtn').addEventListener('click', () => el('budgetModal').classList.remove('hidden'));
+  el('cancelBudget').addEventListener('click', () => el('budgetModal').classList.add('hidden'));
+  el('saveBudget').addEventListener('click', () => {
+    const cat   = el('budgetCatInput').value.trim();
+    const limit = parseFloat(el('budgetLimitInput').value) || 0;
+    const icon  = el('budgetIconInput').value.trim() || '💳';
+    if (cat && limit) {
+      budgets.push({ cat, limit, spent: 0, icon });
+      lsSet('budgets', budgets);
+      renderBudgets();
+      el('budgetModal').classList.add('hidden');
+      el('budgetCatInput').value = el('budgetLimitInput').value = el('budgetIconInput').value = '';
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// SAVINGS GOALS
+// ─────────────────────────────────────────────
+let goals = lsGet('goals', [
+  { name:'Emergency Fund', target:200000, current:50000,  deadline:'2026-12-31', emoji:'🛡️' },
+  { name:'Laptop Upgrade',  target:80000,  current:30000,  deadline:'2026-11-01', emoji:'💻' },
+  { name:'Vacation',        target:150000, current:20000,  deadline:'2027-03-01', emoji:'✈️' },
+]);
+
+function renderGoals() {
+  el('goalsGrid').innerHTML = goals.map((g, i) => {
+    const pct = Math.min(100, (g.current/g.target)*100);
+    return `
+      <div class="goal-card">
+        <div class="goal-icon">${g.emoji||'🎯'}</div>
+        <div class="goal-name">${g.name}</div>
+        <div class="goal-amounts">${fmt(g.current)} saved of ${fmt(g.target)}</div>
+        <div class="goal-pct">${pct.toFixed(0)}%</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        ${g.deadline ? `<div class="goal-deadline">🗓️ Target: ${new Date(g.deadline).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function initSavings() {
+  renderGoals();
+  el('addGoalBtn').addEventListener('click', () => el('goalModal').classList.remove('hidden'));
+  el('cancelGoal').addEventListener('click', () => el('goalModal').classList.add('hidden'));
+  el('saveGoal').addEventListener('click', () => {
+    const name     = el('goalNameInput').value.trim();
+    const target   = parseFloat(el('goalTargetInput').value) || 0;
+    const current  = parseFloat(el('goalCurrentInput').value) || 0;
+    const deadline = el('goalDeadlineInput').value;
+    if (name && target) {
+      goals.push({ name, target, current, deadline, emoji:'🎯' });
+      lsSet('goals', goals);
+      renderGoals();
+      el('goalModal').classList.add('hidden');
+      ['goalNameInput','goalTargetInput','goalCurrentInput','goalDeadlineInput'].forEach(id => el(id).value='');
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// DEBTS
+// ─────────────────────────────────────────────
+let debts = lsGet('debts', [
+  { type:'owe',  person:'Credit Card', amount:15000, due:'2026-09-01', note:'Monthly payment' },
+  { type:'owed', person:'Rahim Bhai',  amount:5000,  due:'2026-10-15', note:'Borrowed for event' },
+]);
+let debtTab = 'owe';
+
+function renderDebts() {
+  el('debtList').innerHTML = debts
+    .filter(d => d.type === debtTab)
+    .map((d, i) => `
+      <div class="debt-item">
+        <div>
+          <div class="debt-person">${d.person}</div>
+          <div class="debt-meta">${d.note} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'N/A'}</div>
+        </div>
+        <div class="debt-amount ${d.type==='owe'?'red':'green'}">${fmt(d.amount)}</div>
+      </div>`).join('') || `<p style="color:var(--text-muted);padding:1rem">No entries yet.</p>`;
+}
+
+function initDebts() {
+  renderDebts();
+  el('debtList');
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      debtTab = btn.dataset.tab;
+      renderDebts();
+    });
+  });
+  el('addDebtBtn').addEventListener('click', () => el('debtModal').classList.remove('hidden'));
+  el('cancelDebt').addEventListener('click', () => el('debtModal').classList.add('hidden'));
+  el('saveDebt').addEventListener('click', () => {
+    const person = el('debtPersonInput').value.trim();
+    const amount = parseFloat(el('debtAmountInput').value) || 0;
+    const due    = el('debtDueInput').value;
+    const note   = el('debtNoteInput').value.trim();
+    if (person && amount) {
+      debts.push({ type:debtTab, person, amount, due, note });
+      lsSet('debts', debts);
+      renderDebts();
+      el('debtModal').classList.add('hidden');
+      ['debtPersonInput','debtAmountInput','debtDueInput','debtNoteInput'].forEach(id => el(id).value='');
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// SCHEDULED TRANSACTIONS
+// ─────────────────────────────────────────────
+let scheduled = lsGet('scheduled', [
+  { name:'Salary',     amount:60000, type:'income',  freq:'monthly', due:'2026-09-01' },
+  { name:'Rent',       amount:25000, type:'expense', freq:'monthly', due:'2026-09-05' },
+  { name:'Internet',   amount:800,   type:'expense', freq:'monthly', due:'2026-09-10' },
+  { name:'Netflix',    amount:1500,  type:'expense', freq:'monthly', due:'2026-09-15' },
+]);
+
+function renderScheduled() {
+  el('scheduledList').innerHTML = scheduled.map((s, i) => `
+    <div class="sched-item">
+      <div class="sched-left">
+        <div class="sched-icon ${s.type}">${s.type==='income'?'📥':'📤'}</div>
+        <div>
+          <div class="sched-name">${s.name}</div>
+          <div class="sched-meta">${s.freq.charAt(0).toUpperCase()+s.freq.slice(1)} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'N/A'}</div>
+        </div>
+      </div>
+      <div class="sched-amount ${s.type==='income'?'green':'red'}">${s.type==='income'?'+':'–'}${fmt(s.amount)}</div>
+    </div>`).join('');
+}
+
+function initScheduled() {
+  renderScheduled();
+  el('addScheduledBtn').addEventListener('click', () => el('scheduledModal').classList.remove('hidden'));
+  el('cancelScheduled').addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
+  el('saveScheduled').addEventListener('click', () => {
+    const name   = el('schedNameInput').value.trim();
+    const amount = parseFloat(el('schedAmountInput').value) || 0;
+    const type   = el('schedTypeInput').value;
+    const freq   = el('schedFreqInput').value;
+    const due    = el('schedDueInput').value;
+    if (name && amount) {
+      scheduled.push({ name, amount, type, freq, due });
+      lsSet('scheduled', scheduled);
+      renderScheduled();
+      el('scheduledModal').classList.add('hidden');
+      ['schedNameInput','schedAmountInput','schedDueInput'].forEach(id => el(id).value='');
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// RANGE FILTER BUTTONS
+// ─────────────────────────────────────────────
+function initRangeFilters() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      buildTrendChart(btn.dataset.range);
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+// SETTINGS
+// ─────────────────────────────────────────────
+function initSettings() {
+  el('exportCSVBtn').addEventListener('click', exportCSV);
+  el('clearDataBtn').addEventListener('click', () => {
+    if (confirm('Clear all locally stored data (budgets, goals, debts, scheduled)?')) {
+      ['budgets','goals','debts','scheduled'].forEach(k => localStorage.removeItem('ledgr_'+k));
+      location.reload();
+    }
+  });
+  el('darkToggle').addEventListener('change', e => toggleDarkMode(e.target.checked));
+  el('darkModeBtn').addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('light-mode');
+    el('darkModeBtn').textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
+  });
+  document.querySelectorAll('.color-swatch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      document.documentElement.style.setProperty('--accent', sw.dataset.color);
+    });
+  });
+}
+
+function toggleDarkMode(light) {
+  document.body.classList.toggle('light-mode', light);
+}
+
+function exportCSV() {
+  const header = 'Month,Income,Salary (Cash),Salary (Accrual),Spent,Net Savings (Cash),Net Savings (Accrual),Transactions,Balance\n';
+  const rows = MONTHLY_DATA.map(d =>
+    `${d.label},${d.income},${d.salary},${d.accrualSalary},${d.spent},${d.savings},${d.normalizedSavings},${d.tx},${d.balance}`
+  ).join('\n');
+  const blob = new Blob([header+rows], { type:'text/csv' });
+  const a = Object.assign(document.createElement('a'), { href:URL.createObjectURL(blob), download:'ledgr_export.csv' });
+  a.click();
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  setCurrentDate();
+  initNav();
+
+  // Dashboard charts
+  buildTrendChart('all');
+  buildSavingsRateChart();
+  buildBalanceChart();
+  buildNetSavingsChart();
+  initRangeFilters();
+
+  // Analytics charts
+  buildYearlyChart();
+  buildTxChart();
+  buildYearlySavingsBar();
+  buildYearlyTable();
+
+  // Feature pages
+  initCalendar();
+  initTransactions();
+  initBudget();
+  initSavings();
+  initDebts();
+  initScheduled();
+  initSettings();
+
+  // Start on dashboard
+  navigate('dashboard');
+
+  // After initial render, try to refresh with live data from Cloudflare Worker.
+  // If WORKER_URL is null or fetch fails, stays on baked-in data silently.
+  tryLoadLiveData();
+});
+
+</script>
+</body>
+</html>

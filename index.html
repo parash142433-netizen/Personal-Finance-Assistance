@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ledgr — Personal Finance Dashboard</title>
+  <meta name="description" content="Your personal finance dashboard — 5-year expenditure analysis, budget tracking, savings goals, and debt management." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════  SIDEBAR  ══════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-left">
+      <span class="brand-icon">₹</span>
+      <span class="brand-name">Ledgr</span>
+    </div>
+    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">✕</button>
+  </div>
+
+  <ul class="nav-list">
+    <li class="nav-item active" data-page="dashboard" id="nav-dashboard">
+      <span class="nav-icon">⬡</span><span class="nav-label">Dashboard</span>
+    </li>
+    <li class="nav-item" data-page="analytics" id="nav-analytics">
+      <span class="nav-icon">📈</span><span class="nav-label">Analytics</span>
+    </li>
+    <li class="nav-item" data-page="calendar" id="nav-calendar">
+      <span class="nav-icon">📅</span><span class="nav-label">Calendar View</span>
+    </li>
+    <li class="nav-item" data-page="budget" id="nav-budget">
+      <span class="nav-icon">🎯</span><span class="nav-label">Budget</span>
+    </li>
+    <li class="nav-item" data-page="savings" id="nav-savings">
+      <span class="nav-icon">💰</span><span class="nav-label">Savings Goals</span>
+    </li>
+    <li class="nav-item" data-page="debts" id="nav-debts">
+      <span class="nav-icon">🤝</span><span class="nav-label">Debts & Loans</span>
+    </li>
+    <li class="nav-item" data-page="transactions" id="nav-transactions">
+      <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
+    </li>
+    <li class="nav-item" data-page="scheduled" id="nav-scheduled">
+      <span class="nav-icon">🔁</span><span class="nav-label">Scheduled</span>
+    </li>
+    <li class="nav-item" data-page="summary" id="nav-summary">
+      <span class="nav-icon">📊</span><span class="nav-label">Personal Summary</span>
+    </li>
+    <li class="nav-item" data-page="settings" id="nav-settings">
+      <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <button class="dark-mode-btn" id="darkModeBtn">🌙 Dark Mode</button>
+  </div>
+</nav>
+
+<!-- Sidebar mobile backdrop overlay -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ══════════════════════════  MAIN  ══════════════════════════ -->
+<main class="main-content" id="mainContent">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn-icon" title="Notifications">🔔</button>
+      <div class="avatar">N</div>
+    </div>
+  </header>
+
+  <!-- ── PAGE: DASHBOARD ── -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <h1>Good afternoon, Nasif 👋</h1>
+      <p class="subtitle">Here's your financial snapshot · <span id="currentDate"></span></p>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-icon">💼</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Current Balance</div>
+          <div class="kpi-value" id="kpi-balance">৳196,414</div>
+          <div class="kpi-sub">As of July 2026</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-green">
+        <div class="kpi-icon">📥</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Income (5 yr)</div>
+          <div class="kpi-value">৳38.9L</div>
+          <div class="kpi-sub">Avg ৳65,997/mo</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-red">
+        <div class="kpi-icon">📤</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Spent (5 yr)</div>
+          <div class="kpi-value">৳40.3L</div>
+          <div class="kpi-sub">Avg ৳68,222/mo</div>
+        </div>
+      </div>
+      <div class="kpi-card accent-purple">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Transactions</div>
+          <div class="kpi-value">1,012</div>
+          <div class="kpi-sub">Across 59 months</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>Income vs Spending Trend</h3>
+          <div class="chart-filters">
+            <button class="filter-btn active" data-range="all">All</button>
+            <button class="filter-btn" data-range="2y">2Y</button>
+            <button class="filter-btn" data-range="1y">1Y</button>
+            <button class="filter-btn" data-range="6m">6M</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Savings Rate</h3></div>
+        <div class="chart-wrap">
+          <canvas id="savingsRateChart"></canvas>
+        </div>
+        <div class="chart-legend-row">
+          <div class="cl-item"><span class="cl-dot green"></span>Positive months: 35</div>
+          <div class="cl-item"><span class="cl-dot red"></span>Negative months: 24</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance & Net savings -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><h3>Running Balance</h3></div>
+        <div class="chart-wrap">
+          <canvas id="balanceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Monthly Net Savings</h3></div>
+        <div class="chart-wrap">
+          <canvas id="netSavingsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick insights -->
+    <div class="insights-grid">
+      <div class="insight-card highlight-gold">
+        <div class="insight-icon">🏆</div>
+        <div class="insight-body">
+          <div class="insight-label">Best Month</div>
+          <div class="insight-value">August 2025</div>
+          <div class="insight-sub">৳3,03,746 saved</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-red">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-body">
+          <div class="insight-label">Worst Month</div>
+          <div class="insight-value">October 2025</div>
+          <div class="insight-sub">–৳3,88,841 (net loss)</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-blue">
+        <div class="insight-icon">💸</div>
+        <div class="insight-body">
+          <div class="insight-label">Highest Spend</div>
+          <div class="insight-value">October 2025</div>
+          <div class="insight-sub">৳4,59,837 spent</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-green">
+        <div class="insight-icon">📈</div>
+        <div class="insight-body">
+          <div class="insight-label">Highest Income</div>
+          <div class="insight-value">August 2025</div>
+          <div class="insight-sub">৳3,32,462 received</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-purple">
+        <div class="insight-icon">🔥</div>
+        <div class="insight-body">
+          <div class="insight-label">Busiest Month</div>
+          <div class="insight-value">April 2026</div>
+          <div class="insight-sub">48 transactions</div>
+        </div>
+      </div>
+      <div class="insight-card highlight-teal">
+        <div class="insight-icon">📅</div>
+        <div class="insight-body">
+          <div class="insight-label">Tracking Period</div>
+          <div class="insight-value">Sep 2021 – Jul 2026</div>
+          <div class="insight-sub">59 months of history</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: ANALYTICS ── -->
+  <section class="page" id="page-analytics">
+    <div class="page-header">
+      <h1>Analytics</h1>
+      <p class="subtitle">Deep-dive into your financial data</p>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>Year-by-Year Comparison</h3>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="yearlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><h3>Transactions per Month</h3></div>
+        <div class="chart-wrap">
+          <canvas id="txChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Yearly Savings Breakdown</h3></div>
+        <div class="chart-wrap">
+          <canvas id="yearlySavingsBar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yearly table -->
+    <div class="table-card">
+      <div class="chart-header"><h3>Annual Summary Table</h3></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Year</th><th>Months</th><th>Total Income</th><th>Total Spent</th><th>Net Savings</th><th>Transactions</th><th>Savings Rate</th></tr>
+        </thead>
+        <tbody id="yearlyTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: CALENDAR VIEW ── -->
+  <section class="page" id="page-calendar">
+    <div class="page-header">
+      <h1>Calendar View</h1>
+      <p class="subtitle">Visualise spending by date — powered by Ledgr-style heat mapping</p>
+    </div>
+    <div class="calendar-controls">
+      <button class="btn-secondary" id="calPrev">← Prev</button>
+      <span class="cal-month-label" id="calMonthLabel"></span>
+      <button class="btn-secondary" id="calNext">Next →</button>
+    </div>
+    <div class="calendar-legend">
+      <span>Low spend</span>
+      <div class="legend-cells">
+        <div class="heat-cell h0"></div>
+        <div class="heat-cell h1"></div>
+        <div class="heat-cell h2"></div>
+        <div class="heat-cell h3"></div>
+        <div class="heat-cell h4"></div>
+      </div>
+      <span>High spend</span>
+    </div>
+    <div class="calendar-grid-wrap">
+      <div class="cal-day-headers">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+    <div class="cal-month-summary" id="calMonthSummary"></div>
+  </section>
+
+  <!-- ── PAGE: BUDGET ── -->
+  <section class="page" id="page-budget">
+    <div class="page-header">
+      <h1>Budget Planner</h1>
+      <p class="subtitle">Set monthly spending limits by category</p>
+    </div>
+    <div class="budget-header-actions">
+      <button class="btn-primary" id="addBudgetBtn">+ Add Budget</button>
+    </div>
+    <div class="budget-list" id="budgetList"></div>
+    <div class="modal hidden" id="budgetModal">
+      <div class="modal-card">
+        <h3>New Budget Category</h3>
+        <label>Category Name<input type="text" id="budgetCatInput" placeholder="e.g. Groceries" /></label>
+        <label>Monthly Limit (৳)<input type="number" id="budgetLimitInput" placeholder="15000" /></label>
+        <label>Icon<input type="text" id="budgetIconInput" placeholder="🛒" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelBudget">Cancel</button>
+          <button class="btn-primary" id="saveBudget">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SAVINGS ── -->
+  <section class="page" id="page-savings">
+    <div class="page-header">
+      <h1>Savings Goals</h1>
+      <p class="subtitle">Create and track your financial targets</p>
+    </div>
+    <button class="btn-primary" id="addGoalBtn">+ New Goal</button>
+    <div class="goals-grid" id="goalsGrid"></div>
+    <div class="modal hidden" id="goalModal">
+      <div class="modal-card">
+        <h3>New Savings Goal</h3>
+        <label>Goal Name<input type="text" id="goalNameInput" placeholder="e.g. Emergency Fund" /></label>
+        <label>Target Amount (৳)<input type="number" id="goalTargetInput" placeholder="100000" /></label>
+        <label>Current Saved (৳)<input type="number" id="goalCurrentInput" placeholder="0" /></label>
+        <label>Deadline<input type="date" id="goalDeadlineInput" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelGoal">Cancel</button>
+          <button class="btn-primary" id="saveGoal">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: DEBTS ── -->
+  <section class="page" id="page-debts">
+    <div class="page-header">
+      <h1>Debts & Loans</h1>
+      <p class="subtitle">Track money you owe or are owed</p>
+    </div>
+    <div class="debt-tabs">
+      <button class="tab-btn active" data-tab="owe">I Owe</button>
+      <button class="tab-btn" data-tab="owed">Owed to Me</button>
+    </div>
+    <button class="btn-primary" id="addDebtBtn">+ Add Entry</button>
+    <div class="debt-list" id="debtList"></div>
+    <div class="modal hidden" id="debtModal">
+      <div class="modal-card">
+        <h3>New Debt Entry</h3>
+        <label>Person / Institution<input type="text" id="debtPersonInput" placeholder="e.g. Karim Bhai" /></label>
+        <label>Amount (৳)<input type="number" id="debtAmountInput" placeholder="5000" /></label>
+        <label>Due Date<input type="date" id="debtDueInput" /></label>
+        <label>Note<input type="text" id="debtNoteInput" placeholder="Optional note" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelDebt">Cancel</button>
+          <button class="btn-primary" id="saveDebt">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: TRANSACTIONS ── -->
+  <section class="page" id="page-transactions">
+    <div class="page-header">
+      <h1>Transaction History</h1>
+      <p class="subtitle">Browse all monthly records — Sep 2021 to Jul 2026</p>
+    </div>
+    <div class="tx-controls">
+      <input type="text" id="txSearch" placeholder="🔍 Search month..." class="search-input" title="Search month" aria-label="Search month" />
+      <select id="txFilter" class="select-input" title="Filter by status" aria-label="Filter by status">
+        <option value="all">All months</option>
+        <option value="positive">Savings months</option>
+        <option value="negative">Deficit months</option>
+      </select>
+      <select id="txYear" class="select-input" title="Filter by year" aria-label="Filter by year">
+        <option value="all">All years</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+      </select>
+      <button id="accrualToggleBtn" class="btn-secondary" title="Toggle between cash-flow and accrual-smoothed salary view">📈 Accrual View</button>
+    </div>
+    <div class="table-card">
+      <table class="data-table" id="txTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Income</th>
+            <th>Salary</th>
+            <th>Spent</th>
+            <th>Net Savings</th>
+            <th>Tx Count</th>
+            <th>Ending Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="txTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SCHEDULED ── -->
+  <section class="page" id="page-scheduled">
+    <div class="page-header">
+      <h1>Scheduled Transactions</h1>
+      <p class="subtitle">Automate recurring income and expenses</p>
+    </div>
+    <button class="btn-primary" id="addScheduledBtn">+ Add Recurring</button>
+    <div class="scheduled-list" id="scheduledList"></div>
+    <div class="modal hidden" id="scheduledModal">
+      <div class="modal-card">
+        <h3>Recurring Transaction</h3>
+        <label>Name<input type="text" id="schedNameInput" placeholder="e.g. Rent" /></label>
+        <label>Amount (৳)<input type="number" id="schedAmountInput" /></label>
+        <label>Type
+          <select id="schedTypeInput">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </label>
+        <label>Frequency
+          <select id="schedFreqInput">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </label>
+        <label>Next Due<input type="date" id="schedDueInput" /></label>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelScheduled">Cancel</button>
+          <button class="btn-primary" id="saveScheduled">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: PERSONAL SUMMARY ── -->
+  <section class="page" id="page-summary">
+    <div class="page-header">
+      <h1>Personal Financial Summary</h1>
+      <p class="subtitle">A narrative of your 5-year financial journey (Sep 2021 – Jul 2026)</p>
+    </div>
+
+    <div class="summary-hero">
+      <div class="summary-stat">
+        <div class="ss-value">৳38,98,020</div>
+        <div class="ss-label">Total Lifetime Income</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value">৳40,26,030</div>
+        <div class="ss-label">Total Lifetime Spending</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value red">–৳1,28,011</div>
+        <div class="ss-label">Net 5-Year Position</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="ss-value">৳1,96,415</div>
+        <div class="ss-label">Current Balance</div>
+      </div>
+    </div>
+
+    <div class="narrative-cards">
+      <div class="narrative-card">
+        <h3>🚀 Your Journey Began</h3>
+        <p>You started tracking in <strong>September 2021</strong> with just ৳34,317 in hand. Over the next 59 months you logged <strong>1,012 transactions</strong>, creating one of the most detailed personal financial records possible.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>📈 Income Growth Story</h3>
+        <p>Your average monthly income grew from ~৳36,000 in 2021–22 to over <strong>৳97,000/month in 2025</strong>. Total salary earned across 5 years: <strong>৳24.6 lakh</strong>, with additional income from other sources.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>⚡ Spending Spikes</h3>
+        <p>Three dramatic spending events stand out: <strong>Jan 2024</strong> (৳4.5L), <strong>Oct 2025</strong> (৳4.6L), and <strong>May 2026</strong> (৳3.9L) — each likely representing a major life purchase or event. These three months alone account for <strong>32% of total lifetime spending</strong>.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>💰 Your Best Financial Periods</h3>
+        <p><strong>August 2025</strong> was your single best month — ৳3.32L income with only ৳28.7K spent, netting you <strong>৳3,03,746</strong>. Your best year was <strong>2025</strong> with ৳14.1L income, though heavy spending kept overall net at –৳14,457.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>📉 Challenging Months</h3>
+        <p>24 out of 59 months (41%) ended with a deficit. The toughest was <strong>October 2025</strong> with a –৳3,88,841 swing. High-spend months without matching income appear to be tied to major purchases, suggesting lumpy spending behavior.</p>
+      </div>
+      <div class="narrative-card">
+        <h3>🎯 Key Takeaways & Recommendations</h3>
+        <ul>
+          <li>Build a dedicated <strong>3-month emergency fund</strong> (~৳2L based on avg spending)</li>
+          <li>Your income is <strong>irregular</strong> — consider smoothing salary via systematic savings</li>
+          <li>Average savings rate is <strong>–3.3%</strong> — target positive savings each month</li>
+          <li>Your 2026 trajectory is positive with strong March (৳1.1L savings) and June (৳87K savings)</li>
+          <li>Transaction volume is rising — <strong>April 2026's 48 transactions</strong> shows increased financial activity</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Year-by-year narrative table -->
+    <div class="table-card">
+      <div class="chart-header"><h3>Year-by-Year Personal Report</h3></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Year</th><th>Income</th><th>Spent</th><th>Net</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2021 (4 mo)</td><td>৳1,76,601</td><td>৳78,724</td><td class="green">+৳97,877</td><td>🟢 Strong Start</td></tr>
+          <tr><td>2022 (12 mo)</td><td>৳4,89,059</td><td>৳5,10,047</td><td class="red">–৳20,988</td><td>🔴 Slight Deficit</td></tr>
+          <tr><td>2023 (12 mo)</td><td>৳6,05,671</td><td>৳5,59,394</td><td class="green">+৳46,277</td><td>🟢 Recovery Year</td></tr>
+          <tr><td>2024 (12 mo)</td><td>৳8,88,102</td><td>৳9,74,783</td><td class="red">–₳86,681</td><td>🔴 Big-ticket spending</td></tr>
+          <tr><td>2025 (12 mo)</td><td>৳14,06,552</td><td>৳14,20,993</td><td class="red">–৳14,441</td><td>🟡 Nearly breakeven</td></tr>
+          <tr><td>2026 (7 mo)</td><td>৳7,33,076</td><td>৳9,44,734</td><td class="red">–৳2,11,657</td><td>🟡 Recovering in H2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── PAGE: SETTINGS ── -->
+  <section class="page" id="page-settings">
+    <div class="page-header">
+      <h1>Settings</h1>
+      <p class="subtitle">Preferences & account configuration</p>
+    </div>
+    <div class="settings-grid">
+      <div class="settings-card">
+        <h3>🌍 Currency & Region</h3>
+        <label>Currency<select class="select-input"><option>BDT (৳)</option><option>USD ($)</option><option>EUR (€)</option></select></label>
+        <label>Date Format<select class="select-input"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select></label>
+      </div>
+      <div class="settings-card">
+        <h3>🎨 Appearance</h3>
+        <label class="toggle-label">Dark Mode<input type="checkbox" id="darkToggle" class="toggle" /></label>
+        <label>Accent Color
+          <div class="color-options">
+            <div class="color-swatch active" data-color="#6366f1"></div>
+            <div class="color-swatch" data-color="#10b981"></div>
+            <div class="color-swatch" data-color="#f59e0b"></div>
+            <div class="color-swatch" data-color="#ef4444"></div>
+            <div class="color-swatch" data-color="#06b6d4"></div>
+          </div>
+        </label>
+      </div>
+      <div class="settings-card">
+        <h3>🔒 Privacy & Data</h3>
+        <p class="settings-note">All your data is stored locally in your browser. Nothing is sent to external servers.</p>
+        <button class="btn-secondary" id="exportCSVBtn">📤 Export as CSV</button>
+        <button class="btn-secondary danger" id="clearDataBtn">🗑️ Clear All Data</button>
+      </div>
+      <div class="settings-card">
+        <h3>🔔 Notifications</h3>
+        <label class="toggle-label">Budget alerts<input type="checkbox" class="toggle" checked /></label>
+        <label class="toggle-label">Monthly summary<input type="checkbox" class="toggle" checked /></label>
+        <label class="toggle-label">Scheduled reminders<input type="checkbox" class="toggle" /></label>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

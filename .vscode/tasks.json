@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy to GitHub Pages",
+      "type": "shell",
+      "command": "git add -A && git diff --cached --quiet && echo 'Nothing to commit.' || (git commit -m \"Update: $(Get-Date -Format 'yyyy-MM-dd HH:mm')\" && git push && echo 'Deployed! GitHub Actions will build and publish in ~60 seconds.')",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Regenerate data/finance_data.json",
+      "type": "shell",
+      "command": "python execution/analyze_expenditure.py --output",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Inject data + bundle mobile HTML (local preview)",
+      "type": "shell",
+      "command": "python execution/inject_data.py && python execution/bundle_standalone_html.py",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
