@@ -556,15 +556,23 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.1rem 1.25rem;
+  transition: var(--transition);
 }
+.budget-item:hover { border-color: var(--border-hover); }
 .budget-item-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: .6rem;
+  gap: .75rem;
 }
 .budget-name { display: flex; align-items: center; gap: .5rem; font-weight: 600; }
-.budget-amounts { font-size: .8rem; color: var(--text-secondary); }
+.budget-right-group {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+}
+.budget-amounts { font-size: .8rem; color: var(--text-secondary); white-space: nowrap; }
 .progress-bar {
   width: 100%;
   height: 6px;
@@ -579,6 +587,45 @@ body {
   transition: width .5s ease;
 }
 .progress-fill.over { background: var(--red); }
+
+/* ── ACTION BUTTONS FOR ITEMS ── */
+.item-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: .85rem;
+  line-height: 1;
+  transition: var(--transition);
+  padding: 0;
+}
+.btn-icon:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-card2);
+  transform: translateY(-1px);
+}
+.btn-icon.edit:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.btn-icon.delete:hover {
+  color: var(--red);
+  border-color: rgba(239,68,68,.4);
+  background: rgba(239,68,68,.15);
+}
 
 /* ─────────────────────────────────────────────
    SAVINGS GOALS
@@ -596,7 +643,14 @@ body {
   transition: var(--transition);
 }
 .goal-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
-.goal-icon { font-size: 2rem; margin-bottom: .75rem; }
+.goal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+.goal-icon { font-size: 2rem; }
+.goal-card-header .goal-icon { margin-bottom: 0; }
 .goal-name { font-weight: 700; margin-bottom: .25rem; }
 .goal-amounts { font-size: .8rem; color: var(--text-secondary); margin-bottom: .75rem; }
 .goal-pct { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin-bottom: .5rem; }
@@ -627,10 +681,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: .75rem;
+  transition: var(--transition);
 }
+.debt-item:hover { border-color: var(--border-hover); }
 .debt-person { font-weight: 700; }
-.debt-meta { font-size: .78rem; color: var(--text-secondary); }
-.debt-amount { font-size: 1.1rem; font-weight: 800; }
+.debt-meta { font-size: .78rem; color: var(--text-secondary); margin-top: .15rem; }
+.debt-right-group {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+}
+.debt-amount { font-size: 1.1rem; font-weight: 800; white-space: nowrap; }
 
 /* ─────────────────────────────────────────────
    SCHEDULED
@@ -644,19 +706,28 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: .75rem;
+  transition: var(--transition);
 }
+.sched-item:hover { border-color: var(--border-hover); }
 .sched-left { display: flex; align-items: center; gap: .75rem; }
 .sched-icon {
   width: 38px; height: 38px;
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 .sched-icon.income { background: rgba(16,185,129,.15); }
 .sched-icon.expense{ background: rgba(239,68,68,.15);  }
 .sched-name { font-weight: 600; }
-.sched-meta { font-size: .75rem; color: var(--text-secondary); }
-.sched-amount { font-weight: 700; font-size: 1rem; }
+.sched-meta { font-size: .75rem; color: var(--text-secondary); margin-top: .15rem; }
+.sched-right-group {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+}
+.sched-amount { font-weight: 700; font-size: 1rem; white-space: nowrap; }
 
 /* ─────────────────────────────────────────────
    SUMMARY PAGE
@@ -1326,9 +1397,10 @@ body {
     <div class="budget-list" id="budgetList"></div>
     <div class="modal hidden" id="budgetModal">
       <div class="modal-card">
-        <h3>New Budget Category</h3>
+        <h3 id="budgetModalTitle">New Budget Category</h3>
         <label>Category Name<input type="text" id="budgetCatInput" placeholder="e.g. Groceries" /></label>
         <label>Monthly Limit (৳)<input type="number" id="budgetLimitInput" placeholder="15000" /></label>
+        <label>Current Spent (৳)<input type="number" id="budgetSpentInput" placeholder="0" /></label>
         <label>Icon<input type="text" id="budgetIconInput" placeholder="🛒" /></label>
         <div class="modal-actions">
           <button class="btn-secondary" id="cancelBudget">Cancel</button>
@@ -1348,11 +1420,12 @@ body {
     <div class="goals-grid" id="goalsGrid"></div>
     <div class="modal hidden" id="goalModal">
       <div class="modal-card">
-        <h3>New Savings Goal</h3>
+        <h3 id="goalModalTitle">New Savings Goal</h3>
         <label>Goal Name<input type="text" id="goalNameInput" placeholder="e.g. Emergency Fund" /></label>
         <label>Target Amount (৳)<input type="number" id="goalTargetInput" placeholder="100000" /></label>
         <label>Current Saved (৳)<input type="number" id="goalCurrentInput" placeholder="0" /></label>
         <label>Deadline<input type="date" id="goalDeadlineInput" /></label>
+        <label>Icon / Emoji<input type="text" id="goalEmojiInput" placeholder="🎯" /></label>
         <div class="modal-actions">
           <button class="btn-secondary" id="cancelGoal">Cancel</button>
           <button class="btn-primary" id="saveGoal">Save</button>
@@ -1375,7 +1448,13 @@ body {
     <div class="debt-list" id="debtList"></div>
     <div class="modal hidden" id="debtModal">
       <div class="modal-card">
-        <h3>New Debt Entry</h3>
+        <h3 id="debtModalTitle">New Debt Entry</h3>
+        <label>Type
+          <select id="debtTypeInput">
+            <option value="owe">I Owe (Liability)</option>
+            <option value="owed">Owed to Me (Asset)</option>
+          </select>
+        </label>
         <label>Person / Institution<input type="text" id="debtPersonInput" placeholder="e.g. Karim Bhai" /></label>
         <label>Amount (৳)<input type="number" id="debtAmountInput" placeholder="5000" /></label>
         <label>Due Date<input type="date" id="debtDueInput" /></label>
@@ -1441,7 +1520,7 @@ body {
     <div class="scheduled-list" id="scheduledList"></div>
     <div class="modal hidden" id="scheduledModal">
       <div class="modal-card">
-        <h3>Recurring Transaction</h3>
+        <h3 id="schedModalTitle">Recurring Transaction</h3>
         <label>Name<input type="text" id="schedNameInput" placeholder="e.g. Rent" /></label>
         <label>Amount (৳)<input type="number" id="schedAmountInput" /></label>
         <label>Type
@@ -1614,74 +1693,74 @@ const WORKER_URL = "https://ledgr-finance-proxy.nafis-fpl-tools.workers.dev";
 // NOTE: salary=actual cash received; accrualSalary=bulk payments split evenly across the months they cover
 // savings=cash-flow net; normalizedSavings=accrual-based net (smoothed)
 const MONTHLY_DATA = [
-  { label:"Sep 2021", iso:"2021-09", spent:0, income:34317.14, salary:34315.0, accrualSalary:34315.0, savings:34317.14, normalizedSavings:34317.14, balance:34317.14, tx:2 },
-  { label:"Oct 2021", iso:"2021-10", spent:3007.0, income:29168.64, salary:25096.0, accrualSalary:25096.0, savings:26161.64, normalizedSavings:26161.64, balance:60478.78, tx:6 },
-  { label:"Nov 2021", iso:"2021-11", spent:56283.0, income:37030.86, salary:23963.0, accrualSalary:23963.0, savings:-19252.14, normalizedSavings:-19252.14, balance:41226.64, tx:15 },
-  { label:"Dec 2021", iso:"2021-12", spent:19434.0, income:76083.94, salary:23988.0, accrualSalary:23988.0, savings:56649.94, normalizedSavings:56649.94, balance:97876.58, tx:11 },
-  { label:"Jan 2022", iso:"2022-01", spent:51439.0, income:38063.0, salary:28063.0, accrualSalary:28063.0, savings:-13376.0, normalizedSavings:-13376.0, balance:84500.58, tx:15 },
-  { label:"Feb 2022", iso:"2022-02", spent:2565.0, income:53303.29, salary:28103.0, accrualSalary:28103.0, savings:50738.29, normalizedSavings:50738.29, balance:135238.87, tx:13 },
-  { label:"Mar 2022", iso:"2022-03", spent:42970.0, income:30244.56, salary:28033.0, accrualSalary:28033.0, savings:-12725.44, normalizedSavings:-12725.44, balance:122513.43, tx:13 },
-  { label:"Apr 2022", iso:"2022-04", spent:13277.0, income:57290.5, salary:28073.0, accrualSalary:28073.0, savings:44013.5, normalizedSavings:44013.5, balance:166526.93, tx:10 },
-  { label:"May 2022", iso:"2022-05", spent:5186.0, income:39419.36, salary:27898.0, accrualSalary:27898.0, savings:34233.36, normalizedSavings:34233.36, balance:200760.29, tx:8 },
-  { label:"Jun 2022", iso:"2022-06", spent:63597.0, income:83427.88, salary:58093.0, accrualSalary:58093.0, savings:19830.88, normalizedSavings:19830.88, balance:220591.17, tx:12 },
-  { label:"Jul 2022", iso:"2022-07", spent:18921.0, income:53092.48, salary:26678.0, accrualSalary:26678.0, savings:34171.48, normalizedSavings:34171.48, balance:254762.65, tx:11 },
-  { label:"Aug 2022", iso:"2022-08", spent:307947.0, income:82152.94, salary:26843.0, accrualSalary:26843.0, savings:-225794.06, normalizedSavings:-225794.06, balance:28968.59, tx:15 },
-  { label:"Sep 2022", iso:"2022-09", spent:13395.0, income:43057.04, salary:26793.0, accrualSalary:26793.0, savings:29662.04, normalizedSavings:29662.04, balance:58630.63, tx:10 },
-  { label:"Oct 2022", iso:"2022-10", spent:27557.0, income:60440.56, salary:26628.0, accrualSalary:26628.0, savings:32883.56, normalizedSavings:32883.56, balance:91514.19, tx:12 },
-  { label:"Nov 2022", iso:"2022-11", spent:10327.0, income:41793.59, salary:26748.0, accrualSalary:26748.0, savings:31466.59, normalizedSavings:31466.59, balance:122980.78, tx:9 },
-  { label:"Dec 2022", iso:"2022-12", spent:28568.0, income:115883.15, salary:43363.0, accrualSalary:43363.0, savings:87315.15, normalizedSavings:87315.15, balance:210295.93, tx:14 },
-  { label:"Jan 2023", iso:"2023-01", spent:35082.0, income:29190.28, salary:0, accrualSalary:0, savings:-5891.72, normalizedSavings:-5891.72, balance:204404.21, tx:14 },
-  { label:"Feb 2023", iso:"2023-02", spent:24266.0, income:86138.18, salary:64790.0, accrualSalary:64790.0, savings:61872.18, normalizedSavings:61872.18, balance:266276.39, tx:16 },
-  { label:"Mar 2023", iso:"2023-03", spent:61740.0, income:46900.0, salary:0, accrualSalary:0, savings:-14840.0, normalizedSavings:-14840.0, balance:251436.39, tx:12 },
-  { label:"Apr 2023", iso:"2023-04", spent:74611.0, income:98250.0, salary:84750.0, accrualSalary:84750.0, savings:23639.0, normalizedSavings:23639.0, balance:275075.39, tx:18 },
-  { label:"May 2023", iso:"2023-05", spent:27775.0, income:46901.92, salary:32150.0, accrualSalary:32150.0, savings:19126.92, normalizedSavings:19126.92, balance:294202.31, tx:12 },
-  { label:"Jun 2023", iso:"2023-06", spent:8878.0, income:61291.39, salary:32236.0, accrualSalary:32236.0, savings:52413.39, normalizedSavings:52413.39, balance:346615.7, tx:11 },
-  { label:"Jul 2023", iso:"2023-07", spent:90466.0, income:48907.61, salary:30837.0, accrualSalary:30837.0, savings:-41558.39, normalizedSavings:-41558.39, balance:305057.31, tx:17 },
-  { label:"Aug 2023", iso:"2023-08", spent:31583.0, income:40764.04, salary:32147.0, accrualSalary:32147.0, savings:9181.04, normalizedSavings:9181.04, balance:314238.35, tx:11 },
-  { label:"Sep 2023", iso:"2023-09", spent:27688.0, income:47516.39, salary:31923.0, accrualSalary:31923.0, savings:19828.39, normalizedSavings:19828.39, balance:334066.74, tx:15 },
-  { label:"Oct 2023", iso:"2023-10", spent:65085.0, income:62763.14, salary:32195.0, accrualSalary:32195.0, savings:-2321.86, normalizedSavings:-2321.86, balance:331744.88, tx:15 },
-  { label:"Nov 2023", iso:"2023-11", spent:12020.0, income:52871.74, salary:32123.0, accrualSalary:32123.0, savings:40851.74, normalizedSavings:40851.74, balance:372596.62, tx:10 },
-  { label:"Dec 2023", iso:"2023-12", spent:47605.0, income:66148.0, salary:0, accrualSalary:0, savings:18543.0, normalizedSavings:18543.0, balance:391139.62, tx:15 },
-  { label:"Jan 2024", iso:"2024-01", spent:451940.0, income:110682.0, salary:92952.0, accrualSalary:92952.0, savings:-341258.0, normalizedSavings:-341258.0, balance:49881.62, tx:24 },
-  { label:"Feb 2024", iso:"2024-02", spent:7143.0, income:48710.16, salary:41164.0, accrualSalary:41164.0, savings:41567.16, normalizedSavings:41567.16, balance:91448.78, tx:11 },
-  { label:"Mar 2024", iso:"2024-03", spent:13703.0, income:72840.67, salary:67555.0, accrualSalary:67555.0, savings:59137.67, normalizedSavings:59137.67, balance:150586.45, tx:13 },
-  { label:"Apr 2024", iso:"2024-04", spent:41811.0, income:51232.0, salary:41185.0, accrualSalary:41185.0, savings:9421.0, normalizedSavings:9421.0, balance:160007.45, tx:13 },
-  { label:"May 2024", iso:"2024-05", spent:56764.0, income:14457.53, salary:0, accrualSalary:0, savings:-42306.47, normalizedSavings:-42306.47, balance:117700.98, tx:17 },
-  { label:"Jun 2024", iso:"2024-06", spent:55233.0, income:148930.1, salary:108836.0, accrualSalary:108836.0, savings:93697.1, normalizedSavings:93697.1, balance:211398.08, tx:21 },
-  { label:"Jul 2024", iso:"2024-07", spent:124379.0, income:15936.0, salary:0, accrualSalary:0, savings:-108443.0, normalizedSavings:-108443.0, balance:102955.08, tx:16 },
-  { label:"Aug 2024", iso:"2024-08", spent:40781.0, income:58499.0, salary:41807.0, accrualSalary:41807.0, savings:17718.0, normalizedSavings:17718.0, balance:120673.08, tx:16 },
-  { label:"Sep 2024", iso:"2024-09", spent:79848.0, income:97543.0, salary:82903.0, accrualSalary:82903.0, savings:17695.0, normalizedSavings:17695.0, balance:138368.08, tx:18 },
-  { label:"Oct 2024", iso:"2024-10", spent:51643.0, income:82056.0, salary:41310.0, accrualSalary:41310.0, savings:30413.0, normalizedSavings:30413.0, balance:168781.08, tx:19 },
-  { label:"Nov 2024", iso:"2024-11", spent:34880.0, income:17082.0, salary:0, accrualSalary:0, savings:-17798.0, normalizedSavings:-17798.0, balance:150983.08, tx:14 },
-  { label:"Dec 2024", iso:"2024-12", spent:75414.0, income:171208.07, salary:109031.0, accrualSalary:109031.0, savings:95794.07, normalizedSavings:95794.07, balance:246777.15, tx:22 },
-  { label:"Jan 2025", iso:"2025-01", spent:34171.0, income:19414.03, salary:0, accrualSalary:0, savings:-14756.97, normalizedSavings:-14756.97, balance:232020.18, tx:17 },
-  { label:"Feb 2025", iso:"2025-02", spent:10481.0, income:113731.86, salary:93840.0, accrualSalary:93840.0, savings:103250.86, normalizedSavings:103250.86, balance:335271.04, tx:15 },
-  { label:"Mar 2025", iso:"2025-03", spent:47959.0, income:85229.41, salary:46768.0, accrualSalary:46768.0, savings:37270.41, normalizedSavings:37270.41, balance:372541.45, tx:17 },
-  { label:"Apr 2025", iso:"2025-04", spent:347688.0, income:102281.0, salary:46895.0, accrualSalary:46895.0, savings:-245407.0, normalizedSavings:-245407.0, balance:127134.45, tx:22 },
-  { label:"May 2025", iso:"2025-05", spent:74350.0, income:61952.0, salary:0, accrualSalary:0, savings:-12398.0, normalizedSavings:-12398.0, balance:114736.45, tx:25 },
-  { label:"Jun 2025", iso:"2025-06", spent:26343.0, income:106317.61, salary:92818.0, accrualSalary:92818.0, savings:79974.61, normalizedSavings:79974.61, balance:194711.06, tx:19 },
-  { label:"Jul 2025", iso:"2025-07", spent:69014.0, income:69845.37, salary:46635.0, accrualSalary:46635.0, savings:831.37, normalizedSavings:831.37, balance:195542.43, tx:23 },
-  { label:"Aug 2025", iso:"2025-08", spent:28716.0, income:332462.0, salary:0, accrualSalary:0, savings:303746.0, normalizedSavings:303746.0, balance:499288.43, tx:13 },
-  { label:"Sep 2025", iso:"2025-09", spent:88285.0, income:138471.0, salary:92921.0, accrualSalary:92921.0, savings:50186.0, normalizedSavings:50186.0, balance:549474.43, tx:31 },
-  { label:"Oct 2025", iso:"2025-10", spent:459837.0, income:70996.37, salary:46841.0, accrualSalary:46841.0, savings:-388840.63, normalizedSavings:-388840.63, balance:160633.8, tx:26 },
-  { label:"Nov 2025", iso:"2025-11", spent:58299.45, income:59293.0, salary:46823.0, accrualSalary:46823.0, savings:993.55, normalizedSavings:993.55, balance:161627.35, tx:36 },
-  { label:"Dec 2025", iso:"2025-12", spent:21145.0, income:267590.62, salary:76443.0, accrualSalary:76443.0, savings:246445.62, normalizedSavings:246445.62, balance:408072.97, tx:26 },
-  { label:"Jan 2026", iso:"2026-01", spent:176465.0, income:31668.87, salary:0, accrualSalary:0, savings:-144796.13, normalizedSavings:-144796.13, balance:263276.84, tx:20 },
-  { label:"Feb 2026", iso:"2026-02", spent:50786.0, income:63436.0, salary:60936.0, accrualSalary:60936.0, savings:12650.0, normalizedSavings:12650.0, balance:275926.84, tx:24 },
-  { label:"Mar 2026", iso:"2026-03", spent:56346.0, income:167818.0, salary:156168.0, accrualSalary:156168.0, savings:111472.0, normalizedSavings:111472.0, balance:387398.84, tx:25 },
-  { label:"Apr 2026", iso:"2026-04", spent:196285.53, income:201468.87, salary:60900.0, accrualSalary:60900.0, savings:5183.34, normalizedSavings:5183.34, balance:392582.18, tx:48 },
-  { label:"May 2026", iso:"2026-05", spent:391577.59, income:87720.0, salary:0, accrualSalary:0, savings:-303857.59, normalizedSavings:-303857.59, balance:88724.59, tx:28 },
-  { label:"Jun 2026", iso:"2026-06", spent:47674.12, income:134724.0, salary:121374.0, accrualSalary:121374.0, savings:87049.88, normalizedSavings:87049.88, balance:175774.47, tx:19 },
-  { label:"Jul 2026", iso:"2026-07", spent:25600.0, income:46240.37, salary:0, accrualSalary:0, savings:20640.37, normalizedSavings:20640.37, balance:196414.84, tx:10 }
+  { label: "Sep 2021", iso: "2021-09", spent: 0, income: 34317.14, salary: 34315.0, accrualSalary: 34315.0, savings: 34317.14, normalizedSavings: 34317.14, balance: 34317.14, tx: 2 },
+  { label: "Oct 2021", iso: "2021-10", spent: 3007.0, income: 29168.64, salary: 25096.0, accrualSalary: 25096.0, savings: 26161.64, normalizedSavings: 26161.64, balance: 60478.78, tx: 6 },
+  { label: "Nov 2021", iso: "2021-11", spent: 56283.0, income: 37030.86, salary: 23963.0, accrualSalary: 23963.0, savings: -19252.14, normalizedSavings: -19252.14, balance: 41226.64, tx: 15 },
+  { label: "Dec 2021", iso: "2021-12", spent: 19434.0, income: 76083.94, salary: 23988.0, accrualSalary: 23988.0, savings: 56649.94, normalizedSavings: 56649.94, balance: 97876.58, tx: 11 },
+  { label: "Jan 2022", iso: "2022-01", spent: 51439.0, income: 38063.0, salary: 28063.0, accrualSalary: 28063.0, savings: -13376.0, normalizedSavings: -13376.0, balance: 84500.58, tx: 15 },
+  { label: "Feb 2022", iso: "2022-02", spent: 2565.0, income: 53303.29, salary: 28103.0, accrualSalary: 28103.0, savings: 50738.29, normalizedSavings: 50738.29, balance: 135238.87, tx: 13 },
+  { label: "Mar 2022", iso: "2022-03", spent: 42970.0, income: 30244.56, salary: 28033.0, accrualSalary: 28033.0, savings: -12725.44, normalizedSavings: -12725.44, balance: 122513.43, tx: 13 },
+  { label: "Apr 2022", iso: "2022-04", spent: 13277.0, income: 57290.5, salary: 28073.0, accrualSalary: 28073.0, savings: 44013.5, normalizedSavings: 44013.5, balance: 166526.93, tx: 10 },
+  { label: "May 2022", iso: "2022-05", spent: 5186.0, income: 39419.36, salary: 27898.0, accrualSalary: 27898.0, savings: 34233.36, normalizedSavings: 34233.36, balance: 200760.29, tx: 8 },
+  { label: "Jun 2022", iso: "2022-06", spent: 63597.0, income: 83427.88, salary: 58093.0, accrualSalary: 58093.0, savings: 19830.88, normalizedSavings: 19830.88, balance: 220591.17, tx: 12 },
+  { label: "Jul 2022", iso: "2022-07", spent: 18921.0, income: 53092.48, salary: 26678.0, accrualSalary: 26678.0, savings: 34171.48, normalizedSavings: 34171.48, balance: 254762.65, tx: 11 },
+  { label: "Aug 2022", iso: "2022-08", spent: 307947.0, income: 82152.94, salary: 26843.0, accrualSalary: 26843.0, savings: -225794.06, normalizedSavings: -225794.06, balance: 28968.59, tx: 15 },
+  { label: "Sep 2022", iso: "2022-09", spent: 13395.0, income: 43057.04, salary: 26793.0, accrualSalary: 26793.0, savings: 29662.04, normalizedSavings: 29662.04, balance: 58630.63, tx: 10 },
+  { label: "Oct 2022", iso: "2022-10", spent: 27557.0, income: 60440.56, salary: 26628.0, accrualSalary: 26628.0, savings: 32883.56, normalizedSavings: 32883.56, balance: 91514.19, tx: 12 },
+  { label: "Nov 2022", iso: "2022-11", spent: 10327.0, income: 41793.59, salary: 26748.0, accrualSalary: 26748.0, savings: 31466.59, normalizedSavings: 31466.59, balance: 122980.78, tx: 9 },
+  { label: "Dec 2022", iso: "2022-12", spent: 28568.0, income: 115883.15, salary: 43363.0, accrualSalary: 43363.0, savings: 87315.15, normalizedSavings: 87315.15, balance: 210295.93, tx: 14 },
+  { label: "Jan 2023", iso: "2023-01", spent: 35082.0, income: 29190.28, salary: 0, accrualSalary: 0, savings: -5891.72, normalizedSavings: -5891.72, balance: 204404.21, tx: 14 },
+  { label: "Feb 2023", iso: "2023-02", spent: 24266.0, income: 86138.18, salary: 64790.0, accrualSalary: 64790.0, savings: 61872.18, normalizedSavings: 61872.18, balance: 266276.39, tx: 16 },
+  { label: "Mar 2023", iso: "2023-03", spent: 61740.0, income: 46900.0, salary: 0, accrualSalary: 0, savings: -14840.0, normalizedSavings: -14840.0, balance: 251436.39, tx: 12 },
+  { label: "Apr 2023", iso: "2023-04", spent: 74611.0, income: 98250.0, salary: 84750.0, accrualSalary: 84750.0, savings: 23639.0, normalizedSavings: 23639.0, balance: 275075.39, tx: 18 },
+  { label: "May 2023", iso: "2023-05", spent: 27775.0, income: 46901.92, salary: 32150.0, accrualSalary: 32150.0, savings: 19126.92, normalizedSavings: 19126.92, balance: 294202.31, tx: 12 },
+  { label: "Jun 2023", iso: "2023-06", spent: 8878.0, income: 61291.39, salary: 32236.0, accrualSalary: 32236.0, savings: 52413.39, normalizedSavings: 52413.39, balance: 346615.7, tx: 11 },
+  { label: "Jul 2023", iso: "2023-07", spent: 90466.0, income: 48907.61, salary: 30837.0, accrualSalary: 30837.0, savings: -41558.39, normalizedSavings: -41558.39, balance: 305057.31, tx: 17 },
+  { label: "Aug 2023", iso: "2023-08", spent: 31583.0, income: 40764.04, salary: 32147.0, accrualSalary: 32147.0, savings: 9181.04, normalizedSavings: 9181.04, balance: 314238.35, tx: 11 },
+  { label: "Sep 2023", iso: "2023-09", spent: 27688.0, income: 47516.39, salary: 31923.0, accrualSalary: 31923.0, savings: 19828.39, normalizedSavings: 19828.39, balance: 334066.74, tx: 15 },
+  { label: "Oct 2023", iso: "2023-10", spent: 65085.0, income: 62763.14, salary: 32195.0, accrualSalary: 32195.0, savings: -2321.86, normalizedSavings: -2321.86, balance: 331744.88, tx: 15 },
+  { label: "Nov 2023", iso: "2023-11", spent: 12020.0, income: 52871.74, salary: 32123.0, accrualSalary: 32123.0, savings: 40851.74, normalizedSavings: 40851.74, balance: 372596.62, tx: 10 },
+  { label: "Dec 2023", iso: "2023-12", spent: 47605.0, income: 66148.0, salary: 0, accrualSalary: 0, savings: 18543.0, normalizedSavings: 18543.0, balance: 391139.62, tx: 15 },
+  { label: "Jan 2024", iso: "2024-01", spent: 451940.0, income: 110682.0, salary: 92952.0, accrualSalary: 92952.0, savings: -341258.0, normalizedSavings: -341258.0, balance: 49881.62, tx: 24 },
+  { label: "Feb 2024", iso: "2024-02", spent: 7143.0, income: 48710.16, salary: 41164.0, accrualSalary: 41164.0, savings: 41567.16, normalizedSavings: 41567.16, balance: 91448.78, tx: 11 },
+  { label: "Mar 2024", iso: "2024-03", spent: 13703.0, income: 72840.67, salary: 67555.0, accrualSalary: 67555.0, savings: 59137.67, normalizedSavings: 59137.67, balance: 150586.45, tx: 13 },
+  { label: "Apr 2024", iso: "2024-04", spent: 41811.0, income: 51232.0, salary: 41185.0, accrualSalary: 41185.0, savings: 9421.0, normalizedSavings: 9421.0, balance: 160007.45, tx: 13 },
+  { label: "May 2024", iso: "2024-05", spent: 56764.0, income: 14457.53, salary: 0, accrualSalary: 0, savings: -42306.47, normalizedSavings: -42306.47, balance: 117700.98, tx: 17 },
+  { label: "Jun 2024", iso: "2024-06", spent: 55233.0, income: 148930.1, salary: 108836.0, accrualSalary: 108836.0, savings: 93697.1, normalizedSavings: 93697.1, balance: 211398.08, tx: 21 },
+  { label: "Jul 2024", iso: "2024-07", spent: 124379.0, income: 15936.0, salary: 0, accrualSalary: 0, savings: -108443.0, normalizedSavings: -108443.0, balance: 102955.08, tx: 16 },
+  { label: "Aug 2024", iso: "2024-08", spent: 40781.0, income: 58499.0, salary: 41807.0, accrualSalary: 41807.0, savings: 17718.0, normalizedSavings: 17718.0, balance: 120673.08, tx: 16 },
+  { label: "Sep 2024", iso: "2024-09", spent: 79848.0, income: 97543.0, salary: 82903.0, accrualSalary: 82903.0, savings: 17695.0, normalizedSavings: 17695.0, balance: 138368.08, tx: 18 },
+  { label: "Oct 2024", iso: "2024-10", spent: 51643.0, income: 82056.0, salary: 41310.0, accrualSalary: 41310.0, savings: 30413.0, normalizedSavings: 30413.0, balance: 168781.08, tx: 19 },
+  { label: "Nov 2024", iso: "2024-11", spent: 34880.0, income: 17082.0, salary: 0, accrualSalary: 0, savings: -17798.0, normalizedSavings: -17798.0, balance: 150983.08, tx: 14 },
+  { label: "Dec 2024", iso: "2024-12", spent: 75414.0, income: 171208.07, salary: 109031.0, accrualSalary: 109031.0, savings: 95794.07, normalizedSavings: 95794.07, balance: 246777.15, tx: 22 },
+  { label: "Jan 2025", iso: "2025-01", spent: 34171.0, income: 19414.03, salary: 0, accrualSalary: 0, savings: -14756.97, normalizedSavings: -14756.97, balance: 232020.18, tx: 17 },
+  { label: "Feb 2025", iso: "2025-02", spent: 10481.0, income: 113731.86, salary: 93840.0, accrualSalary: 93840.0, savings: 103250.86, normalizedSavings: 103250.86, balance: 335271.04, tx: 15 },
+  { label: "Mar 2025", iso: "2025-03", spent: 47959.0, income: 85229.41, salary: 46768.0, accrualSalary: 46768.0, savings: 37270.41, normalizedSavings: 37270.41, balance: 372541.45, tx: 17 },
+  { label: "Apr 2025", iso: "2025-04", spent: 347688.0, income: 102281.0, salary: 46895.0, accrualSalary: 46895.0, savings: -245407.0, normalizedSavings: -245407.0, balance: 127134.45, tx: 22 },
+  { label: "May 2025", iso: "2025-05", spent: 74350.0, income: 61952.0, salary: 0, accrualSalary: 0, savings: -12398.0, normalizedSavings: -12398.0, balance: 114736.45, tx: 25 },
+  { label: "Jun 2025", iso: "2025-06", spent: 26343.0, income: 106317.61, salary: 92818.0, accrualSalary: 92818.0, savings: 79974.61, normalizedSavings: 79974.61, balance: 194711.06, tx: 19 },
+  { label: "Jul 2025", iso: "2025-07", spent: 69014.0, income: 69845.37, salary: 46635.0, accrualSalary: 46635.0, savings: 831.37, normalizedSavings: 831.37, balance: 195542.43, tx: 23 },
+  { label: "Aug 2025", iso: "2025-08", spent: 28716.0, income: 332462.0, salary: 0, accrualSalary: 0, savings: 303746.0, normalizedSavings: 303746.0, balance: 499288.43, tx: 13 },
+  { label: "Sep 2025", iso: "2025-09", spent: 88285.0, income: 138471.0, salary: 92921.0, accrualSalary: 92921.0, savings: 50186.0, normalizedSavings: 50186.0, balance: 549474.43, tx: 31 },
+  { label: "Oct 2025", iso: "2025-10", spent: 459837.0, income: 70996.37, salary: 46841.0, accrualSalary: 46841.0, savings: -388840.63, normalizedSavings: -388840.63, balance: 160633.8, tx: 26 },
+  { label: "Nov 2025", iso: "2025-11", spent: 58299.45, income: 59293.0, salary: 46823.0, accrualSalary: 46823.0, savings: 993.55, normalizedSavings: 993.55, balance: 161627.35, tx: 36 },
+  { label: "Dec 2025", iso: "2025-12", spent: 21145.0, income: 267590.62, salary: 76443.0, accrualSalary: 76443.0, savings: 246445.62, normalizedSavings: 246445.62, balance: 408072.97, tx: 26 },
+  { label: "Jan 2026", iso: "2026-01", spent: 176465.0, income: 31668.87, salary: 0, accrualSalary: 0, savings: -144796.13, normalizedSavings: -144796.13, balance: 263276.84, tx: 20 },
+  { label: "Feb 2026", iso: "2026-02", spent: 50786.0, income: 63436.0, salary: 60936.0, accrualSalary: 60936.0, savings: 12650.0, normalizedSavings: 12650.0, balance: 275926.84, tx: 24 },
+  { label: "Mar 2026", iso: "2026-03", spent: 56346.0, income: 167818.0, salary: 156168.0, accrualSalary: 156168.0, savings: 111472.0, normalizedSavings: 111472.0, balance: 387398.84, tx: 25 },
+  { label: "Apr 2026", iso: "2026-04", spent: 196285.53, income: 201468.87, salary: 60900.0, accrualSalary: 60900.0, savings: 5183.34, normalizedSavings: 5183.34, balance: 392582.18, tx: 48 },
+  { label: "May 2026", iso: "2026-05", spent: 391577.59, income: 87720.0, salary: 0, accrualSalary: 0, savings: -303857.59, normalizedSavings: -303857.59, balance: 88724.59, tx: 28 },
+  { label: "Jun 2026", iso: "2026-06", spent: 47674.12, income: 134724.0, salary: 121374.0, accrualSalary: 121374.0, savings: 87049.88, normalizedSavings: 87049.88, balance: 175774.47, tx: 19 },
+  { label: "Jul 2026", iso: "2026-07", spent: 25600.0, income: 46240.37, salary: 0, accrualSalary: 0, savings: 20640.37, normalizedSavings: 20640.37, balance: 196414.84, tx: 10 }
 ];
 
 const YEARLY_DATA = {
-  '2021': { income:176600.58, spent:78724.0, savings:97876.58, normalizedSavings:97876.58, tx:34 },
-  '2022': { income:698168.35, spent:585749.0, savings:112419.35, normalizedSavings:112419.35, tx:142 },
-  '2023': { income:687642.69, spent:506799.0, savings:180843.69, normalizedSavings:180843.69, tx:166 },
-  '2024': { income:889176.53, spent:1033539.0, savings:-144362.47, normalizedSavings:-144362.47, tx:204 },
-  '2025': { income:1427584.27, spent:1266288.45, savings:161295.82, normalizedSavings:161295.82, tx:270 },
-  '2026': { income:733076.11, spent:944734.24, savings:-211658.13, normalizedSavings:-211658.13, tx:174 }
+  '2021': { income: 176600.58, spent: 78724.0, savings: 97876.58, normalizedSavings: 97876.58, tx: 34 },
+  '2022': { income: 698168.35, spent: 585749.0, savings: 112419.35, normalizedSavings: 112419.35, tx: 142 },
+  '2023': { income: 687642.69, spent: 506799.0, savings: 180843.69, normalizedSavings: 180843.69, tx: 166 },
+  '2024': { income: 889176.53, spent: 1033539.0, savings: -144362.47, normalizedSavings: -144362.47, tx: 204 },
+  '2025': { income: 1427584.27, spent: 1266288.45, savings: 161295.82, normalizedSavings: 161295.82, tx: 270 },
+  '2026': { income: 733076.11, spent: 944734.24, savings: -211658.13, normalizedSavings: -211658.13, tx: 174 }
 };
 
 
@@ -1747,6 +1826,26 @@ function initNav() {
   el('hamburger')?.addEventListener('click', toggleSidebar);
   el('sidebarCloseBtn')?.addEventListener('click', closeSidebar);
   el('sidebarBackdrop')?.addEventListener('click', closeSidebar);
+
+  // Close modals when clicking backdrop
+  ['budgetModal', 'goalModal', 'debtModal', 'scheduledModal'].forEach(id => {
+    const modal = el(id);
+    if (modal) {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.classList.add('hidden');
+      });
+    }
+  });
+
+  // Close modals on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      ['budgetModal', 'goalModal', 'debtModal', 'scheduledModal'].forEach(id => {
+        el(id)?.classList.add('hidden');
+      });
+      closeSidebar();
+    }
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -2116,16 +2215,30 @@ let budgets = lsGet('budgets', [
   { cat: 'Transport', limit: 5000, spent: 3200, icon: '🚗' },
   { cat: 'Shopping', limit: 10000, spent: 8100, icon: '🛍️' },
 ]);
+let editBudgetIndex = null;
 
 function renderBudgets() {
-  el('budgetList').innerHTML = budgets.map((b, i) => {
-    const pct = Math.min(100, (b.spent / b.limit) * 100);
-    const over = b.spent > b.limit;
+  const list = el('budgetList');
+  if (!budgets || !budgets.length) {
+    list.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No budget categories yet. Click "+ Add Budget" above to create one.</p>`;
+    return;
+  }
+  list.innerHTML = budgets.map((b, i) => {
+    const limit = Number(b.limit) || 0;
+    const spent = Number(b.spent) || 0;
+    const pct = limit > 0 ? Math.min(100, (spent / limit) * 100) : 0;
+    const over = spent > limit;
     return `
-      <div class="budget-item">
+      <div class="budget-item" data-id="${i}">
         <div class="budget-item-header">
-          <div class="budget-name">${b.icon} ${b.cat}</div>
-          <div class="budget-amounts">${fmt(b.spent)} / ${fmt(b.limit)} · ${pct.toFixed(0)}%</div>
+          <div class="budget-name"><span>${b.icon || '💳'}</span> ${b.cat}</div>
+          <div class="budget-right-group">
+            <div class="budget-amounts">${fmt(spent)} / ${fmt(limit)} · ${pct.toFixed(0)}%</div>
+            <div class="item-actions">
+              <button class="btn-icon edit" onclick="openBudgetModal(${i})" title="Edit budget category" aria-label="Edit budget category">✏️</button>
+              <button class="btn-icon delete" onclick="deleteBudget(${i})" title="Delete budget category" aria-label="Delete budget category">🗑️</button>
+            </div>
+          </div>
         </div>
         <div class="progress-bar">
           <div class="progress-fill ${over ? 'over' : ''}" style="width:${pct}%"></div>
@@ -2134,21 +2247,61 @@ function renderBudgets() {
   }).join('');
 }
 
+function openBudgetModal(index = null) {
+  editBudgetIndex = index;
+  const modal = el('budgetModal');
+  const title = el('budgetModalTitle') || modal.querySelector('h3');
+  if (index !== null && budgets[index]) {
+    const b = budgets[index];
+    if (title) title.textContent = 'Edit Budget Category';
+    el('budgetCatInput').value = b.cat || '';
+    el('budgetLimitInput').value = b.limit ?? '';
+    if (el('budgetSpentInput')) el('budgetSpentInput').value = b.spent ?? 0;
+    el('budgetIconInput').value = b.icon || '💳';
+  } else {
+    if (title) title.textContent = 'New Budget Category';
+    el('budgetCatInput').value = '';
+    el('budgetLimitInput').value = '';
+    if (el('budgetSpentInput')) el('budgetSpentInput').value = 0;
+    el('budgetIconInput').value = '🛒';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteBudget(index) {
+  if (confirm(`Are you sure you want to delete "${budgets[index]?.cat || 'this category'}"?`)) {
+    budgets.splice(index, 1);
+    lsSet('budgets', budgets);
+    renderBudgets();
+  }
+}
+
 function initBudget() {
   renderBudgets();
-  el('addBudgetBtn').addEventListener('click', () => el('budgetModal').classList.remove('hidden'));
-  el('cancelBudget').addEventListener('click', () => el('budgetModal').classList.add('hidden'));
-  el('saveBudget').addEventListener('click', () => {
+  el('addBudgetBtn')?.addEventListener('click', () => openBudgetModal());
+  el('cancelBudget')?.addEventListener('click', () => el('budgetModal').classList.add('hidden'));
+  el('saveBudget')?.addEventListener('click', () => {
     const cat = el('budgetCatInput').value.trim();
     const limit = parseFloat(el('budgetLimitInput').value) || 0;
+    const spent = el('budgetSpentInput') ? (parseFloat(el('budgetSpentInput').value) || 0) : (editBudgetIndex !== null ? (budgets[editBudgetIndex]?.spent || 0) : 0);
     const icon = el('budgetIconInput').value.trim() || '💳';
-    if (cat && limit) {
-      budgets.push({ cat, limit, spent: 0, icon });
-      lsSet('budgets', budgets);
-      renderBudgets();
-      el('budgetModal').classList.add('hidden');
-      el('budgetCatInput').value = el('budgetLimitInput').value = el('budgetIconInput').value = '';
+    if (!cat) {
+      alert('Please enter a category name.');
+      return;
     }
+    if (limit <= 0) {
+      alert('Please enter a valid monthly limit amount.');
+      return;
+    }
+    if (editBudgetIndex !== null && budgets[editBudgetIndex]) {
+      budgets[editBudgetIndex] = { cat, limit, spent, icon };
+    } else {
+      budgets.push({ cat, limit, spent, icon });
+    }
+    lsSet('budgets', budgets);
+    renderBudgets();
+    el('budgetModal').classList.add('hidden');
+    editBudgetIndex = null;
   });
 }
 
@@ -2160,15 +2313,29 @@ let goals = lsGet('goals', [
   { name: 'Laptop Upgrade', target: 80000, current: 30000, deadline: '2026-11-01', emoji: '💻' },
   { name: 'Vacation', target: 150000, current: 20000, deadline: '2027-03-01', emoji: '✈️' },
 ]);
+let editGoalIndex = null;
 
 function renderGoals() {
-  el('goalsGrid').innerHTML = goals.map((g, i) => {
-    const pct = Math.min(100, (g.current / g.target) * 100);
+  const grid = el('goalsGrid');
+  if (!goals || !goals.length) {
+    grid.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;grid-column:1/-1;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No savings goals created yet. Click "+ New Goal" above to add one.</p>`;
+    return;
+  }
+  grid.innerHTML = goals.map((g, i) => {
+    const target = Number(g.target) || 0;
+    const current = Number(g.current) || 0;
+    const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
     return `
       <div class="goal-card">
-        <div class="goal-icon">${g.emoji || '🎯'}</div>
+        <div class="goal-card-header">
+          <div class="goal-icon">${g.emoji || '🎯'}</div>
+          <div class="item-actions">
+            <button class="btn-icon edit" onclick="openGoalModal(${i})" title="Edit goal" aria-label="Edit goal">✏️</button>
+            <button class="btn-icon delete" onclick="deleteGoal(${i})" title="Delete goal" aria-label="Delete goal">🗑️</button>
+          </div>
+        </div>
         <div class="goal-name">${g.name}</div>
-        <div class="goal-amounts">${fmt(g.current)} saved of ${fmt(g.target)}</div>
+        <div class="goal-amounts">${fmt(current)} saved of ${fmt(target)}</div>
         <div class="goal-pct">${pct.toFixed(0)}%</div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         ${g.deadline ? `<div class="goal-deadline">🗓️ Target: ${new Date(g.deadline).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>` : ''}
@@ -2176,22 +2343,64 @@ function renderGoals() {
   }).join('');
 }
 
+function openGoalModal(index = null) {
+  editGoalIndex = index;
+  const modal = el('goalModal');
+  const title = el('goalModalTitle') || modal.querySelector('h3');
+  if (index !== null && goals[index]) {
+    const g = goals[index];
+    if (title) title.textContent = 'Edit Savings Goal';
+    el('goalNameInput').value = g.name || '';
+    el('goalTargetInput').value = g.target ?? '';
+    el('goalCurrentInput').value = g.current ?? '';
+    el('goalDeadlineInput').value = g.deadline || '';
+    if (el('goalEmojiInput')) el('goalEmojiInput').value = g.emoji || '🎯';
+  } else {
+    if (title) title.textContent = 'New Savings Goal';
+    el('goalNameInput').value = '';
+    el('goalTargetInput').value = '';
+    el('goalCurrentInput').value = '';
+    el('goalDeadlineInput').value = '';
+    if (el('goalEmojiInput')) el('goalEmojiInput').value = '🎯';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteGoal(index) {
+  if (confirm(`Are you sure you want to delete goal "${goals[index]?.name || 'this goal'}"?`)) {
+    goals.splice(index, 1);
+    lsSet('goals', goals);
+    renderGoals();
+  }
+}
+
 function initSavings() {
   renderGoals();
-  el('addGoalBtn').addEventListener('click', () => el('goalModal').classList.remove('hidden'));
-  el('cancelGoal').addEventListener('click', () => el('goalModal').classList.add('hidden'));
-  el('saveGoal').addEventListener('click', () => {
+  el('addGoalBtn')?.addEventListener('click', () => openGoalModal());
+  el('cancelGoal')?.addEventListener('click', () => el('goalModal').classList.add('hidden'));
+  el('saveGoal')?.addEventListener('click', () => {
     const name = el('goalNameInput').value.trim();
     const target = parseFloat(el('goalTargetInput').value) || 0;
     const current = parseFloat(el('goalCurrentInput').value) || 0;
     const deadline = el('goalDeadlineInput').value;
-    if (name && target) {
-      goals.push({ name, target, current, deadline, emoji: '🎯' });
-      lsSet('goals', goals);
-      renderGoals();
-      el('goalModal').classList.add('hidden');
-      ['goalNameInput', 'goalTargetInput', 'goalCurrentInput', 'goalDeadlineInput'].forEach(id => el(id).value = '');
+    const emoji = el('goalEmojiInput') ? (el('goalEmojiInput').value.trim() || '🎯') : '🎯';
+    if (!name) {
+      alert('Please enter a goal name.');
+      return;
     }
+    if (target <= 0) {
+      alert('Please enter a valid target amount.');
+      return;
+    }
+    if (editGoalIndex !== null && goals[editGoalIndex]) {
+      goals[editGoalIndex] = { name, target, current, deadline, emoji };
+    } else {
+      goals.push({ name, target, current, deadline, emoji });
+    }
+    lsSet('goals', goals);
+    renderGoals();
+    el('goalModal').classList.add('hidden');
+    editGoalIndex = null;
   });
 }
 
@@ -2203,23 +2412,68 @@ let debts = lsGet('debts', [
   { type: 'owed', person: 'Rahim Bhai', amount: 5000, due: '2026-10-15', note: 'Borrowed for event' },
 ]);
 let debtTab = 'owe';
+let editDebtIndex = null;
 
 function renderDebts() {
-  el('debtList').innerHTML = debts
-    .filter(d => d.type === debtTab)
-    .map((d, i) => `
-      <div class="debt-item">
-        <div>
-          <div class="debt-person">${d.person}</div>
-          <div class="debt-meta">${d.note} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</div>
-        </div>
+  const container = el('debtList');
+  const filtered = debts
+    .map((d, originalIndex) => ({ ...d, originalIndex }))
+    .filter(d => d.type === debtTab);
+
+  if (!filtered.length) {
+    container.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No ${debtTab === 'owe' ? 'debts you owe' : 'loans owed to you'} recorded. Click "+ Add Entry" above to add one.</p>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(d => `
+    <div class="debt-item">
+      <div>
+        <div class="debt-person">${d.person}</div>
+        <div class="debt-meta">${d.note || 'No note'} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</div>
+      </div>
+      <div class="debt-right-group">
         <div class="debt-amount ${d.type === 'owe' ? 'red' : 'green'}">${fmt(d.amount)}</div>
-      </div>`).join('') || `<p style="color:var(--text-muted);padding:1rem">No entries yet.</p>`;
+        <div class="item-actions">
+          <button class="btn-icon edit" onclick="openDebtModal(${d.originalIndex})" title="Edit debt entry" aria-label="Edit debt entry">✏️</button>
+          <button class="btn-icon delete" onclick="deleteDebt(${d.originalIndex})" title="Delete debt entry" aria-label="Delete debt entry">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openDebtModal(index = null) {
+  editDebtIndex = index;
+  const modal = el('debtModal');
+  const title = el('debtModalTitle') || modal.querySelector('h3');
+  if (index !== null && debts[index]) {
+    const d = debts[index];
+    if (title) title.textContent = 'Edit Debt Entry';
+    if (el('debtTypeInput')) el('debtTypeInput').value = d.type || debtTab;
+    el('debtPersonInput').value = d.person || '';
+    el('debtAmountInput').value = d.amount ?? '';
+    el('debtDueInput').value = d.due || '';
+    el('debtNoteInput').value = d.note || '';
+  } else {
+    if (title) title.textContent = 'New Debt Entry';
+    if (el('debtTypeInput')) el('debtTypeInput').value = debtTab;
+    el('debtPersonInput').value = '';
+    el('debtAmountInput').value = '';
+    el('debtDueInput').value = '';
+    el('debtNoteInput').value = '';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteDebt(index) {
+  if (confirm(`Are you sure you want to delete the entry for "${debts[index]?.person || 'this person'}"?`)) {
+    debts.splice(index, 1);
+    lsSet('debts', debts);
+    renderDebts();
+  }
 }
 
 function initDebts() {
   renderDebts();
-  el('debtList');
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2228,20 +2482,38 @@ function initDebts() {
       renderDebts();
     });
   });
-  el('addDebtBtn').addEventListener('click', () => el('debtModal').classList.remove('hidden'));
-  el('cancelDebt').addEventListener('click', () => el('debtModal').classList.add('hidden'));
-  el('saveDebt').addEventListener('click', () => {
+  el('addDebtBtn')?.addEventListener('click', () => openDebtModal());
+  el('cancelDebt')?.addEventListener('click', () => el('debtModal').classList.add('hidden'));
+  el('saveDebt')?.addEventListener('click', () => {
+    const type = el('debtTypeInput') ? el('debtTypeInput').value : debtTab;
     const person = el('debtPersonInput').value.trim();
     const amount = parseFloat(el('debtAmountInput').value) || 0;
     const due = el('debtDueInput').value;
     const note = el('debtNoteInput').value.trim();
-    if (person && amount) {
-      debts.push({ type: debtTab, person, amount, due, note });
-      lsSet('debts', debts);
-      renderDebts();
-      el('debtModal').classList.add('hidden');
-      ['debtPersonInput', 'debtAmountInput', 'debtDueInput', 'debtNoteInput'].forEach(id => el(id).value = '');
+    if (!person) {
+      alert('Please enter a person or institution name.');
+      return;
     }
+    if (amount <= 0) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+    if (editDebtIndex !== null && debts[editDebtIndex]) {
+      debts[editDebtIndex] = { type, person, amount, due, note };
+    } else {
+      debts.push({ type, person, amount, due, note });
+    }
+    lsSet('debts', debts);
+    // If the debt type was changed, switch tab to view it
+    if (type !== debtTab) {
+      debtTab = type;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === debtTab);
+      });
+    }
+    renderDebts();
+    el('debtModal').classList.add('hidden');
+    editDebtIndex = null;
   });
 }
 
@@ -2254,40 +2526,103 @@ let scheduled = lsGet('scheduled', [
   { name: 'Internet', amount: 800, type: 'expense', freq: 'monthly', due: '2026-09-10' },
   { name: 'Netflix', amount: 1500, type: 'expense', freq: 'monthly', due: '2026-09-15' },
 ]);
+let editSchedIndex = null;
 
 function renderScheduled() {
-  el('scheduledList').innerHTML = scheduled.map((s, i) => `
+  const container = el('scheduledList');
+  if (!scheduled || !scheduled.length) {
+    container.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No recurring transactions set up. Click "+ Add Recurring" above to create one.</p>`;
+    return;
+  }
+  container.innerHTML = scheduled.map((s, i) => `
     <div class="sched-item">
       <div class="sched-left">
         <div class="sched-icon ${s.type}">${s.type === 'income' ? '📥' : '📤'}</div>
         <div>
           <div class="sched-name">${s.name}</div>
-          <div class="sched-meta">${s.freq.charAt(0).toUpperCase() + s.freq.slice(1)} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}</div>
+          <div class="sched-meta">${s.freq ? (s.freq.charAt(0).toUpperCase() + s.freq.slice(1)) : 'Monthly'} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}</div>
         </div>
       </div>
-      <div class="sched-amount ${s.type === 'income' ? 'green' : 'red'}">${s.type === 'income' ? '+' : '–'}${fmt(s.amount)}</div>
+      <div class="sched-right-group">
+        <div class="sched-amount ${s.type === 'income' ? 'green' : 'red'}">${s.type === 'income' ? '+' : '–'}${fmt(s.amount)}</div>
+        <div class="item-actions">
+          <button class="btn-icon edit" onclick="openScheduledModal(${i})" title="Edit recurring transaction" aria-label="Edit recurring transaction">✏️</button>
+          <button class="btn-icon delete" onclick="deleteScheduled(${i})" title="Delete recurring transaction" aria-label="Delete recurring transaction">🗑️</button>
+        </div>
+      </div>
     </div>`).join('');
+}
+
+function openScheduledModal(index = null) {
+  editSchedIndex = index;
+  const modal = el('scheduledModal');
+  const title = el('schedModalTitle') || modal.querySelector('h3');
+  if (index !== null && scheduled[index]) {
+    const s = scheduled[index];
+    if (title) title.textContent = 'Edit Recurring Transaction';
+    el('schedNameInput').value = s.name || '';
+    el('schedAmountInput').value = s.amount ?? '';
+    el('schedTypeInput').value = s.type || 'expense';
+    el('schedFreqInput').value = s.freq || 'monthly';
+    el('schedDueInput').value = s.due || '';
+  } else {
+    if (title) title.textContent = 'New Recurring Transaction';
+    el('schedNameInput').value = '';
+    el('schedAmountInput').value = '';
+    el('schedTypeInput').value = 'expense';
+    el('schedFreqInput').value = 'monthly';
+    el('schedDueInput').value = '';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteScheduled(index) {
+  if (confirm(`Are you sure you want to delete recurring item "${scheduled[index]?.name || 'this item'}"?`)) {
+    scheduled.splice(index, 1);
+    lsSet('scheduled', scheduled);
+    renderScheduled();
+  }
 }
 
 function initScheduled() {
   renderScheduled();
-  el('addScheduledBtn').addEventListener('click', () => el('scheduledModal').classList.remove('hidden'));
-  el('cancelScheduled').addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
-  el('saveScheduled').addEventListener('click', () => {
+  el('addScheduledBtn')?.addEventListener('click', () => openScheduledModal());
+  el('cancelScheduled')?.addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
+  el('saveScheduled')?.addEventListener('click', () => {
     const name = el('schedNameInput').value.trim();
     const amount = parseFloat(el('schedAmountInput').value) || 0;
     const type = el('schedTypeInput').value;
     const freq = el('schedFreqInput').value;
     const due = el('schedDueInput').value;
-    if (name && amount) {
-      scheduled.push({ name, amount, type, freq, due });
-      lsSet('scheduled', scheduled);
-      renderScheduled();
-      el('scheduledModal').classList.add('hidden');
-      ['schedNameInput', 'schedAmountInput', 'schedDueInput'].forEach(id => el(id).value = '');
+    if (!name) {
+      alert('Please enter a transaction name.');
+      return;
     }
+    if (amount <= 0) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+    if (editSchedIndex !== null && scheduled[editSchedIndex]) {
+      scheduled[editSchedIndex] = { name, amount, type, freq, due };
+    } else {
+      scheduled.push({ name, amount, type, freq, due });
+    }
+    lsSet('scheduled', scheduled);
+    renderScheduled();
+    el('scheduledModal').classList.add('hidden');
+    editSchedIndex = null;
   });
 }
+
+// Expose modal functions to window for inline onclick attributes
+window.openBudgetModal = openBudgetModal;
+window.deleteBudget = deleteBudget;
+window.openGoalModal = openGoalModal;
+window.deleteGoal = deleteGoal;
+window.openDebtModal = openDebtModal;
+window.deleteDebt = deleteDebt;
+window.openScheduledModal = openScheduledModal;
+window.deleteScheduled = deleteScheduled;
 
 // ─────────────────────────────────────────────
 // RANGE FILTER BUTTONS
