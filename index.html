@@ -303,9 +303,10 @@
     <div class="budget-list" id="budgetList"></div>
     <div class="modal hidden" id="budgetModal">
       <div class="modal-card">
-        <h3>New Budget Category</h3>
+        <h3 id="budgetModalTitle">New Budget Category</h3>
         <label>Category Name<input type="text" id="budgetCatInput" placeholder="e.g. Groceries" /></label>
         <label>Monthly Limit (৳)<input type="number" id="budgetLimitInput" placeholder="15000" /></label>
+        <label>Current Spent (৳)<input type="number" id="budgetSpentInput" placeholder="0" /></label>
         <label>Icon<input type="text" id="budgetIconInput" placeholder="🛒" /></label>
         <div class="modal-actions">
           <button class="btn-secondary" id="cancelBudget">Cancel</button>
@@ -325,11 +326,12 @@
     <div class="goals-grid" id="goalsGrid"></div>
     <div class="modal hidden" id="goalModal">
       <div class="modal-card">
-        <h3>New Savings Goal</h3>
+        <h3 id="goalModalTitle">New Savings Goal</h3>
         <label>Goal Name<input type="text" id="goalNameInput" placeholder="e.g. Emergency Fund" /></label>
         <label>Target Amount (৳)<input type="number" id="goalTargetInput" placeholder="100000" /></label>
         <label>Current Saved (৳)<input type="number" id="goalCurrentInput" placeholder="0" /></label>
         <label>Deadline<input type="date" id="goalDeadlineInput" /></label>
+        <label>Icon / Emoji<input type="text" id="goalEmojiInput" placeholder="🎯" /></label>
         <div class="modal-actions">
           <button class="btn-secondary" id="cancelGoal">Cancel</button>
           <button class="btn-primary" id="saveGoal">Save</button>
@@ -352,7 +354,13 @@
     <div class="debt-list" id="debtList"></div>
     <div class="modal hidden" id="debtModal">
       <div class="modal-card">
-        <h3>New Debt Entry</h3>
+        <h3 id="debtModalTitle">New Debt Entry</h3>
+        <label>Type
+          <select id="debtTypeInput">
+            <option value="owe">I Owe (Liability)</option>
+            <option value="owed">Owed to Me (Asset)</option>
+          </select>
+        </label>
         <label>Person / Institution<input type="text" id="debtPersonInput" placeholder="e.g. Karim Bhai" /></label>
         <label>Amount (৳)<input type="number" id="debtAmountInput" placeholder="5000" /></label>
         <label>Due Date<input type="date" id="debtDueInput" /></label>
@@ -418,7 +426,7 @@
     <div class="scheduled-list" id="scheduledList"></div>
     <div class="modal hidden" id="scheduledModal">
       <div class="modal-card">
-        <h3>Recurring Transaction</h3>
+        <h3 id="schedModalTitle">Recurring Transaction</h3>
         <label>Name<input type="text" id="schedNameInput" placeholder="e.g. Rent" /></label>
         <label>Amount (৳)<input type="number" id="schedAmountInput" /></label>
         <label>Type

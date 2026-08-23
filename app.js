@@ -155,6 +155,26 @@ function initNav() {
   el('hamburger')?.addEventListener('click', toggleSidebar);
   el('sidebarCloseBtn')?.addEventListener('click', closeSidebar);
   el('sidebarBackdrop')?.addEventListener('click', closeSidebar);
+
+  // Close modals when clicking backdrop
+  ['budgetModal', 'goalModal', 'debtModal', 'scheduledModal'].forEach(id => {
+    const modal = el(id);
+    if (modal) {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.classList.add('hidden');
+      });
+    }
+  });
+
+  // Close modals on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      ['budgetModal', 'goalModal', 'debtModal', 'scheduledModal'].forEach(id => {
+        el(id)?.classList.add('hidden');
+      });
+      closeSidebar();
+    }
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -524,16 +544,30 @@ let budgets = lsGet('budgets', [
   { cat: 'Transport', limit: 5000, spent: 3200, icon: '🚗' },
   { cat: 'Shopping', limit: 10000, spent: 8100, icon: '🛍️' },
 ]);
+let editBudgetIndex = null;
 
 function renderBudgets() {
-  el('budgetList').innerHTML = budgets.map((b, i) => {
-    const pct = Math.min(100, (b.spent / b.limit) * 100);
-    const over = b.spent > b.limit;
+  const list = el('budgetList');
+  if (!budgets || !budgets.length) {
+    list.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No budget categories yet. Click "+ Add Budget" above to create one.</p>`;
+    return;
+  }
+  list.innerHTML = budgets.map((b, i) => {
+    const limit = Number(b.limit) || 0;
+    const spent = Number(b.spent) || 0;
+    const pct = limit > 0 ? Math.min(100, (spent / limit) * 100) : 0;
+    const over = spent > limit;
     return `
-      <div class="budget-item">
+      <div class="budget-item" data-id="${i}">
         <div class="budget-item-header">
-          <div class="budget-name">${b.icon} ${b.cat}</div>
-          <div class="budget-amounts">${fmt(b.spent)} / ${fmt(b.limit)} · ${pct.toFixed(0)}%</div>
+          <div class="budget-name"><span>${b.icon || '💳'}</span> ${b.cat}</div>
+          <div class="budget-right-group">
+            <div class="budget-amounts">${fmt(spent)} / ${fmt(limit)} · ${pct.toFixed(0)}%</div>
+            <div class="item-actions">
+              <button class="btn-icon edit" onclick="openBudgetModal(${i})" title="Edit budget category" aria-label="Edit budget category">✏️</button>
+              <button class="btn-icon delete" onclick="deleteBudget(${i})" title="Delete budget category" aria-label="Delete budget category">🗑️</button>
+            </div>
+          </div>
         </div>
         <div class="progress-bar">
           <div class="progress-fill ${over ? 'over' : ''}" style="width:${pct}%"></div>
@@ -542,21 +576,61 @@ function renderBudgets() {
   }).join('');
 }
 
+function openBudgetModal(index = null) {
+  editBudgetIndex = index;
+  const modal = el('budgetModal');
+  const title = el('budgetModalTitle') || modal.querySelector('h3');
+  if (index !== null && budgets[index]) {
+    const b = budgets[index];
+    if (title) title.textContent = 'Edit Budget Category';
+    el('budgetCatInput').value = b.cat || '';
+    el('budgetLimitInput').value = b.limit ?? '';
+    if (el('budgetSpentInput')) el('budgetSpentInput').value = b.spent ?? 0;
+    el('budgetIconInput').value = b.icon || '💳';
+  } else {
+    if (title) title.textContent = 'New Budget Category';
+    el('budgetCatInput').value = '';
+    el('budgetLimitInput').value = '';
+    if (el('budgetSpentInput')) el('budgetSpentInput').value = 0;
+    el('budgetIconInput').value = '🛒';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteBudget(index) {
+  if (confirm(`Are you sure you want to delete "${budgets[index]?.cat || 'this category'}"?`)) {
+    budgets.splice(index, 1);
+    lsSet('budgets', budgets);
+    renderBudgets();
+  }
+}
+
 function initBudget() {
   renderBudgets();
-  el('addBudgetBtn').addEventListener('click', () => el('budgetModal').classList.remove('hidden'));
-  el('cancelBudget').addEventListener('click', () => el('budgetModal').classList.add('hidden'));
-  el('saveBudget').addEventListener('click', () => {
+  el('addBudgetBtn')?.addEventListener('click', () => openBudgetModal());
+  el('cancelBudget')?.addEventListener('click', () => el('budgetModal').classList.add('hidden'));
+  el('saveBudget')?.addEventListener('click', () => {
     const cat = el('budgetCatInput').value.trim();
     const limit = parseFloat(el('budgetLimitInput').value) || 0;
+    const spent = el('budgetSpentInput') ? (parseFloat(el('budgetSpentInput').value) || 0) : (editBudgetIndex !== null ? (budgets[editBudgetIndex]?.spent || 0) : 0);
     const icon = el('budgetIconInput').value.trim() || '💳';
-    if (cat && limit) {
-      budgets.push({ cat, limit, spent: 0, icon });
-      lsSet('budgets', budgets);
-      renderBudgets();
-      el('budgetModal').classList.add('hidden');
-      el('budgetCatInput').value = el('budgetLimitInput').value = el('budgetIconInput').value = '';
+    if (!cat) {
+      alert('Please enter a category name.');
+      return;
     }
+    if (limit <= 0) {
+      alert('Please enter a valid monthly limit amount.');
+      return;
+    }
+    if (editBudgetIndex !== null && budgets[editBudgetIndex]) {
+      budgets[editBudgetIndex] = { cat, limit, spent, icon };
+    } else {
+      budgets.push({ cat, limit, spent, icon });
+    }
+    lsSet('budgets', budgets);
+    renderBudgets();
+    el('budgetModal').classList.add('hidden');
+    editBudgetIndex = null;
   });
 }
 
@@ -568,15 +642,29 @@ let goals = lsGet('goals', [
   { name: 'Laptop Upgrade', target: 80000, current: 30000, deadline: '2026-11-01', emoji: '💻' },
   { name: 'Vacation', target: 150000, current: 20000, deadline: '2027-03-01', emoji: '✈️' },
 ]);
+let editGoalIndex = null;
 
 function renderGoals() {
-  el('goalsGrid').innerHTML = goals.map((g, i) => {
-    const pct = Math.min(100, (g.current / g.target) * 100);
+  const grid = el('goalsGrid');
+  if (!goals || !goals.length) {
+    grid.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;grid-column:1/-1;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No savings goals created yet. Click "+ New Goal" above to add one.</p>`;
+    return;
+  }
+  grid.innerHTML = goals.map((g, i) => {
+    const target = Number(g.target) || 0;
+    const current = Number(g.current) || 0;
+    const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
     return `
       <div class="goal-card">
-        <div class="goal-icon">${g.emoji || '🎯'}</div>
+        <div class="goal-card-header">
+          <div class="goal-icon">${g.emoji || '🎯'}</div>
+          <div class="item-actions">
+            <button class="btn-icon edit" onclick="openGoalModal(${i})" title="Edit goal" aria-label="Edit goal">✏️</button>
+            <button class="btn-icon delete" onclick="deleteGoal(${i})" title="Delete goal" aria-label="Delete goal">🗑️</button>
+          </div>
+        </div>
         <div class="goal-name">${g.name}</div>
-        <div class="goal-amounts">${fmt(g.current)} saved of ${fmt(g.target)}</div>
+        <div class="goal-amounts">${fmt(current)} saved of ${fmt(target)}</div>
         <div class="goal-pct">${pct.toFixed(0)}%</div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         ${g.deadline ? `<div class="goal-deadline">🗓️ Target: ${new Date(g.deadline).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>` : ''}
@@ -584,22 +672,64 @@ function renderGoals() {
   }).join('');
 }
 
+function openGoalModal(index = null) {
+  editGoalIndex = index;
+  const modal = el('goalModal');
+  const title = el('goalModalTitle') || modal.querySelector('h3');
+  if (index !== null && goals[index]) {
+    const g = goals[index];
+    if (title) title.textContent = 'Edit Savings Goal';
+    el('goalNameInput').value = g.name || '';
+    el('goalTargetInput').value = g.target ?? '';
+    el('goalCurrentInput').value = g.current ?? '';
+    el('goalDeadlineInput').value = g.deadline || '';
+    if (el('goalEmojiInput')) el('goalEmojiInput').value = g.emoji || '🎯';
+  } else {
+    if (title) title.textContent = 'New Savings Goal';
+    el('goalNameInput').value = '';
+    el('goalTargetInput').value = '';
+    el('goalCurrentInput').value = '';
+    el('goalDeadlineInput').value = '';
+    if (el('goalEmojiInput')) el('goalEmojiInput').value = '🎯';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteGoal(index) {
+  if (confirm(`Are you sure you want to delete goal "${goals[index]?.name || 'this goal'}"?`)) {
+    goals.splice(index, 1);
+    lsSet('goals', goals);
+    renderGoals();
+  }
+}
+
 function initSavings() {
   renderGoals();
-  el('addGoalBtn').addEventListener('click', () => el('goalModal').classList.remove('hidden'));
-  el('cancelGoal').addEventListener('click', () => el('goalModal').classList.add('hidden'));
-  el('saveGoal').addEventListener('click', () => {
+  el('addGoalBtn')?.addEventListener('click', () => openGoalModal());
+  el('cancelGoal')?.addEventListener('click', () => el('goalModal').classList.add('hidden'));
+  el('saveGoal')?.addEventListener('click', () => {
     const name = el('goalNameInput').value.trim();
     const target = parseFloat(el('goalTargetInput').value) || 0;
     const current = parseFloat(el('goalCurrentInput').value) || 0;
     const deadline = el('goalDeadlineInput').value;
-    if (name && target) {
-      goals.push({ name, target, current, deadline, emoji: '🎯' });
-      lsSet('goals', goals);
-      renderGoals();
-      el('goalModal').classList.add('hidden');
-      ['goalNameInput', 'goalTargetInput', 'goalCurrentInput', 'goalDeadlineInput'].forEach(id => el(id).value = '');
+    const emoji = el('goalEmojiInput') ? (el('goalEmojiInput').value.trim() || '🎯') : '🎯';
+    if (!name) {
+      alert('Please enter a goal name.');
+      return;
     }
+    if (target <= 0) {
+      alert('Please enter a valid target amount.');
+      return;
+    }
+    if (editGoalIndex !== null && goals[editGoalIndex]) {
+      goals[editGoalIndex] = { name, target, current, deadline, emoji };
+    } else {
+      goals.push({ name, target, current, deadline, emoji });
+    }
+    lsSet('goals', goals);
+    renderGoals();
+    el('goalModal').classList.add('hidden');
+    editGoalIndex = null;
   });
 }
 
@@ -611,23 +741,68 @@ let debts = lsGet('debts', [
   { type: 'owed', person: 'Rahim Bhai', amount: 5000, due: '2026-10-15', note: 'Borrowed for event' },
 ]);
 let debtTab = 'owe';
+let editDebtIndex = null;
 
 function renderDebts() {
-  el('debtList').innerHTML = debts
-    .filter(d => d.type === debtTab)
-    .map((d, i) => `
-      <div class="debt-item">
-        <div>
-          <div class="debt-person">${d.person}</div>
-          <div class="debt-meta">${d.note} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</div>
-        </div>
+  const container = el('debtList');
+  const filtered = debts
+    .map((d, originalIndex) => ({ ...d, originalIndex }))
+    .filter(d => d.type === debtTab);
+
+  if (!filtered.length) {
+    container.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No ${debtTab === 'owe' ? 'debts you owe' : 'loans owed to you'} recorded. Click "+ Add Entry" above to add one.</p>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(d => `
+    <div class="debt-item">
+      <div>
+        <div class="debt-person">${d.person}</div>
+        <div class="debt-meta">${d.note || 'No note'} · Due: ${d.due ? new Date(d.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</div>
+      </div>
+      <div class="debt-right-group">
         <div class="debt-amount ${d.type === 'owe' ? 'red' : 'green'}">${fmt(d.amount)}</div>
-      </div>`).join('') || `<p style="color:var(--text-muted);padding:1rem">No entries yet.</p>`;
+        <div class="item-actions">
+          <button class="btn-icon edit" onclick="openDebtModal(${d.originalIndex})" title="Edit debt entry" aria-label="Edit debt entry">✏️</button>
+          <button class="btn-icon delete" onclick="deleteDebt(${d.originalIndex})" title="Delete debt entry" aria-label="Delete debt entry">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openDebtModal(index = null) {
+  editDebtIndex = index;
+  const modal = el('debtModal');
+  const title = el('debtModalTitle') || modal.querySelector('h3');
+  if (index !== null && debts[index]) {
+    const d = debts[index];
+    if (title) title.textContent = 'Edit Debt Entry';
+    if (el('debtTypeInput')) el('debtTypeInput').value = d.type || debtTab;
+    el('debtPersonInput').value = d.person || '';
+    el('debtAmountInput').value = d.amount ?? '';
+    el('debtDueInput').value = d.due || '';
+    el('debtNoteInput').value = d.note || '';
+  } else {
+    if (title) title.textContent = 'New Debt Entry';
+    if (el('debtTypeInput')) el('debtTypeInput').value = debtTab;
+    el('debtPersonInput').value = '';
+    el('debtAmountInput').value = '';
+    el('debtDueInput').value = '';
+    el('debtNoteInput').value = '';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteDebt(index) {
+  if (confirm(`Are you sure you want to delete the entry for "${debts[index]?.person || 'this person'}"?`)) {
+    debts.splice(index, 1);
+    lsSet('debts', debts);
+    renderDebts();
+  }
 }
 
 function initDebts() {
   renderDebts();
-  el('debtList');
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -636,20 +811,38 @@ function initDebts() {
       renderDebts();
     });
   });
-  el('addDebtBtn').addEventListener('click', () => el('debtModal').classList.remove('hidden'));
-  el('cancelDebt').addEventListener('click', () => el('debtModal').classList.add('hidden'));
-  el('saveDebt').addEventListener('click', () => {
+  el('addDebtBtn')?.addEventListener('click', () => openDebtModal());
+  el('cancelDebt')?.addEventListener('click', () => el('debtModal').classList.add('hidden'));
+  el('saveDebt')?.addEventListener('click', () => {
+    const type = el('debtTypeInput') ? el('debtTypeInput').value : debtTab;
     const person = el('debtPersonInput').value.trim();
     const amount = parseFloat(el('debtAmountInput').value) || 0;
     const due = el('debtDueInput').value;
     const note = el('debtNoteInput').value.trim();
-    if (person && amount) {
-      debts.push({ type: debtTab, person, amount, due, note });
-      lsSet('debts', debts);
-      renderDebts();
-      el('debtModal').classList.add('hidden');
-      ['debtPersonInput', 'debtAmountInput', 'debtDueInput', 'debtNoteInput'].forEach(id => el(id).value = '');
+    if (!person) {
+      alert('Please enter a person or institution name.');
+      return;
     }
+    if (amount <= 0) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+    if (editDebtIndex !== null && debts[editDebtIndex]) {
+      debts[editDebtIndex] = { type, person, amount, due, note };
+    } else {
+      debts.push({ type, person, amount, due, note });
+    }
+    lsSet('debts', debts);
+    // If the debt type was changed, switch tab to view it
+    if (type !== debtTab) {
+      debtTab = type;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === debtTab);
+      });
+    }
+    renderDebts();
+    el('debtModal').classList.add('hidden');
+    editDebtIndex = null;
   });
 }
 
@@ -662,40 +855,103 @@ let scheduled = lsGet('scheduled', [
   { name: 'Internet', amount: 800, type: 'expense', freq: 'monthly', due: '2026-09-10' },
   { name: 'Netflix', amount: 1500, type: 'expense', freq: 'monthly', due: '2026-09-15' },
 ]);
+let editSchedIndex = null;
 
 function renderScheduled() {
-  el('scheduledList').innerHTML = scheduled.map((s, i) => `
+  const container = el('scheduledList');
+  if (!scheduled || !scheduled.length) {
+    container.innerHTML = `<p style="color:var(--text-muted);padding:1.5rem;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">No recurring transactions set up. Click "+ Add Recurring" above to create one.</p>`;
+    return;
+  }
+  container.innerHTML = scheduled.map((s, i) => `
     <div class="sched-item">
       <div class="sched-left">
         <div class="sched-icon ${s.type}">${s.type === 'income' ? '📥' : '📤'}</div>
         <div>
           <div class="sched-name">${s.name}</div>
-          <div class="sched-meta">${s.freq.charAt(0).toUpperCase() + s.freq.slice(1)} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}</div>
+          <div class="sched-meta">${s.freq ? (s.freq.charAt(0).toUpperCase() + s.freq.slice(1)) : 'Monthly'} · Next: ${s.due ? new Date(s.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}</div>
         </div>
       </div>
-      <div class="sched-amount ${s.type === 'income' ? 'green' : 'red'}">${s.type === 'income' ? '+' : '–'}${fmt(s.amount)}</div>
+      <div class="sched-right-group">
+        <div class="sched-amount ${s.type === 'income' ? 'green' : 'red'}">${s.type === 'income' ? '+' : '–'}${fmt(s.amount)}</div>
+        <div class="item-actions">
+          <button class="btn-icon edit" onclick="openScheduledModal(${i})" title="Edit recurring transaction" aria-label="Edit recurring transaction">✏️</button>
+          <button class="btn-icon delete" onclick="deleteScheduled(${i})" title="Delete recurring transaction" aria-label="Delete recurring transaction">🗑️</button>
+        </div>
+      </div>
     </div>`).join('');
+}
+
+function openScheduledModal(index = null) {
+  editSchedIndex = index;
+  const modal = el('scheduledModal');
+  const title = el('schedModalTitle') || modal.querySelector('h3');
+  if (index !== null && scheduled[index]) {
+    const s = scheduled[index];
+    if (title) title.textContent = 'Edit Recurring Transaction';
+    el('schedNameInput').value = s.name || '';
+    el('schedAmountInput').value = s.amount ?? '';
+    el('schedTypeInput').value = s.type || 'expense';
+    el('schedFreqInput').value = s.freq || 'monthly';
+    el('schedDueInput').value = s.due || '';
+  } else {
+    if (title) title.textContent = 'New Recurring Transaction';
+    el('schedNameInput').value = '';
+    el('schedAmountInput').value = '';
+    el('schedTypeInput').value = 'expense';
+    el('schedFreqInput').value = 'monthly';
+    el('schedDueInput').value = '';
+  }
+  modal.classList.remove('hidden');
+}
+
+function deleteScheduled(index) {
+  if (confirm(`Are you sure you want to delete recurring item "${scheduled[index]?.name || 'this item'}"?`)) {
+    scheduled.splice(index, 1);
+    lsSet('scheduled', scheduled);
+    renderScheduled();
+  }
 }
 
 function initScheduled() {
   renderScheduled();
-  el('addScheduledBtn').addEventListener('click', () => el('scheduledModal').classList.remove('hidden'));
-  el('cancelScheduled').addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
-  el('saveScheduled').addEventListener('click', () => {
+  el('addScheduledBtn')?.addEventListener('click', () => openScheduledModal());
+  el('cancelScheduled')?.addEventListener('click', () => el('scheduledModal').classList.add('hidden'));
+  el('saveScheduled')?.addEventListener('click', () => {
     const name = el('schedNameInput').value.trim();
     const amount = parseFloat(el('schedAmountInput').value) || 0;
     const type = el('schedTypeInput').value;
     const freq = el('schedFreqInput').value;
     const due = el('schedDueInput').value;
-    if (name && amount) {
-      scheduled.push({ name, amount, type, freq, due });
-      lsSet('scheduled', scheduled);
-      renderScheduled();
-      el('scheduledModal').classList.add('hidden');
-      ['schedNameInput', 'schedAmountInput', 'schedDueInput'].forEach(id => el(id).value = '');
+    if (!name) {
+      alert('Please enter a transaction name.');
+      return;
     }
+    if (amount <= 0) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+    if (editSchedIndex !== null && scheduled[editSchedIndex]) {
+      scheduled[editSchedIndex] = { name, amount, type, freq, due };
+    } else {
+      scheduled.push({ name, amount, type, freq, due });
+    }
+    lsSet('scheduled', scheduled);
+    renderScheduled();
+    el('scheduledModal').classList.add('hidden');
+    editSchedIndex = null;
   });
 }
+
+// Expose modal functions to window for inline onclick attributes
+window.openBudgetModal = openBudgetModal;
+window.deleteBudget = deleteBudget;
+window.openGoalModal = openGoalModal;
+window.deleteGoal = deleteGoal;
+window.openDebtModal = openDebtModal;
+window.deleteDebt = deleteDebt;
+window.openScheduledModal = openScheduledModal;
+window.deleteScheduled = deleteScheduled;
 
 // ─────────────────────────────────────────────
 // RANGE FILTER BUTTONS
