@@ -62,7 +62,7 @@ source = APP_JS_PATH.read_text(encoding='utf-8')
 
 # Replace the DATA block (from its comment header through the end of YEARLY_DATA)
 pattern = re.compile(
-    r'// ─+\n// DATA:.*?(?=\n// ─+\n// LIVE DATA LOADER)',
+    r'// ─+\n// DATA:.*?(?=\n// ─+\n// UTILITIES)',
     re.DOTALL
 )
 
