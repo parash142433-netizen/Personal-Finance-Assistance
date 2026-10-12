@@ -78,10 +78,12 @@ def parse_mtb(text):
 
 
 def parse_ebl(text):
-    prev_m = re.search(rf"Previous Balance BDT\s+({NUM})", text, re.I)
     total_m = re.search(rf"Total Outstanding :\s+({NUM})BDT", text)
-    if not (prev_m and total_m):
+    if not total_m:
         raise StatementError("EBL header totals not found")
+    # Statements with no carried-over balance have no "Previous Balance" row.
+    prev_m = re.search(rf"Previous Balance BDT\s+({NUM})", text, re.I)
+    previous = money(prev_m.group(1)) if prev_m else 0.0
     row_re = re.compile(r"^(\d{2}-[A-Za-z]{3}-\d{4}) (.+?) BDT\s+(-?[\d,]+\.\d{2})BDT", re.M)
     rows = []
     for m in row_re.finditer(text):
@@ -96,7 +98,7 @@ def parse_ebl(text):
             "amount": amount,  # positive = spend, negative = payment
         })
     net = round(sum(r["amount"] for r in rows), 2)
-    expected = round(money(total_m.group(1)) - money(prev_m.group(1)), 2)
+    expected = round(money(total_m.group(1)) - previous, 2)
     if net != expected:
         raise StatementError(f"EBL rows total {net} but statement implies {expected}")
     return {"kind": "ebl", "rows": rows}
