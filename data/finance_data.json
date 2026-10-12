@@ -1951,7 +1951,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130257// Sonali / Truncation Point"
+      "ename": "Cheque, Sonali"
     },
     {
       "d": "2026-05-17",
@@ -2127,7 +2127,7 @@
       "t": "MB/FT/24411624/1311000658570/1311000590786/paras",
       "a": -3400.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -2336,7 +2336,7 @@
       "t": "MB/FT/23989102/1311010040235/1311000590786/Paras",
       "a": -1015.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -2471,7 +2471,7 @@
       "t": "MB/FT/23610016/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -3143,7 +3143,7 @@
       "t": "MB/FT/21176098/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -3741,7 +3741,7 @@
       "t": "MB/FT/19259763/1311000658570/1311000590786/paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -3907,7 +3907,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130256// Sonali / Truncation Point"
+      "ename": "Cheque, Sonali"
     },
     {
       "d": "2025-10-14",
@@ -4206,7 +4206,7 @@
       "t": "MB/FT/17452677/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -4350,7 +4350,7 @@
       "t": "MB/FT/17064023/1311000658570/1311000590786/paras",
       "a": -560.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -4588,7 +4588,7 @@
       "t": "MB/FT/16165175/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -4743,7 +4743,7 @@
       "t": "MB/FT/15378153/1311010040235/1311000590786/Paras",
       "a": -5750.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -4806,7 +4806,7 @@
       "t": "MB/FT/15271763/1311000590786/0170310072277/Paras",
       "a": 2000.0,
       "s": "MTB",
-      "k": "spend",
+      "k": "self",
       "e": "Transfers to people",
       "ename": "Paras"
     },
@@ -5044,7 +5044,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130255// Agbk / Agr Anibank"
+      "ename": "Cheque, Agr Anibank"
     },
     {
       "d": "2025-04-07",
@@ -5590,7 +5590,7 @@
       "t": "MB/FT/12309245/1311010040235/1311000590786/Paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -6300,7 +6300,7 @@
       "t": "MB/FT/10385039/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Paras"
     },
@@ -6810,7 +6810,7 @@
       "t": "MB/FT/9065892/1311010040235/1311000590786/Parash",
       "a": -230.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -7219,7 +7219,7 @@
       "t": "MB/FT/7915225/1311000658570/1311000590786/parash",
       "a": -680.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -7412,7 +7412,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -7477,7 +7477,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130254// Abl / Agra Nibank"
+      "ename": "Cheque, Agra Nibank"
     },
     {
       "d": "2024-01-01",
@@ -7720,7 +7720,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -500.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -8263,7 +8263,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130253// Janata / Truncation Point"
+      "ename": "Cheque, Janata"
     },
     {
       "d": "2023-07-04",
@@ -8526,7 +8526,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -260.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -8944,7 +8944,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -3500.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -9128,7 +9128,7 @@
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -9923,7 +9923,7 @@
       "s": "MTB",
       "k": "spend",
       "e": "Cheques",
-      "ename": "Chq Paid/130252//Rani Bank L Td. /Agrani Bank"
+      "ename": "Cheque, Agrani Bank"
     },
     {
       "d": "2022-08-20",
@@ -10269,7 +10269,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -700.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -10617,7 +10617,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -10626,7 +10626,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -10810,7 +10810,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -14000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -10884,7 +10884,7 @@
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "income",
+      "k": "self",
       "c": "Transfers from people",
       "src": "Parash"
     },
@@ -11048,7 +11048,7 @@
       "t": "MB/FT/1311000590786/1311000584275/Parash",
       "a": 2000.0,
       "s": "MTB",
-      "k": "spend",
+      "k": "self",
       "e": "Transfers to people",
       "ename": "Parash"
     },

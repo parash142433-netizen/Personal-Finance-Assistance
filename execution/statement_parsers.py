@@ -162,10 +162,12 @@ def build_monthly(statements):
             m = months[iso]
             if st["kind"] == "mtb":
                 m["tx"] += 1
-                m["income"] += r["deposit"]
+                self_ = is_self_transfer(r["description"])
+                if not self_:
+                    m["income"] += r["deposit"]
                 if "salary" in r["description"].lower():
                     m["salary"] += r["deposit"]
-                if r["withdrawal"] and not _is_card_payment(r["description"]):
+                if r["withdrawal"] and not self_ and not _is_card_payment(r["description"]):
                     m["spent"] += r["withdrawal"]
                 if r["date"] >= m["date"]:
                     m["balance"], m["date"] = r["balance"], r["date"]
@@ -372,9 +374,25 @@ def expense_category(desc):
     return "Other spending"
 
 
+SELF_NAMES = {"parash", "paras"}  # the account holder's own name on transfers
+
+
+def is_self_transfer(desc):
+    """A transfer to or from the account holder's own name. Not income or spending."""
+    if not re.match(r"(MB/FT|IB/FT)", desc, re.I):
+        return False
+    parts = [p.strip().lower() for p in re.split(r"[/~]", desc) if p.strip()]
+    return bool(parts) and parts[-1] in SELF_NAMES
+
+
 def expense_payee(desc):
     """The name in the statement for an expense: a merchant, a person, or a bank transfer."""
     parts = [p.strip() for p in re.split(r"[/~|]", desc) if p.strip()]
+    if re.match(r"CHQ Paid", desc, re.I):
+        # The statement names only the bank that collected the cheque, not the payee.
+        segs = [s.strip() for s in desc.split("/") if s.strip() and not s.strip().isdigit()]
+        segs = [s for s in segs if s.upper() != "TRUNCATION POINT"]
+        return f"Cheque, {segs[-1].title()}" if len(segs) > 1 else "Cheque"
     if re.match(r"POS-", desc, re.I):
         name = re.sub(r"^POS-", "", desc, flags=re.I)
         name = re.split(r"-\d", name)[0]
@@ -424,6 +442,9 @@ def annotate_income(transactions):
             out.append(dict(rule["extra"]))
         else:
             out.append(t)
+    for t in out:
+        if t["k"] in ("income", "spend") and is_self_transfer(t["t"]):
+            t["k"] = "self"  # moved between the account holder's own accounts or names
     for t in out:
         if t["k"] != "income":
             continue
