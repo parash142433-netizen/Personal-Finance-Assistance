@@ -266,8 +266,9 @@ MONTH_IN_DESC_RE = re.compile(r"(january|february|march|marc|april|may|june|july
 
 def classify_income(desc, date):
     """Returns (category, salary_month) for an income row.
-    category: 'Salary', 'Bonus' or 'Other income'. salary_month is the month the salary is for:
-    the month named in the description, otherwise the month it arrived."""
+    category is one of: Salary, Bonus, Interest & government savings, Mobile purchase payment,
+    Refunds & reversals, Cash & RTGS deposits, Loans & repayments, Transfers from people, Other income.
+    salary_month is the month the salary is for: the month named in the description, otherwise the month it arrived."""
     if BONUS_RE.search(desc):
         return "Bonus", None
     if SALARY_RE.search(desc):
@@ -276,7 +277,41 @@ def classify_income(desc, date):
             year = int(m.group(2)) if m.group(2) else int(date[:4])
             return "Salary", f"{year}-{MONTH_WORDS[m.group(1).lower()]:02d}"
         return "Salary", date[:7]
+    if re.search(r"^@TDS", desc, re.I):
+        return "Tax adjustments (TDS)", None
+    if re.search(r"mobile purchase", desc, re.I):
+        return "Mobile purchase payment", None
+    if re.search(r"interest|treasury|GPO", desc, re.I):
+        return "Interest & government savings", None
+    if re.search(r"REV[/-]|reversal|\bRET\b|refund|cash ret|^credit-", desc, re.I):
+        return "Refunds & reversals", None
+    if re.search(r"^cash$|cash deposit|rtgs", desc, re.I):
+        return "Cash & RTGS deposits", None
+    if re.search(r"\bloan", desc, re.I):
+        return "Loans & repayments", None
+    if re.search(r"^(EFT|MB/FT|IB/FT|NPSB|MFS|MB/bKash)", desc, re.I):
+        return "Transfers from people", None
     return "Other income", None
+
+
+GENERIC_NOTES = {"ok", "cash", "transfer", "tr", "food", "adjust", "fund", "personal", "food", "chaap", "kitkat", "ttansfer", "dhar", "bolia", "iftaar", "medici", "consumer produ", "thanks a lot b", "loan", "loan ret", "loan return", "return", "ret"}
+
+
+def income_sender(desc):
+    """The name in the statement for a transfer, or a short label when the statement has no name."""
+    parts = [p.strip() for p in re.split(r"[/~]", desc) if p.strip()]
+    if re.match(r"EFT", desc, re.I) and len(parts) > 2:
+        return " ".join(parts[2].split()).title()
+    if re.match(r"(MB/FT|IB/FT|MB/bKash)", desc, re.I) and parts:
+        last = " ".join(parts[-1].split())
+        if last.lower() in GENERIC_NOTES or re.fullmatch(r"[\d\s.]+", last):
+            return "Unnamed transfer"
+        return last.title()
+    if re.match(r"NPSB", desc, re.I):
+        return "Bank transfer (NPSB)"
+    if re.match(r"MFS", desc, re.I):
+        return "Mobile wallet transfer"
+    return None
 
 
 def salary_timing(date, salary_month):
@@ -320,6 +355,7 @@ def annotate_income(transactions):
             continue
         cat, sal_month = classify_income(t["t"], t["d"])
         t["c"] = cat
+        t["src"] = income_sender(t["t"])
         if cat == "Salary":
             t["m"] = sal_month
             t["tm"] = salary_timing(t["d"], sal_month)

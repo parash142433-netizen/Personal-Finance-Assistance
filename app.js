@@ -112,7 +112,7 @@ function setCurrentDate() {
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'insights', 'scheduled', 'summary', 'settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'income', 'insights', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
@@ -124,7 +124,7 @@ function navigate(page) {
   el('topbarTitle').textContent = {
     dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
     budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
-    transactions: 'Transactions', feed: 'Transaction Feed', insights: 'Insights', scheduled: 'Scheduled', summary: 'Personal Summary',
+    transactions: 'Transactions', feed: 'Transaction Feed', income: 'Income', insights: 'Insights', scheduled: 'Scheduled', summary: 'Personal Summary',
     settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
@@ -1222,6 +1222,7 @@ async function initFeed() {
   const search = document.getElementById('feedSearch');
   if (search) search.addEventListener('input', () => { FEED.query = search.value.trim().toLowerCase(); renderFeed(); });
   renderFeed();
+  initIncome();
 }
 
 function renderFeed() {
@@ -1367,4 +1368,92 @@ function renderInsights() {
     ? subs.map(g => '<div class="feed-row"><div><div class="feed-desc">' + escHtml(g.key) + '</div><div class="feed-src">' +
         escHtml(g.months.length + ' months') + '</div></div><div class="feed-amt">' + fmt(g.amounts[0]) + ' a month</div></div>').join('')
     : '<div class="feed-note">No repeat charges found yet. A subscription shows up after two months with a similar charge.</div>');
+}
+
+// ── INCOME DASHBOARD ─────────────────────────────────────────────────────────────
+// Income rows from the transaction list, grouped by the category the statement text gives them.
+const INCOME_GROUPS = [
+  ['Salary', ['Salary']],
+  ['Bonuses', ['Bonus']],
+  ['Interest & savings', ['Interest & government savings']],
+  ['From people and banks', ['Transfers from people', 'Loans & repayments']],
+  ['Cash & RTGS', ['Cash & RTGS deposits']],
+  ['Other', ['Refunds & reversals', 'Mobile purchase payment', 'Tax adjustments (TDS)', 'Other income']],
+];
+const INCOME_COLORS = ['#34d399', '#fbbf24', '#22d3ee', '#60a5fa', '#c4b5fd', '#94a3b8'];
+let incChart = null;
+
+function incomeRows() {
+  const year = (document.getElementById('incYear') || {}).value || 'all';
+  return FEED.all.filter(t => t.k === 'income' && (year === 'all' || t.d.startsWith(year)));
+}
+
+function initIncome() {
+  const sel = document.getElementById('incYear');
+  if (!sel) return;
+  const years = [...new Set(FEED.all.filter(t => t.k === 'income').map(t => t.d.slice(0, 4)))].sort();
+  sel.innerHTML = '<option value="all">All years</option>' + years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+  sel.value = 'all';
+  sel.addEventListener('change', renderIncome);
+  renderIncome();
+}
+
+function renderIncome() {
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const rows = incomeRows();
+  const sumOf = cats => rows.filter(t => cats.includes(t.c)).reduce((s, t) => s - t.a, 0);
+  const total = rows.reduce((s, t) => s - t.a, 0);
+  set('incTotal', fmt(total));
+  set('incSalary', fmt(sumOf(['Salary'])));
+  set('incBonus', fmt(sumOf(['Bonus'])));
+  set('incPeople', fmt(sumOf(['Transfers from people', 'Loans & repayments'])));
+
+  // Monthly chart: one stacked bar per month, one colour per group
+  const year = document.getElementById('incYear').value;
+  const months = [...new Set(rows.map(t => t.d.slice(0, 7)))].sort();
+  set('incChartTitle', year === 'all' ? 'Income by year' : 'Income by month, ' + year);
+  const groupBy = year === 'all'
+    ? (t => t.d.slice(0, 4))
+    : (t => t.d.slice(0, 7));
+  const labels = [...new Set(rows.map(groupBy))].sort();
+  const datasets = INCOME_GROUPS.map(([name, cats], i) => ({
+    label: name,
+    data: labels.map(l => rows.filter(t => groupBy(t) === l && cats.includes(t.c)).reduce((s, t) => s - t.a, 0)),
+    backgroundColor: INCOME_COLORS[i],
+    borderRadius: 3,
+  }));
+  const canvas = document.getElementById('incChart');
+  if (canvas && typeof Chart !== 'undefined') {
+    if (incChart) incChart.destroy();
+    incChart = new Chart(canvas, {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => fmt(v, true) } } },
+      },
+    });
+  }
+
+  // Category table
+  const catTotals = {};
+  rows.forEach(t => { catTotals[t.c] = (catTotals[t.c] || 0) - t.a; });
+  const catHtml = Object.entries(catTotals).sort((a, b) => b[1] - a[1]).map(([c, v]) =>
+    '<div class="feed-row"><div class="feed-desc">' + escHtml(c) + '</div><div class="feed-amt green">' + fmt(v) +
+    (total ? ' · ' + Math.round(v / total * 100) + '%' : '') + '</div></div>').join('');
+  set('incCats', '') ;
+  document.getElementById('incCats').innerHTML = catHtml || '<div class="feed-note">No income in this period.</div>';
+
+  // Names on the statements (transfers and bank credits)
+  const names = {};
+  rows.filter(t => t.src && t.c !== 'Salary' && t.c !== 'Bonus').forEach(t => {
+    const e = names[t.src] = names[t.src] || { total: 0, count: 0 };
+    e.total -= t.a; e.count += 1;
+  });
+  const nameHtml = Object.entries(names).sort((a, b) => b[1].total - a[1].total).slice(0, 25).map(([n, e]) =>
+    '<div class="feed-row"><div><div class="feed-desc">' + escHtml(n) + '</div><div class="feed-src">' + e.count + ' deposits</div></div>' +
+    '<div class="feed-amt green">' + fmt(e.total) + '</div></div>').join('');
+  document.getElementById('incNames').innerHTML = nameHtml || '<div class="feed-note">No named transfers in this period.</div>';
 }

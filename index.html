@@ -45,7 +45,10 @@
     <li class="nav-item" data-page="transactions" id="nav-transactions">
       <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
     </li>
-            <li class="nav-item" data-page="insights" id="nav-insights">
+                <li class="nav-item" data-page="income" id="nav-income">
+      <span class="nav-icon">💼</span><span class="nav-label">Income</span>
+    </li>
+    <li class="nav-item" data-page="insights" id="nav-insights">
       <span class="nav-icon">💡</span><span class="nav-label">Insights</span>
     </li>
     <li class="nav-item" data-page="feed" id="nav-feed">
@@ -346,6 +349,34 @@
     </div>
     <input type="search" id="feedSearch" class="feed-search" placeholder="Search transactions" />
     <div id="feedList"></div>
+  </section>
+
+  <!-- ── PAGE: INCOME ── -->
+  <section class="page" id="page-income">
+    <div class="page-header">
+      <h1>Income</h1>
+      <p class="subtitle">Every deposit, grouped by what the statement says it is</p>
+    </div>
+    <div class="feed-toolbar">
+      <label for="incYear" class="feed-month">Year</label>
+      <select id="incYear" class="feed-search" style="max-width:160px;margin:0">
+        <option value="all">All years</option>
+      </select>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent-green"><div class="kpi-body"><div class="kpi-label">Total income</div><div class="kpi-value" id="incTotal">—</div></div></div>
+      <div class="kpi-card accent-blue"><div class="kpi-body"><div class="kpi-label">Salary</div><div class="kpi-value" id="incSalary">—</div></div></div>
+      <div class="kpi-card accent-gold"><div class="kpi-body"><div class="kpi-label">Bonuses</div><div class="kpi-value" id="incBonus">—</div></div></div>
+      <div class="kpi-card accent-purple"><div class="kpi-body"><div class="kpi-label">From people and banks</div><div class="kpi-value" id="incPeople">—</div></div></div>
+    </div>
+    <div class="chart-card" style="margin-top:16px">
+      <div class="chart-header"><h3 id="incChartTitle">Income by month</h3></div>
+      <div class="chart-wrap" style="height:300px"><canvas id="incChart"></canvas></div>
+    </div>
+    <h3 class="ins-h">By category</h3>
+    <div id="incCats"></div>
+    <h3 class="ins-h">By name on the statement</h3>
+    <div id="incNames"></div>
   </section>
 
   <!-- ── PAGE: INSIGHTS ── -->
