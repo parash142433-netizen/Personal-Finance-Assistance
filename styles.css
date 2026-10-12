@@ -1107,3 +1107,13 @@ body {
 .feed-amt { font-weight: 600; white-space: nowrap; }
 .feed-amt.muted { opacity: 0.6; }
 .feed-note { padding: 14px; border-radius: 10px; background: rgba(128,128,128,0.08); }
+
+/* In-page dialogs (replace the browser confirm and alert pop-ups) */
+.app-dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 16px; }
+.app-dialog { background: var(--card, #fff); color: var(--text, #111); border-radius: 14px; padding: 22px; max-width: 380px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+.app-dialog p { margin: 0 0 18px; line-height: 1.45; }
+.app-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.app-dialog-btn { border: 1px solid #c3c8d4; background: transparent; color: inherit; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-weight: 600; }
+.app-dialog-btn:hover { background: rgba(128,128,128,0.12); }
+.app-dialog-danger { background: #d92d20; border-color: #d92d20; color: #fff; }
+.app-dialog-danger:hover { background: #b42318; }
