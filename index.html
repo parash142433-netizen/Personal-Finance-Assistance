@@ -48,6 +48,9 @@
                 <li class="nav-item" data-page="income" id="nav-income">
       <span class="nav-icon">💼</span><span class="nav-label">Income</span>
     </li>
+    <li class="nav-item" data-page="expenses" id="nav-expenses">
+      <span class="nav-icon">🛒</span><span class="nav-label">Expenses</span>
+    </li>
     <li class="nav-item" data-page="insights" id="nav-insights">
       <span class="nav-icon">💡</span><span class="nav-label">Insights</span>
     </li>
@@ -377,6 +380,34 @@
     <div id="incCats"></div>
     <h3 class="ins-h">By name on the statement</h3>
     <div id="incNames"></div>
+  </section>
+
+  <!-- ── PAGE: EXPENSES ── -->
+  <section class="page" id="page-expenses">
+    <div class="page-header">
+      <h1>Expenses</h1>
+      <p class="subtitle">Every payment out, grouped by what the statement says it was for. Card bill payments are left out, since the card purchases are counted.</p>
+    </div>
+    <div class="feed-toolbar">
+      <label for="expYear" class="feed-month">Year</label>
+      <select id="expYear" class="feed-search" style="max-width:160px;margin:0">
+        <option value="all">All years</option>
+      </select>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent-red"><div class="kpi-body"><div class="kpi-label">Total spent</div><div class="kpi-value" id="expTotal">—</div></div></div>
+      <div class="kpi-card accent-blue"><div class="kpi-body"><div class="kpi-label">Card purchases</div><div class="kpi-value" id="expCard">—</div></div></div>
+      <div class="kpi-card accent-purple"><div class="kpi-body"><div class="kpi-label">Sent to people and wallets</div><div class="kpi-value" id="expPeople">—</div></div></div>
+      <div class="kpi-card accent-gold"><div class="kpi-body"><div class="kpi-label">Cash withdrawn</div><div class="kpi-value" id="expCash">—</div></div></div>
+    </div>
+    <div class="chart-card" style="margin-top:16px">
+      <div class="chart-header"><h3 id="expChartTitle">Spending by month</h3></div>
+      <div class="chart-wrap" style="height:300px"><canvas id="expChart"></canvas></div>
+    </div>
+    <h3 class="ins-h">By category</h3>
+    <div id="expCats"></div>
+    <h3 class="ins-h">By payee on the statement</h3>
+    <div id="expNames"></div>
   </section>
 
   <!-- ── PAGE: INSIGHTS ── -->
