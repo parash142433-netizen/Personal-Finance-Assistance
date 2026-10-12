@@ -292,9 +292,30 @@ def salary_timing(date, salary_month):
     return "Paid mid-month"
 
 
+# Known deposits that combine two things. Split by the owner's own statement of what they were.
+SPLIT_RULES = [
+    {
+        "d": "2026-03-01", "a": -94881.0,
+        "keep": -74881.0,  # salary for February 2026
+        "extra": {"d": "2026-03-01", "t": "Mobile purchase payment (bi-yearly, first installment)", "a": -20000.0, "s": "MTB", "k": "income"},
+    },
+]
+
+
 def annotate_income(transactions):
-    """Adds the category to every income row. Salary rows also get the salary month and timing."""
+    """Splits known combined deposits, then adds the category to every income row.
+    Salary rows also get the salary month and timing."""
+    out = []
     for t in transactions:
+        t = dict(t)
+        rule = next((r for r in SPLIT_RULES if t["d"] == r["d"] and round(t["a"], 2) == r["a"]), None)
+        if rule:
+            t["a"] = rule["keep"]
+            out.append(t)
+            out.append(dict(rule["extra"]))
+        else:
+            out.append(t)
+    for t in out:
         if t["k"] != "income":
             continue
         cat, sal_month = classify_income(t["t"], t["d"])
@@ -302,7 +323,7 @@ def annotate_income(transactions):
         if cat == "Salary":
             t["m"] = sal_month
             t["tm"] = salary_timing(t["d"], sal_month)
-    return transactions
+    return out
 
 
 def build_transactions(statements, after_iso):
