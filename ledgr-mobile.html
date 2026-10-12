@@ -3136,8 +3136,8 @@ function renderFeed() {
     const dayTotal = items.reduce((s, t) => s + (t.k === 'spend' ? t.a : 0), 0);
     const day = new Date(d + 'T00:00:00').toLocaleString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
     const rowsHtml = items.map(t => {
-      const cls = t.k === 'income' ? 'green' : (t.k === 'payment' ? 'muted' : '');
-      const sign = t.k === 'income' ? '+' : (t.k === 'payment' ? '' : '–');
+      const cls = t.k === 'income' ? 'green' : (t.k === 'payment' || t.k === 'self' ? 'muted' : '');
+      const sign = t.k === 'income' ? '+' : (t.k === 'payment' || t.k === 'self' ? '' : '–');
       return '<div class="feed-row"><div><div class="feed-desc">' + escHtml(t.t) + '</div><div class="feed-src">' +
         escHtml(t.s) + ' · ' + escHtml(t.c || t.k) + (t.tm ? ' · ' + escHtml(t.tm) : '') + '</div></div><div class="feed-amt ' + cls + '">' + sign + fmt(Math.abs(t.a)) + '</div></div>';
     }).join('');
