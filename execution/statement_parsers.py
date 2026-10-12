@@ -154,7 +154,11 @@ def build_monthly(statements):
 
 def build_payload(statements):
     """Full payload in the shape the dashboard reads: monthly_series, yearly, overview, highlights."""
-    series = build_monthly(statements)
+    return payload_from_series(build_monthly(statements))
+
+
+def payload_from_series(series):
+    """Same payload, computed from a monthly series (used after merging with the base history)."""
     if not series:
         raise StatementError("no months to publish")
     yearly = {}

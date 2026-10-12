@@ -15,7 +15,7 @@ import urllib.request
 from pypdf import PdfReader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from statement_parsers import StatementError, build_payload, parse_ebl, parse_mtb  # noqa: E402
+from statement_parsers import StatementError, build_monthly, parse_ebl, parse_mtb, payload_from_series  # noqa: E402
 
 FOLDER_ID = "195e6CTfUf73ELYA8zlWs-D486xnL3aso"  # the Banking folder
 CF_ACCOUNT = "e8382c2665bb696adbfb91b935627b32"
@@ -23,6 +23,9 @@ CF_NAMESPACE = "b8ce5e4dcd7f47d1b18f92094d572dca"  # ledgr-data KV namespace
 STATE_KEY = "statements_state"
 DATA_KEY = "finance_data"
 ERROR_KEY = "last_error"
+BASE_KEY = "base_history"  # Sep 2021 - Jul 2026 monthly series from the spreadsheet
+# Full bank history 2021-2026 (older layout). Not parsed: the base history already covers it.
+IGNORED_FILE_IDS = {"1la6QufIK1rv9F8HWs1dkUKgXijvaSXa9"}
 
 
 def http(method, url, headers=None, body=None):
@@ -124,6 +127,8 @@ def sync():
     errors = []
     files = list_pdfs(token)
     for f in files:
+        if f["id"] in IGNORED_FILE_IDS:
+            continue
         prev = state.get(f["id"])
         # Files that already parsed are kept; files that failed are retried every run.
         if prev and prev.get("modifiedTime") == f["modifiedTime"] and "rows" in prev:
@@ -163,7 +168,18 @@ def sync():
         kv_put(ERROR_KEY, {"errors": errors or ["no statements found in the folder"]})
         print("Not published:", errors or "no statements")
         return 1
-    payload = build_payload(good)
+    # Keep the base history and add only the months after its last month from the PDFs.
+    base = kv_get_json(BASE_KEY, None)
+    if base is None:
+        raise StatementError("base history is missing from KV")
+    base_series = base["monthly_series"]
+    last_base = base_series[-1]["iso"]
+    new_series = [m for m in build_monthly(good) if m["iso"] > last_base]
+    if not new_series:
+        kv_put(ERROR_KEY, {"errors": []})
+        print("No new months after", last_base)
+        return 0
+    payload = payload_from_series(base_series + new_series)
     kv_put(DATA_KEY, payload)
     kv_put(ERROR_KEY, {"errors": []})
     print(f"Published {len(payload['monthly_series'])} months from {len(good)} statements")
