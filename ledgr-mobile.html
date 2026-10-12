@@ -1185,31 +1185,31 @@ body {
         <div class="kpi-body">
           <div class="kpi-label">Current Balance</div>
           <div class="kpi-value" id="kpi-balance">৳196,414</div>
-          <div class="kpi-sub">As of July 2026</div>
+          <div class="kpi-sub" id="kpi-balance-sub">As of July 2026</div>
         </div>
       </div>
       <div class="kpi-card accent-green">
         <div class="kpi-icon">📥</div>
         <div class="kpi-body">
           <div class="kpi-label">Total Income (5 yr)</div>
-          <div class="kpi-value">৳38.9L</div>
-          <div class="kpi-sub">Avg ৳65,997/mo</div>
+          <div class="kpi-value" id="kpi-income">৳38.9L</div>
+          <div class="kpi-sub" id="kpi-income-sub">Avg ৳65,997/mo</div>
         </div>
       </div>
       <div class="kpi-card accent-red">
         <div class="kpi-icon">📤</div>
         <div class="kpi-body">
           <div class="kpi-label">Total Spent (5 yr)</div>
-          <div class="kpi-value">৳40.3L</div>
-          <div class="kpi-sub">Avg ৳68,222/mo</div>
+          <div class="kpi-value" id="kpi-spent">৳40.3L</div>
+          <div class="kpi-sub" id="kpi-spent-sub">Avg ৳68,222/mo</div>
         </div>
       </div>
       <div class="kpi-card accent-purple">
         <div class="kpi-icon">📊</div>
         <div class="kpi-body">
           <div class="kpi-label">Total Transactions</div>
-          <div class="kpi-value">1,012</div>
-          <div class="kpi-sub">Across 59 months</div>
+          <div class="kpi-value" id="kpi-tx">1,012</div>
+          <div class="kpi-sub" id="kpi-tx-sub">Across 59 months</div>
         </div>
       </div>
     </div>
@@ -1236,8 +1236,8 @@ body {
           <canvas id="savingsRateChart"></canvas>
         </div>
         <div class="chart-legend-row">
-          <div class="cl-item"><span class="cl-dot green"></span>Positive months: 35</div>
-          <div class="cl-item"><span class="cl-dot red"></span>Negative months: 24</div>
+          <div class="cl-item"><span class="cl-dot green"></span><span id="cl-positive">Positive months: 35</span></div>
+          <div class="cl-item"><span class="cl-dot red"></span><span id="cl-negative">Negative months: 24</span></div>
         </div>
       </div>
     </div>
@@ -1264,48 +1264,48 @@ body {
         <div class="insight-icon">🏆</div>
         <div class="insight-body">
           <div class="insight-label">Best Month</div>
-          <div class="insight-value">August 2025</div>
-          <div class="insight-sub">৳3,03,746 saved</div>
+          <div class="insight-value id="hl-best"">August 2025</div>
+          <div class="insight-sub id="hl-best-sub"">৳3,03,746 saved</div>
         </div>
       </div>
       <div class="insight-card highlight-red">
         <div class="insight-icon">⚠️</div>
         <div class="insight-body">
           <div class="insight-label">Worst Month</div>
-          <div class="insight-value">October 2025</div>
-          <div class="insight-sub">–৳3,88,841 (net loss)</div>
+          <div class="insight-value id="hl-worst"">October 2025</div>
+          <div class="insight-sub id="hl-worst-sub"">–৳3,88,841 (net loss)</div>
         </div>
       </div>
       <div class="insight-card highlight-blue">
         <div class="insight-icon">💸</div>
         <div class="insight-body">
           <div class="insight-label">Highest Spend</div>
-          <div class="insight-value">October 2025</div>
-          <div class="insight-sub">৳4,59,837 spent</div>
+          <div class="insight-value id="hl-spend"">October 2025</div>
+          <div class="insight-sub id="hl-spend-sub"">৳4,59,837 spent</div>
         </div>
       </div>
       <div class="insight-card highlight-green">
         <div class="insight-icon">📈</div>
         <div class="insight-body">
           <div class="insight-label">Highest Income</div>
-          <div class="insight-value">August 2025</div>
-          <div class="insight-sub">৳3,32,462 received</div>
+          <div class="insight-value id="hl-income"">August 2025</div>
+          <div class="insight-sub id="hl-income-sub"">৳3,32,462 received</div>
         </div>
       </div>
       <div class="insight-card highlight-purple">
         <div class="insight-icon">🔥</div>
         <div class="insight-body">
           <div class="insight-label">Busiest Month</div>
-          <div class="insight-value">April 2026</div>
-          <div class="insight-sub">48 transactions</div>
+          <div class="insight-value id="hl-busy"">April 2026</div>
+          <div class="insight-sub id="hl-busy-sub"">48 transactions</div>
         </div>
       </div>
       <div class="insight-card highlight-teal">
         <div class="insight-icon">📅</div>
         <div class="insight-body">
           <div class="insight-label">Tracking Period</div>
-          <div class="insight-value">Sep 2021 – Jul 2026</div>
-          <div class="insight-sub">59 months of history</div>
+          <div class="insight-value id="hl-period"">Sep 2021 – Jul 2026</div>
+          <div class="insight-sub id="hl-period-sub"">59 months of history</div>
         </div>
       </div>
     </div>
@@ -2713,9 +2713,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // After initial render, try to refresh with live data from Cloudflare Worker.
   // If WORKER_URL is null or fetch fails, stays on baked-in data silently.
-  tryLoadLiveData();
+  updateSummary();
 });
 
+// ── SUMMARY CARDS ──────────────────────────────────────────────────────────────
+// Filled from the monthly data so the cards follow every new statement.
+function updateSummary() {
+  const rows = MONTHLY_DATA;
+  if (!rows || !rows.length) return;
+  const n = rows.length;
+  const total = k => rows.reduce((s, r) => s + (r[k] || 0), 0);
+  const income = total('income');
+  const spent = total('spent');
+  const tx = total('tx');
+  const first = rows[0];
+  const last = rows[n - 1];
+  const best = rows.reduce((a, b) => (b.savings > a.savings ? b : a));
+  const worst = rows.reduce((a, b) => (b.savings < a.savings ? b : a));
+  const topSpend = rows.reduce((a, b) => (b.spent > a.spent ? b : a));
+  const topIncome = rows.reduce((a, b) => (b.income > a.income ? b : a));
+  const busiest = rows.reduce((a, b) => (b.tx > a.tx ? b : a));
+  const longMonth = r => new Date(r.iso + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const positive = rows.filter(r => r.savings >= 0).length;
+
+  set('kpi-balance', fmt(last.balance));
+  set('kpi-balance-sub', 'As of ' + last.label);
+  set('kpi-income', fmt(income, true));
+  set('kpi-income-sub', 'Avg ' + fmt(income / n) + '/mo');
+  set('kpi-spent', fmt(spent, true));
+  set('kpi-spent-sub', 'Avg ' + fmt(spent / n) + '/mo');
+  set('kpi-tx', Math.round(tx).toLocaleString('en-US'));
+  set('kpi-tx-sub', 'Across ' + n + ' months');
+  set('cl-positive', 'Positive months: ' + positive);
+  set('cl-negative', 'Negative months: ' + (n - positive));
+  set('hl-best', longMonth(best));
+  set('hl-best-sub', fmt(best.savings) + ' saved');
+  set('hl-worst', longMonth(worst));
+  set('hl-worst-sub', '–' + fmt(Math.abs(worst.savings)) + ' (net loss)');
+  set('hl-spend', longMonth(topSpend));
+  set('hl-spend-sub', fmt(topSpend.spent) + ' spent');
+  set('hl-income', longMonth(topIncome));
+  set('hl-income-sub', fmt(topIncome.income) + ' received');
+  set('hl-busy', longMonth(busiest));
+  set('hl-busy-sub', Math.round(busiest.tx) + ' transactions');
+  set('hl-period', first.label + ' – ' + last.label);
+  set('hl-period-sub', n + ' months of history');
+}
 </script>
 </body>
 </html>

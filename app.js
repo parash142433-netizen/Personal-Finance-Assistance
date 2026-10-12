@@ -1042,5 +1042,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // After initial render, try to refresh with live data from Cloudflare Worker.
   // If WORKER_URL is null or fetch fails, stays on baked-in data silently.
-  tryLoadLiveData();
+  updateSummary();
 });
+
+// ── SUMMARY CARDS ──────────────────────────────────────────────────────────────
+// Filled from the monthly data so the cards follow every new statement.
+function updateSummary() {
+  const rows = MONTHLY_DATA;
+  if (!rows || !rows.length) return;
+  const n = rows.length;
+  const total = k => rows.reduce((s, r) => s + (r[k] || 0), 0);
+  const income = total('income');
+  const spent = total('spent');
+  const tx = total('tx');
+  const first = rows[0];
+  const last = rows[n - 1];
+  const best = rows.reduce((a, b) => (b.savings > a.savings ? b : a));
+  const worst = rows.reduce((a, b) => (b.savings < a.savings ? b : a));
+  const topSpend = rows.reduce((a, b) => (b.spent > a.spent ? b : a));
+  const topIncome = rows.reduce((a, b) => (b.income > a.income ? b : a));
+  const busiest = rows.reduce((a, b) => (b.tx > a.tx ? b : a));
+  const longMonth = r => new Date(r.iso + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const positive = rows.filter(r => r.savings >= 0).length;
+
+  set('kpi-balance', fmt(last.balance));
+  set('kpi-balance-sub', 'As of ' + last.label);
+  set('kpi-income', fmt(income, true));
+  set('kpi-income-sub', 'Avg ' + fmt(income / n) + '/mo');
+  set('kpi-spent', fmt(spent, true));
+  set('kpi-spent-sub', 'Avg ' + fmt(spent / n) + '/mo');
+  set('kpi-tx', Math.round(tx).toLocaleString('en-US'));
+  set('kpi-tx-sub', 'Across ' + n + ' months');
+  set('cl-positive', 'Positive months: ' + positive);
+  set('cl-negative', 'Negative months: ' + (n - positive));
+  set('hl-best', longMonth(best));
+  set('hl-best-sub', fmt(best.savings) + ' saved');
+  set('hl-worst', longMonth(worst));
+  set('hl-worst-sub', '–' + fmt(Math.abs(worst.savings)) + ' (net loss)');
+  set('hl-spend', longMonth(topSpend));
+  set('hl-spend-sub', fmt(topSpend.spent) + ' spent');
+  set('hl-income', longMonth(topIncome));
+  set('hl-income-sub', fmt(topIncome.income) + ' received');
+  set('hl-busy', longMonth(busiest));
+  set('hl-busy-sub', Math.round(busiest.tx) + ' transactions');
+  set('hl-period', first.label + ' – ' + last.label);
+  set('hl-period-sub', n + ' months of history');
+}
