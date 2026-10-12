@@ -255,6 +255,56 @@ def payload_from_series(series):
     return {"overview": overview, "highlights": highlights, "yearly": yearly, "monthly_series": series}
 
 
+MONTH_WORDS = {m.lower(): i for i, m in enumerate(
+    ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]) if m}
+MONTH_WORDS.update({k[:3]: v for k, v in list(MONTH_WORDS.items())})
+MONTH_WORDS.update({"marc": 3, "sept": 9})
+BONUS_RE = re.compile(r"bonus|wppf|profit participation|festival", re.I)
+SALARY_RE = re.compile(r"salary", re.I)
+MONTH_IN_DESC_RE = re.compile(r"(january|february|march|marc|april|may|june|july|august|september|sept|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)\W*(\d{4})?", re.I)
+
+
+def classify_income(desc, date):
+    """Returns (category, salary_month) for an income row.
+    category: 'Salary', 'Bonus' or 'Other income'. salary_month is the month the salary is for:
+    the month named in the description, otherwise the month it arrived."""
+    if BONUS_RE.search(desc):
+        return "Bonus", None
+    if SALARY_RE.search(desc):
+        m = MONTH_IN_DESC_RE.search(desc)
+        if m and MONTH_WORDS.get(m.group(1).lower()):
+            year = int(m.group(2)) if m.group(2) else int(date[:4])
+            return "Salary", f"{year}-{MONTH_WORDS[m.group(1).lower()]:02d}"
+        return "Salary", date[:7]
+    return "Other income", None
+
+
+def salary_timing(date, salary_month):
+    """When the salary arrived compared with the month it is for."""
+    arrived_month, day = date[:7], int(date[8:10])
+    if arrived_month == salary_month and day >= 25:
+        return "Paid at month end"
+    if arrived_month != salary_month:
+        y, mo = map(int, salary_month.split("-"))
+        nxt = f"{y + (mo == 12)}-{(mo % 12) + 1:02d}"
+        if arrived_month == nxt and day <= 5:
+            return "Paid on 1st-5th of next month"
+    return "Paid mid-month"
+
+
+def annotate_income(transactions):
+    """Adds the category to every income row. Salary rows also get the salary month and timing."""
+    for t in transactions:
+        if t["k"] != "income":
+            continue
+        cat, sal_month = classify_income(t["t"], t["d"])
+        t["c"] = cat
+        if cat == "Salary":
+            t["m"] = sal_month
+            t["tm"] = salary_timing(t["d"], sal_month)
+    return transactions
+
+
 def build_transactions(statements, after_iso):
     """Individual transactions for the Transactions page. a > 0 is money out, a < 0 is money in.
     k: spend (purchase or withdrawal), income (deposit), payment (card bill payment or card credit)."""
