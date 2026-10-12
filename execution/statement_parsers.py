@@ -102,8 +102,12 @@ def parse_mtb_history(text):
         if round(prev - w + d - b, 2) != 0:
             raise StatementError(f"history balance does not follow on {s.group(3)}/{s.group(2)}: {line[:80]!r}")
         desc = re.sub(r"^\d{2}/\d{2}/\d{2}\s+", "", line[:nums[-3].start()])
+        date = f"20{s.group(3)}-{s.group(2)}-{s.group(1)}"
+        if s.group(3) == "70":  # placeholder date in some rows; the description states the real one
+            dated = re.search(r"DATED (\d{2})/(\d{2})/(\d{4})", desc)
+            date = f"{dated.group(3)}-{dated.group(2)}-{dated.group(1)}" if dated else (rows[-1]["date"] if rows else date)
         rows.append({
-            "date": f"20{s.group(3)}-{s.group(2)}-{s.group(1)}",
+            "date": date,
             "description": " ".join(desc.split()),
             "deposit": d,
             "withdrawal": w,
