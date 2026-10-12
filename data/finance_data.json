@@ -2400,12 +2400,20 @@
     {
       "d": "2026-03-01",
       "t": "Salary For February 2026",
-      "a": -94881.0,
+      "a": -74881.0,
       "s": "MTB",
       "k": "income",
       "c": "Salary",
       "m": "2026-02",
       "tm": "Paid on 1st-5th of next month"
+    },
+    {
+      "d": "2026-03-01",
+      "t": "Mobile purchase payment (bi-yearly, first installment)",
+      "a": -20000.0,
+      "s": "MTB",
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-03-01",
