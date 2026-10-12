@@ -1088,4 +1088,88 @@ function updateSummary() {
   set('hl-busy-sub', Math.round(busiest.tx) + ' transactions');
   set('hl-period', first.label + ' – ' + last.label);
   set('hl-period-sub', n + ' months of history');
+  updateAnalysis();
+}
+
+// ── ANALYSIS PAGE ──────────────────────────────────────────────────────────────
+// Every figure on the Analysis page is computed from the monthly data.
+function updateAnalysis() {
+  const rows = MONTHLY_DATA;
+  if (!rows || !rows.length) return;
+  const n = rows.length;
+  const sum = (arr, k) => arr.reduce((s, r) => s + (r[k] || 0), 0);
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const longMonth = r => new Date(r.iso + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  const signed = v => (v < 0 ? '–' : '') + fmt(Math.abs(v));
+  const income = sum(rows, 'income');
+  const spent = sum(rows, 'spent');
+  const net = income - spent;
+  const first = rows[0];
+  const last = rows[n - 1];
+
+  set('an-range', first.label + ' – ' + last.label);
+  set('an-income', fmt(income));
+  set('an-spent', fmt(spent));
+  const netEl = document.getElementById('an-net');
+  if (netEl) { netEl.textContent = signed(net); netEl.classList.toggle('red', net < 0); }
+  set('an-balance', fmt(last.balance));
+
+  set('an-start', longMonth(first));
+  set('an-start-bal', fmt(first.balance));
+  set('an-months', n);
+  set('an-tx', Math.round(sum(rows, 'tx')).toLocaleString('en-US'));
+  const early = rows.filter(r => r.iso < '2023-01');
+  if (early.length) set('an-inc-early', fmt(sum(early, 'income') / early.length));
+  const byYear = {};
+  rows.forEach(r => { const y = r.iso.slice(0, 4); (byYear[y] = byYear[y] || []).push(r); });
+  const yearStats = Object.keys(byYear).sort().map(y => {
+    const rs = byYear[y];
+    const i = sum(rs, 'income');
+    const s = sum(rs, 'spent');
+    return { y, months: rs.length, income: i, spent: s, net: i - s };
+  });
+  const y25 = byYear['2025'];
+  if (y25) set('an-inc-2025', fmt(sum(y25, 'income') / y25.length));
+  set('an-salary', fmt(sum(rows, 'salary'), true));
+
+  const top3 = [...rows].sort((a, b) => b.spent - a.spent).slice(0, 3);
+  top3.forEach((r, i) => set('an-spike-' + (i + 1), r.label + ' (' + fmt(r.spent, true) + ')'));
+  set('an-spike-share', Math.round(sum(top3, 'spent') / spent * 100) + '%');
+
+  const best = rows.reduce((a, b) => (b.savings > a.savings ? b : a));
+  set('an-best-m', longMonth(best));
+  set('an-best-inc', fmt(best.income, true));
+  set('an-best-spent', fmt(best.spent, true));
+  set('an-best-sav', fmt(best.savings));
+  const bestYear = yearStats.reduce((a, b) => (b.income > a.income ? b : a));
+  set('an-best-y', bestYear.y);
+  set('an-best-y-inc', fmt(bestYear.income, true));
+  set('an-best-y-net', signed(bestYear.net));
+
+  const deficits = rows.filter(r => r.savings < 0).length;
+  const toughest = rows.reduce((a, b) => (b.savings < a.savings ? b : a));
+  set('an-def-count', deficits);
+  set('an-months2', n);
+  set('an-def-pct', Math.round(deficits / n * 100) + '%');
+  set('an-tough-m', longMonth(toughest));
+  set('an-tough-amt', signed(toughest.savings));
+
+  set('an-emerg', fmt(3 * spent / n, true));
+  set('an-rate', (income ? net / income * 100 : 0).toFixed(1).replace('-', '–') + '%');
+  const y26 = rows.filter(r => r.iso.startsWith('2026')).sort((a, b) => b.savings - a.savings);
+  if (y26[0]) set('an-2026a', longMonth(y26[0]) + ' (' + fmt(y26[0].savings, true) + ' saved)');
+  if (y26[1]) set('an-2026b', longMonth(y26[1]) + ' (' + fmt(y26[1].savings, true) + ' saved)');
+  const busiest = rows.reduce((a, b) => (b.tx > a.tx ? b : a));
+  set('an-busy-m', longMonth(busiest));
+  set('an-busy-tx', Math.round(busiest.tx));
+
+  const tbody = document.getElementById('an-yearly');
+  if (tbody) {
+    tbody.innerHTML = yearStats.map(s => {
+      const verdict = s.net >= 0 ? '🟢 Surplus' : (s.net >= -0.05 * s.income ? '🟡 Nearly breakeven' : '🔴 Deficit');
+      const cls = s.net >= 0 ? 'green' : 'red';
+      return '<tr><td>' + s.y + ' (' + s.months + ' mo)</td><td>' + fmt(s.income) + '</td><td>' + fmt(s.spent) +
+        '</td><td class="' + cls + '">' + (s.net >= 0 ? '+' : '') + signed(s.net) + '</td><td>' + verdict + '</td></tr>';
+    }).join('');
+  }
 }
