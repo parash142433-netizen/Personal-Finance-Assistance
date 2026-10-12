@@ -1165,7 +1165,10 @@ body {
     <li class="nav-item" data-page="transactions" id="nav-transactions">
       <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
     </li>
-        <li class="nav-item" data-page="feed" id="nav-feed">
+            <li class="nav-item" data-page="insights" id="nav-insights">
+      <span class="nav-icon">💡</span><span class="nav-label">Insights</span>
+    </li>
+    <li class="nav-item" data-page="feed" id="nav-feed">
       <span class="nav-icon">🧾</span><span class="nav-label">Transaction Feed</span>
     </li>
     <li class="nav-item" data-page="scheduled" id="nav-scheduled">
@@ -1463,6 +1466,23 @@ body {
     </div>
     <input type="search" id="feedSearch" class="feed-search" placeholder="Search transactions" />
     <div id="feedList"></div>
+  </section>
+
+  <!-- ── PAGE: INSIGHTS ── -->
+  <section class="page" id="page-insights">
+    <div class="page-header">
+      <h1>Insights</h1>
+      <p class="subtitle">Spending alert, banks and cards, categories and subscriptions for the month chosen in the Transaction Feed</p>
+    </div>
+    <div class="feed-note" id="insAlert">—</div>
+    <h3 class="ins-h">Where your money goes, by bank and card</h3>
+    <div id="insBanks"></div>
+    <h3 class="ins-h">Your cards</h3>
+    <div id="insCards"></div>
+    <h3 class="ins-h">Spending categories</h3>
+    <div id="insCats"></div>
+    <h3 class="ins-h">Possible subscriptions</h3>
+    <div id="insSubs"></div>
   </section>
 
   <!-- ── PAGE: SAVINGS ── -->
@@ -1834,7 +1854,7 @@ function setCurrentDate() {
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'scheduled', 'summary', 'settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'insights', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
@@ -1846,7 +1866,7 @@ function navigate(page) {
   el('topbarTitle').textContent = {
     dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
     budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
-    transactions: 'Transactions', feed: 'Transaction Feed', scheduled: 'Scheduled', summary: 'Personal Summary',
+    transactions: 'Transactions', feed: 'Transaction Feed', insights: 'Insights', scheduled: 'Scheduled', summary: 'Personal Summary',
     settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
@@ -2947,6 +2967,7 @@ async function initFeed() {
 }
 
 function renderFeed() {
+  renderInsights();
   const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
   const m = FEED.months[FEED.idx];
   const longMonth = m ? new Date(m + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' }) : 'No transactions yet';
@@ -2984,6 +3005,87 @@ function renderFeed() {
     return '<div class="feed-day"><div class="feed-dayhead"><span>' + escHtml(day) + '</span><span>' +
       (dayTotal ? fmt(dayTotal) + ' spent' : '') + '</span></div>' + rowsHtml + '</div>';
   }).join('');
+}
+
+// ── INSIGHTS ─────────────────────────────────────────────────────────────────────
+// Built from the same transaction list as the Feed, for the month chosen there.
+const CATEGORY_RULES = [
+  ['Food & Dining', /foodpanda|domino|chillox|tasty|kudos|restaurant|cafe|pizza|kfc|sweet|bakery|fried|chicken|burger|hotel|tea\b/i],
+  ['Transport & Travel', /uber|pathao|share ?trip|railway|rail|gozayaan|ride|bus\b|fuel|petrol|airline/i],
+  ['Shopping', /pickaboo|best buy|aarong|daraz|chaldal|shop|mart|store|electronics|pharmacy/i],
+  ['Bills & Mobile', /bill|dpdc|titas|desco|grameenphone|topup|mobile|internet/i],
+  ['Cash & ATM', /cash|atm|ratm|cw-|withdraw/i],
+  ['Fees & VAT', /\bvat\b|fee|charge|risk assurance|verification/i],
+];
+const categoryOf = desc => { const hit = CATEGORY_RULES.find(([, re]) => re.test(desc)); return hit ? hit[0] : 'Other'; };
+const merchantKey = desc => desc.toUpperCase().replace(/[^A-Z ]/g, ' ').split(/\s+/).filter(Boolean).slice(0, 2).join(' ');
+
+function renderInsights() {
+  const set = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
+  const m = FEED.months[FEED.idx];
+  if (!m) { set('insAlert', 'No transactions yet.'); return; }
+  const prevMonth = FEED.months[FEED.idx - 1];
+  const monthRows = t => FEED.all.filter(x => x.d.startsWith(t));
+  const rows = monthRows(m);
+  const spendOf = list => list.filter(x => x.k === 'spend').reduce((s, x) => s + x.a, 0);
+
+  // Spending alert against the previous month
+  const cur = spendOf(rows);
+  if (prevMonth) {
+    const prev = spendOf(monthRows(prevMonth));
+    const pct = prev ? Math.round((cur - prev) / prev * 100) : null;
+    const words = pct === null ? '' : (pct >= 0 ? pct + '% more' : Math.abs(pct) + '% less') + ' than ' + new Date(prevMonth + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    set('insAlert', '<strong>' + escHtml(new Date(m + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' })) +
+      '</strong>: spent <strong>' + fmt(cur) + '</strong>' + (words ? ' — ' + escHtml(words) + ' (' + fmt(spendOf(monthRows(prevMonth))) + ')' : '') + '.');
+  } else {
+    set('insAlert', 'Spent <strong>' + fmt(cur) + '</strong> this month. No earlier month to compare yet.');
+  }
+
+  // Banks and cards: spending, income and payments for the month
+  const sources = [...new Set(FEED.all.map(x => x.s))];
+  const bankRows = sources.map(s => {
+    const r = rows.filter(x => x.s === s);
+    const sum = k => r.filter(x => x.k === k).reduce((a, x) => a + Math.abs(x.a), 0);
+    return '<div class="feed-row"><div><div class="feed-desc">' + escHtml(s) + '</div><div class="feed-src">' +
+      escHtml(r.length + ' transactions') + '</div></div><div class="feed-amt">' + fmt(sum('spend')) + ' spent · ' +
+      fmt(sum('income')) + ' in · ' + fmt(sum('payment')) + ' paid</div></div>';
+  });
+  set('insBanks', bankRows.join('') || '<div class="feed-note">No bank activity this month.</div>');
+
+  // Cards: EBL card purchases and payments
+  const cardRows = rows.filter(x => x.s === 'EBL card');
+  const purchases = cardRows.filter(x => x.k === 'spend');
+  const payments = cardRows.filter(x => x.k === 'payment');
+  set('insCards', cardRows.length
+    ? '<div class="feed-note">' + purchases.length + ' purchases totalling <strong>' + fmt(spendOf(cardRows)) +
+      '</strong>, and <strong>' + fmt(payments.reduce((a, x) => a + Math.abs(x.a), 0)) + '</strong> in payments and credits.</div>'
+    : '<div class="feed-note">No card activity this month.</div>');
+
+  // Categories for spending this month
+  const cats = {};
+  rows.filter(x => x.k === 'spend').forEach(x => { const c = categoryOf(x.t); cats[c] = (cats[c] || 0) + x.a; });
+  const total = Object.values(cats).reduce((a, b) => a + b, 0);
+  const catHtml = Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, v]) =>
+    '<div class="feed-row"><div class="feed-desc">' + escHtml(c) + '</div><div class="feed-amt">' + fmt(v) +
+    (total ? ' · ' + Math.round(v / total * 100) + '%' : '') + '</div></div>').join('');
+  set('insCats', catHtml || '<div class="feed-note">No spending to categorise this month.</div>');
+
+  // Subscriptions: the same merchant charged a similar amount in two or more months
+  const groups = {};
+  FEED.all.filter(x => x.k === 'spend').forEach(x => {
+    const key = merchantKey(x.t); if (!key) return;
+    (groups[key] = groups[key] || []).push(x);
+  });
+  const subs = Object.entries(groups).map(([key, list]) => {
+    const months = [...new Set(list.map(x => x.d.slice(0, 7)))];
+    const amounts = list.map(x => x.a);
+    const lo = Math.min(...amounts), hi = Math.max(...amounts);
+    return { key, months, amounts, similar: months.length >= 2 && hi <= lo * 1.05 };
+  }).filter(g => g.similar);
+  set('insSubs', subs.length
+    ? subs.map(g => '<div class="feed-row"><div><div class="feed-desc">' + escHtml(g.key) + '</div><div class="feed-src">' +
+        escHtml(g.months.length + ' months') + '</div></div><div class="feed-amt">' + fmt(g.amounts[0]) + ' a month</div></div>').join('')
+    : '<div class="feed-note">No repeat charges found yet. A subscription shows up after two months with a similar charge.</div>');
 }
 </script>
 </body>
