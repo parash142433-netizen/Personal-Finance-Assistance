@@ -1103,6 +1103,22 @@ body {
   }
 }
 
+/* Transaction feed */
+.feed-toolbar { display: flex; align-items: center; gap: 12px; margin: 8px 0 16px; }
+.feed-nav { border: 1px solid var(--border, #d0d5dd); background: transparent; border-radius: 8px; padding: 6px 12px; cursor: pointer; color: inherit; }
+.feed-month { font-weight: 600; min-width: 160px; text-align: center; }
+.feed-tabs { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.feed-tab { border: 1px solid var(--border, #d0d5dd); background: transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer; color: inherit; }
+.feed-tab.active { background: #4f52b2; color: #fff; border-color: #4f52b2; }
+.feed-search { width: 100%; max-width: 420px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border, #d0d5dd); margin-bottom: 12px; }
+.feed-day { margin-bottom: 14px; }
+.feed-dayhead { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; opacity: 0.75; padding: 6px 2px; border-bottom: 1px solid rgba(128,128,128,0.25); }
+.feed-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 2px; border-bottom: 1px solid rgba(128,128,128,0.15); gap: 12px; }
+.feed-desc { font-weight: 500; }
+.feed-src { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+.feed-amt { font-weight: 600; white-space: nowrap; }
+.feed-amt.muted { opacity: 0.6; }
+.feed-note { padding: 14px; border-radius: 10px; background: rgba(128,128,128,0.08); }
 </style>
 </head>
 <body>
@@ -1138,6 +1154,9 @@ body {
     </li>
     <li class="nav-item" data-page="transactions" id="nav-transactions">
       <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
+    </li>
+        <li class="nav-item" data-page="feed" id="nav-feed">
+      <span class="nav-icon">🧾</span><span class="nav-label">Transaction Feed</span>
     </li>
     <li class="nav-item" data-page="scheduled" id="nav-scheduled">
       <span class="nav-icon">🔁</span><span class="nav-label">Scheduled</span>
@@ -1408,6 +1427,32 @@ body {
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ── PAGE: TRANSACTION FEED ── -->
+  <section class="page" id="page-feed">
+    <div class="page-header">
+      <h1>Transaction Feed</h1>
+      <p class="subtitle">Every transaction from your statements, by day</p>
+    </div>
+    <div class="feed-toolbar">
+      <button class="feed-nav" id="feedPrev" aria-label="Previous month">←</button>
+      <span class="feed-month" id="feedMonth">—</span>
+      <button class="feed-nav" id="feedNext" aria-label="Next month">→</button>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent-red"><div class="kpi-body"><div class="kpi-label">Spent</div><div class="kpi-value" id="feedSpent">—</div></div></div>
+      <div class="kpi-card accent-green"><div class="kpi-body"><div class="kpi-label">Income</div><div class="kpi-value" id="feedIncome">—</div></div></div>
+      <div class="kpi-card accent-purple"><div class="kpi-body"><div class="kpi-label">Card payments</div><div class="kpi-value" id="feedPayments">—</div></div></div>
+    </div>
+    <div class="feed-tabs">
+      <button class="feed-tab active" data-f="all">All</button>
+      <button class="feed-tab" data-f="spend">Spending</button>
+      <button class="feed-tab" data-f="income">Income</button>
+      <button class="feed-tab" data-f="savings">Savings</button>
+    </div>
+    <input type="search" id="feedSearch" class="feed-search" placeholder="Search transactions" />
+    <div id="feedList"></div>
   </section>
 
   <!-- ── PAGE: SAVINGS ── -->
@@ -1779,7 +1824,7 @@ function setCurrentDate() {
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'scheduled', 'summary', 'settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
@@ -1791,7 +1836,7 @@ function navigate(page) {
   el('topbarTitle').textContent = {
     dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
     budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
-    transactions: 'Transactions', scheduled: 'Scheduled', summary: 'Personal Summary',
+    transactions: 'Transactions', feed: 'Transaction Feed', scheduled: 'Scheduled', summary: 'Personal Summary',
     settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
@@ -2707,6 +2752,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // After initial render, try to refresh with live data from Cloudflare Worker.
   // If WORKER_URL is null or fetch fails, stays on baked-in data silently.
   updateSummary();
+  initFeed();
 });
 
 // ── SUMMARY CARDS ──────────────────────────────────────────────────────────────
@@ -2836,6 +2882,71 @@ function updateAnalysis() {
         '</td><td class="' + cls + '">' + (s.net >= 0 ? '+' : '') + signed(s.net) + '</td><td>' + verdict + '</td></tr>';
     }).join('');
   }
+}
+
+// ── TRANSACTION FEED ───────────────────────────────────────────────────────────
+// Reads the per-transaction list published with the statements (data/finance_data.json).
+const FEED = { all: [], months: [], idx: -1, tab: 'all', query: '' };
+const escHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+async function initFeed() {
+  try {
+    const r = await fetch('data/finance_data.json?v=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) FEED.all = (await r.json()).transactions || [];
+  } catch (e) { FEED.all = []; }
+  FEED.months = [...new Set(FEED.all.map(t => t.d.slice(0, 7)))].sort();
+  FEED.idx = FEED.months.length - 1;
+  const on = (id, fn) => { const e = document.getElementById(id); if (e) e.addEventListener('click', fn); };
+  on('feedPrev', () => { if (FEED.idx > 0) { FEED.idx--; renderFeed(); } });
+  on('feedNext', () => { if (FEED.idx < FEED.months.length - 1) { FEED.idx++; renderFeed(); } });
+  document.querySelectorAll('.feed-tab').forEach(b => b.addEventListener('click', () => {
+    FEED.tab = b.dataset.f;
+    document.querySelectorAll('.feed-tab').forEach(x => x.classList.toggle('active', x === b));
+    renderFeed();
+  }));
+  const search = document.getElementById('feedSearch');
+  if (search) search.addEventListener('input', () => { FEED.query = search.value.trim().toLowerCase(); renderFeed(); });
+  renderFeed();
+}
+
+function renderFeed() {
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const m = FEED.months[FEED.idx];
+  const longMonth = m ? new Date(m + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' }) : 'No transactions yet';
+  set('feedMonth', longMonth);
+  const rows = m ? FEED.all.filter(t => t.d.startsWith(m)) : [];
+  const sumOf = k => rows.filter(t => t.k === k).reduce((s, t) => s + Math.abs(t.a), 0);
+  const spent = sumOf('spend'), income = sumOf('income'), payments = sumOf('payment');
+  set('feedSpent', fmt(spent));
+  set('feedIncome', fmt(income));
+  set('feedPayments', fmt(payments));
+
+  const list = document.getElementById('feedList');
+  if (!list) return;
+  if (FEED.tab === 'savings') {
+    const net = income - spent;
+    list.innerHTML = '<div class="feed-note">Net savings for ' + escHtml(longMonth) + ': <strong>' +
+      (net < 0 ? '–' : '') + fmt(Math.abs(net)) + '</strong> (income minus spending). Savings are not tagged per transaction in the statements.</div>';
+    return;
+  }
+  let shown = rows.filter(t => FEED.tab === 'all' || (FEED.tab === 'spend' && t.k === 'spend') || (FEED.tab === 'income' && t.k === 'income'));
+  if (FEED.query) shown = shown.filter(t => t.t.toLowerCase().includes(FEED.query));
+  if (!shown.length) { list.innerHTML = '<div class="feed-note">No transactions match.</div>'; return; }
+  const days = {};
+  shown.forEach(t => { (days[t.d] = days[t.d] || []).push(t); });
+  list.innerHTML = Object.keys(days).sort().reverse().map(d => {
+    const items = days[d];
+    const dayTotal = items.reduce((s, t) => s + (t.k === 'spend' ? t.a : 0), 0);
+    const day = new Date(d + 'T00:00:00').toLocaleString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    const rowsHtml = items.map(t => {
+      const cls = t.k === 'income' ? 'green' : (t.k === 'payment' ? 'muted' : '');
+      const sign = t.k === 'income' ? '+' : (t.k === 'payment' ? '' : '–');
+      return '<div class="feed-row"><div><div class="feed-desc">' + escHtml(t.t) + '</div><div class="feed-src">' +
+        escHtml(t.s) + ' · ' + escHtml(t.k) + '</div></div><div class="feed-amt ' + cls + '">' + sign + fmt(Math.abs(t.a)) + '</div></div>';
+    }).join('');
+    return '<div class="feed-day"><div class="feed-dayhead"><span>' + escHtml(day) + '</span><span>' +
+      (dayTotal ? fmt(dayTotal) + ' spent' : '') + '</span></div>' + rowsHtml + '</div>';
+  }).join('');
 }
 </script>
 </body>

@@ -45,6 +45,9 @@
     <li class="nav-item" data-page="transactions" id="nav-transactions">
       <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
     </li>
+        <li class="nav-item" data-page="feed" id="nav-feed">
+      <span class="nav-icon">🧾</span><span class="nav-label">Transaction Feed</span>
+    </li>
     <li class="nav-item" data-page="scheduled" id="nav-scheduled">
       <span class="nav-icon">🔁</span><span class="nav-label">Scheduled</span>
     </li>
@@ -314,6 +317,32 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ── PAGE: TRANSACTION FEED ── -->
+  <section class="page" id="page-feed">
+    <div class="page-header">
+      <h1>Transaction Feed</h1>
+      <p class="subtitle">Every transaction from your statements, by day</p>
+    </div>
+    <div class="feed-toolbar">
+      <button class="feed-nav" id="feedPrev" aria-label="Previous month">←</button>
+      <span class="feed-month" id="feedMonth">—</span>
+      <button class="feed-nav" id="feedNext" aria-label="Next month">→</button>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent-red"><div class="kpi-body"><div class="kpi-label">Spent</div><div class="kpi-value" id="feedSpent">—</div></div></div>
+      <div class="kpi-card accent-green"><div class="kpi-body"><div class="kpi-label">Income</div><div class="kpi-value" id="feedIncome">—</div></div></div>
+      <div class="kpi-card accent-purple"><div class="kpi-body"><div class="kpi-label">Card payments</div><div class="kpi-value" id="feedPayments">—</div></div></div>
+    </div>
+    <div class="feed-tabs">
+      <button class="feed-tab active" data-f="all">All</button>
+      <button class="feed-tab" data-f="spend">Spending</button>
+      <button class="feed-tab" data-f="income">Income</button>
+      <button class="feed-tab" data-f="savings">Savings</button>
+    </div>
+    <input type="search" id="feedSearch" class="feed-search" placeholder="Search transactions" />
+    <div id="feedList"></div>
   </section>
 
   <!-- ── PAGE: SAVINGS ── -->
