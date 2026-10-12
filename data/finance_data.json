@@ -984,7 +984,8 @@
       "t": "EFTICE/NRBC/NA/SHAHINA ANWAR~31100003845~Fund Tran",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-08-27",
@@ -1103,7 +1104,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7944.75,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-08-19",
@@ -1166,7 +1168,8 @@
       "t": "MB/FT/27772814/0210310074939/1311000590786/",
       "a": -8872.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-08-10",
@@ -1208,7 +1211,8 @@
       "t": "MB/FT/27589230/1311010040235/1311000590786/Sharf",
       "a": -1400.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-08-05",
@@ -1243,14 +1247,18 @@
       "t": "Salary For July 2026",
       "a": -60942.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-07",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2026-08-02",
       "t": "MB/FT/27451310/0140442000026/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-08-01",
@@ -1278,42 +1286,48 @@
       "t": "NPSB IBFT-621321178871-00001311000590786-DC TO NP",
       "a": -330.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-12",
       "t": "NPSB IBFT-120726467612-00001311000590786-NPS ONLI",
       "a": -6400.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-09",
       "t": "MB/FT/26672051/1311010372574/1311000590786/",
       "a": -700.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-09",
       "t": "MB/FT/26674193/7110310002010/1311000590786/",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-09",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -8274.37,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-08",
       "t": "MB/FT/26660217/1311002470787/1311000590786/",
       "a": -730.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-07",
@@ -1334,7 +1348,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-05",
@@ -1355,7 +1370,8 @@
       "t": "MB/FT/26377848/1311000405548/1311000590786/",
       "a": -20000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-07-01",
@@ -1369,21 +1385,26 @@
       "t": "Salary For June 2026",
       "a": -60170.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-06",
+      "tm": "Paid at month end"
     },
     {
       "d": "2026-06-30",
       "t": "MB/FT/26352705/0210310074939/1311000590786/",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-06-30",
       "t": "MB/FT/26353426/0210310074939/1311000590786/",
       "a": -600.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-06-28",
@@ -1439,7 +1460,8 @@
       "t": "NPSB IBFT-200626156354-00001311000590786-NPS ONLI",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-06-18",
@@ -1453,7 +1475,8 @@
       "t": "MB/FT/25858091/7110310002010/1311000590786/",
       "a": -250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-06-08",
@@ -1544,7 +1567,8 @@
       "t": "MB/FT/25422317/1311000658570/1311000590786/nasif",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-06-02",
@@ -1558,7 +1582,10 @@
       "t": "Salary For May 2026",
       "a": -61204.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-05",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2026-05-31",
@@ -1621,14 +1648,16 @@
       "t": "MB/FT/25228107/1311000405548/1311000590786/",
       "a": -230.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-25",
       "t": "NPSB IBFT-614516408216-00001311000590786-BRBL ONL",
       "a": -15000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-23",
@@ -1705,7 +1734,8 @@
       "t": "Faruk Azam",
       "a": -30000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-14",
@@ -1719,7 +1749,8 @@
       "t": "MB/FT/24768022/7110310002010/1311000590786/",
       "a": -560.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-13",
@@ -1733,7 +1764,8 @@
       "t": "Eid Ul Adha Bonus 2026",
       "a": -34630.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2026-05-11",
@@ -1754,7 +1786,8 @@
       "t": "NPSB IBFT-110526602297-00001311000590786-NPS ONLI",
       "a": -900.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-10",
@@ -1768,7 +1801,8 @@
       "t": "EFTICE/NRBC/NA/SHAHINA ANWAR~31100003845~Fund Tran",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-05-09",
@@ -1838,7 +1872,8 @@
       "t": "MB/FT/24411624/1311000658570/1311000590786/paras",
       "a": -3400.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-30",
@@ -1852,28 +1887,34 @@
       "t": "NPSB IBFT-300426432007-00001311000590786-NPS ONLI",
       "a": -1205.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-30",
       "t": "Salary For April 2026",
       "a": -60900.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-04",
+      "tm": "Paid at month end"
     },
     {
       "d": "2026-04-30",
       "t": "MB/FT/24311852/1311000405548/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-30",
       "t": "MB/FT/24320209/0210310074939/1311000590786/10k l",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-30",
@@ -1887,7 +1928,8 @@
       "t": "REV/MB/bKash/9337494/1777572134568386/bkash",
       "a": -220.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-30",
@@ -1901,7 +1943,8 @@
       "t": "REV/MB/bKash/9337866/1777573371174911/bkash",
       "a": -220.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-29",
@@ -1922,7 +1965,8 @@
       "t": "NPSB IBFT-270426389819-00001311000590786-NPS ONLI",
       "a": -7500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-26",
@@ -1971,7 +2015,8 @@
       "t": "MB/FT/24109750/7110310002010/1311000590786/",
       "a": -600.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-21",
@@ -1999,14 +2044,16 @@
       "t": "MB/FT/23989102/1311010040235/1311000590786/Paras",
       "a": -1015.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-19",
       "t": "cash",
       "a": -85000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-18",
@@ -2034,7 +2081,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7978.5,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-11",
@@ -2062,7 +2110,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -8274.37,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-09",
@@ -2083,7 +2132,8 @@
       "t": "MB/FT/23671972/7110310002010/1311000590786/",
       "a": -420.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-08",
@@ -2104,14 +2154,16 @@
       "t": "MB/FT/23610016/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-06",
       "t": "MB/FT/23611827/1311010370772/1311000590786/",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-06",
@@ -2125,7 +2177,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-05",
@@ -2160,7 +2213,8 @@
       "t": "MB/FT/23440982/1311000585210/1311000590786/",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-04-01",
@@ -2174,14 +2228,18 @@
       "t": "MB/FT/23458619/0140442000026/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-03-31",
       "t": "Salary For March 2026",
       "a": -61287.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-03",
+      "tm": "Paid at month end"
     },
     {
       "d": "2026-03-30",
@@ -2272,7 +2330,8 @@
       "t": "NPSB IBFT-607221093591-00001311000590786-DC TO NP",
       "a": -650.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-03-13",
@@ -2314,7 +2373,8 @@
       "t": "MB/FT/22702498/1311000585210/1311000590786/dhar",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-03-03",
@@ -2342,14 +2402,18 @@
       "t": "Salary For February 2026",
       "a": -94881.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-02",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2026-03-01",
       "t": "MB/FT/22477981/0210310074939/1311000590786/",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-02-28",
@@ -2384,7 +2448,8 @@
       "t": "NPSB IBFT-260226597686-00001311000590786-NPS ONLI",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-02-26",
@@ -2398,7 +2463,8 @@
       "t": "NPSB IBFT-260226599083-00001311000590786-NPS ONLI",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-02-26",
@@ -2517,7 +2583,10 @@
       "t": "Salary For January 2026",
       "a": -60936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2026-01",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2026-01-27",
@@ -2573,14 +2642,16 @@
       "t": "MB/FT/21332090/0170310221543/1311000590786/xfcgb",
       "a": -480.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-18",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7978.5,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-18",
@@ -2608,28 +2679,32 @@
       "t": "NPSB IBFT-601315067081-00001311000590786-DC TO NP",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-12",
       "t": "MB/FT/21176098/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-11",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -8274.37,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-06",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2026-01-05",
@@ -2664,7 +2739,8 @@
       "t": "INTEREST CREDIT",
       "a": -400.62,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-31",
@@ -2678,7 +2754,10 @@
       "t": "Salary Month of Dec-25",
       "a": -76443.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-12",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-12-30",
@@ -2706,14 +2785,16 @@
       "t": "RTGS/IFIC2512293878406 /MR.MD.ABDU/120120431",
       "a": -100000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-28",
       "t": "MB/FT/20721937/1311000405548/1311000590786/2 Pun",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-28",
@@ -2734,7 +2815,8 @@
       "t": "WPPF 2024 -25",
       "a": -60247.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2025-12-20",
@@ -2769,7 +2851,8 @@
       "t": "NPSB IBFT-534722591203-00001311000590786-BRBL ONL",
       "a": -5050.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-14",
@@ -2797,14 +2880,16 @@
       "t": "NPSB IBFT-141225816566-00001311000590786-NPS ONLI",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-12",
       "t": "NPSB IBFT-121225798026-00001311000590786-NPS ONLI",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-12",
@@ -2825,35 +2910,42 @@
       "t": "EFTICE/EBL/MD NAYEM HASAN/SAKIB ESHRAK~13314401842",
       "a": -20000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-02",
       "t": "MB/FT/20039321/0170310210984/1311000590786/rashe",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-12-01",
       "t": "MB/FT/20005790/1311010040235/1311000590786/Medic",
       "a": -1250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-30",
       "t": "Salary month of Nov-25",
       "a": -46823.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-11",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-11-30",
       "t": "MB/FT/19963667/0140442000026/1311000590786/",
       "a": -5500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-29",
@@ -2909,7 +3001,8 @@
       "t": "MB/FT/19851522/7110310002010/1311000590786/",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-24",
@@ -2930,7 +3023,8 @@
       "t": "MB/FT/19784938/1311000405548/1311000590786/",
       "a": -850.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-22",
@@ -2958,7 +3052,8 @@
       "t": "MB/FT/19641117/1311010372574/1311000590786/",
       "a": -220.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-14",
@@ -2986,7 +3081,8 @@
       "t": "NPSB IBFT-141125512002-00001311000590786-NPS ONLI",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-13",
@@ -3007,14 +3103,16 @@
       "t": "MB/FT/19518436/1311010372574/1311000590786/",
       "a": -300.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-11",
       "t": "MB/FT/19516340/7110310002010/1311000590786/",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-11",
@@ -3028,7 +3126,8 @@
       "t": "REV/MB/bKash/7481494/1762898061288082/back",
       "a": -100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-09",
@@ -3077,14 +3176,16 @@
       "t": "MB/FT/19259763/1311000658570/1311000590786/paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-02",
       "t": "MB/FT/19203736/1311010372574/1311000590786/",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-11-01",
@@ -3098,14 +3199,18 @@
       "t": "SALARY FOR OCTOBER 2025",
       "a": -46841.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-10",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-10-30",
       "t": "MB/FT/19150538/1311000405548/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-10-29",
@@ -3245,28 +3350,32 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -8274.37,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-10-07",
       "t": "VISA POS TXN REV-946349-3519 66-05/10/2025",
       "a": -445.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-10-06",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-10-04",
       "t": "MB/FT/18469829/1311010071827/1311000590786/",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-10-01",
@@ -3287,7 +3396,10 @@
       "t": "Salary September 2025",
       "a": -46231.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-09",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-09-23",
@@ -3308,7 +3420,8 @@
       "t": "MB/FT/18056866/1311010370790/1311000590786/cash",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-16",
@@ -3322,7 +3435,8 @@
       "t": "NPSB IBFT-150925995468-00001311000590786-NPS ONLI",
       "a": -12000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-14",
@@ -3343,7 +3457,8 @@
       "t": "MB/FT/17849991/7110310002010/1311000590786/",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-05",
@@ -3385,7 +3500,8 @@
       "t": "MB/FT/17748353/1311010370790/1311000590786/Cash",
       "a": -20000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-04",
@@ -3399,14 +3515,16 @@
       "t": "MB/FT/17714548/7110310002010/1311000590786/",
       "a": -250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-03",
       "t": "MB/FT/17718865/0210310074939/1311000590786/",
       "a": -3100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-09-03",
@@ -3420,7 +3538,10 @@
       "t": "Salary August 2025",
       "a": -46690.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-08",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2025-09-01",
@@ -3434,28 +3555,32 @@
       "t": "MB/FT/17452677/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-22",
       "t": "MB/FT/17432916/1311010370790/1311000590786/Shuvo",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-21",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -300000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-21",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-20",
@@ -3469,14 +3594,16 @@
       "t": "MB/FT/17313700/7110310002010/1311000590786/SPPLC",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-12",
       "t": "MB/FT/17209768/1311010370790/1311000590786/Shuvo",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-11",
@@ -3546,7 +3673,8 @@
       "t": "MB/FT/17064023/1311000658570/1311000590786/paras",
       "a": -560.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-05",
@@ -3567,7 +3695,8 @@
       "t": "MB/FT/16924303/1311010040235/1311000590786/Sharf",
       "a": -2950.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-08-01",
@@ -3602,7 +3731,10 @@
       "t": "Salary Month ofJuly 2025",
       "a": -46635.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-07",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-07-27",
@@ -3637,14 +3769,16 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -8274.37,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-07-08",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-07-07",
@@ -3693,7 +3827,8 @@
       "t": "NPSB IBFT-518315776255-00001311000590786-PUBALI B",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-07-02",
@@ -3707,14 +3842,18 @@
       "t": "Salary Month of June 2025",
       "a": -46006.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-06",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-06-30",
       "t": "@TDS Rate : 15.00",
       "a": -299.61,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-06-30",
@@ -3728,7 +3867,8 @@
       "t": "MB/FT/16165175/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-06-27",
@@ -3742,7 +3882,8 @@
       "t": "MB/FT/16109860/7110310002010/1311000590786/",
       "a": -700.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-06-23",
@@ -3756,7 +3897,8 @@
       "t": "NPSB IBFT-517315362168-00001311000590786-BRBL ONL",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-06-20",
@@ -3805,7 +3947,8 @@
       "t": "MB/FT/15835716/0170310107113/1311000590786/tr",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-06-10",
@@ -3819,7 +3962,10 @@
       "t": "Salary Month of May 2025",
       "a": -46812.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-05",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2025-05-31",
@@ -3833,7 +3979,8 @@
       "t": "NPSB IBFT-514910971831-00001311000590786-BRBL ONL",
       "a": -15000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-05-24",
@@ -3847,7 +3994,8 @@
       "t": "MB/FT/15378153/1311010040235/1311000590786/Paras",
       "a": -5750.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-05-23",
@@ -3861,21 +4009,24 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-05-21",
       "t": "NPSB IBFT-210525080434-00001311000590786-NPS ONLI",
       "a": -3500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-05-20",
       "t": "EID-UL-AZHA BONUS 2025",
       "a": -29700.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2025-05-20",
@@ -3938,14 +4089,18 @@
       "t": "MB/FT/14896819/1311001934153/1311000590786/",
       "a": -550.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-30",
       "t": "Salary Month of April 2025",
       "a": -46895.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-04",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-04-29",
@@ -3973,7 +4128,8 @@
       "t": "NPSB IBFT-270425896468-00001311000590786-NPS ONLI",
       "a": -1050.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-24",
@@ -4008,7 +4164,8 @@
       "t": "MB/FT/14675138/1311010040235/1311000590786/Sharf",
       "a": -30000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-20",
@@ -4022,14 +4179,16 @@
       "t": "MB/FT/14660175/0170310107113/1311000590786/tr",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-18",
       "t": "MB/FT/14640954/1311010040235/1311000590786/Seclo",
       "a": -400.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-17",
@@ -4050,7 +4209,8 @@
       "t": "MB/FT/14586291/1311000405548/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-13",
@@ -4064,14 +4224,16 @@
       "t": "MB/FT/14523136/1311010372574/1311000590786/",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-10",
       "t": "NPSB IBFT-100425801092-00001311000590786-NPS ONLI",
       "a": -8000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-04-08",
@@ -4085,14 +4247,16 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-03-31",
       "t": "@TDS Rate : 15.00",
       "a": -701.41,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-03-31",
@@ -4106,21 +4270,26 @@
       "t": "NPSB IBFT-300325738434-00001311000590786-NPS ONLI",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-03-30",
       "t": "NPSB IBFT-508921972310-00001311000590786-DC TO NP",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-03-27",
       "t": "SALARY FOR MARCH 2025",
       "a": -46768.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-03",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-03-23",
@@ -4169,7 +4338,8 @@
       "t": "Festival Bonus 2025",
       "a": -29700.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2025-03-12",
@@ -4183,21 +4353,24 @@
       "t": "MB/FT/13828443/1311010372574/1311000590786/",
       "a": -1260.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-03-02",
       "t": "MB/FT/13645369/7110310002010/1311000590786/",
       "a": -800.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-28",
       "t": "@TDS Rate : 15.00",
       "a": -539.86,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-28",
@@ -4211,7 +4384,10 @@
       "t": "Salary Feb 2025",
       "a": -46763.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-02",
+      "tm": "Paid at month end"
     },
     {
       "d": "2025-02-27",
@@ -4225,7 +4401,8 @@
       "t": "MB/FT/13533098/1311010040235/1311000590786/Kacch",
       "a": -400.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-23",
@@ -4239,7 +4416,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-20",
@@ -4253,21 +4431,26 @@
       "t": "MB/FT/13344570/1311010370772/1311000590786/",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-09",
       "t": "MB/FT/13266698/1311000584275/1311000590786/Cash",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-02",
       "t": "Salary January 2025",
       "a": -47077.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2025-01",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2025-02-02",
@@ -4281,7 +4464,8 @@
       "t": "MB/FT/13111720/1311000585210/1311000590786/due p",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-02-01",
@@ -4295,7 +4479,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -14.03,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-31",
@@ -4316,7 +4501,8 @@
       "t": "NPSB IBFT-502208159860-00001311000590786-DC TO NP",
       "a": -1582.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-20",
@@ -4337,7 +4523,8 @@
       "t": "NPSB IBFT-502009788700-00001311000590786-DC TO NP",
       "a": -1582.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-20",
@@ -4358,7 +4545,8 @@
       "t": "MB/FT/12827473/1311001234329/1311000590786/",
       "a": -1300.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-15",
@@ -4386,14 +4574,16 @@
       "t": "MB/FT/12727918/0170310107113/1311000590786/tr",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-08",
       "t": "MB/FT/12657113/1311010040235/1311000590786/",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-08",
@@ -4407,14 +4597,16 @@
       "t": "NPSB IBFT-080125148105-00001311000590786-NPS ONLI",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-05",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2025-01-04",
@@ -4435,7 +4627,8 @@
       "t": "INTEREST CREDIT",
       "a": -337.07,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-12-31",
@@ -4456,7 +4649,10 @@
       "t": "Salary December 2024",
       "a": -67813.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-12",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-12-30",
@@ -4477,7 +4673,8 @@
       "t": "WPPF Payment for the year 20 23-24",
       "a": -55100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2024-12-20",
@@ -4498,14 +4695,16 @@
       "t": "MB/FT/12309245/1311010040235/1311000590786/Paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-12-18",
       "t": "MB/FT/12298810/1311010040235/1311000590786/Bolia",
       "a": -740.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-12-09",
@@ -4547,14 +4746,18 @@
       "t": "MB/FT/12029141/1311001934153/1311000590786/",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-12-01",
       "t": "Salary Nov 2024",
       "a": -41218.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-11",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2024-12-01",
@@ -4582,7 +4785,8 @@
       "t": "NPSB IBFT-271124875414-00001311000590786-NPS ONLI",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-22",
@@ -4617,7 +4821,8 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-20",
@@ -4631,7 +4836,8 @@
       "t": "MB/FT/11804306/1311000584275/1311000590786/cash",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-20",
@@ -4652,7 +4858,8 @@
       "t": "MB/FT/11663648/1311001234329/1311000590786/Thank",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-09",
@@ -4666,7 +4873,8 @@
       "t": "MB/FT/11524067/1311000584275/1311000590786/Loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-04",
@@ -4680,21 +4888,26 @@
       "t": "MB/FT/11483930/1311000658570/1311000590786/",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-11-01",
       "t": "MB/FT/11449722/1311010372574/1311000590786/",
       "a": -130.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-31",
       "t": "SALARY OCT 2024",
       "a": -41310.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-10",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-10-31",
@@ -4715,21 +4928,24 @@
       "t": "MB/FT/11419252/0170310107113/1311000590786/tr",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-30",
       "t": "EFTICE/JANATA/NotApplicable/NAFIS SADIK HOSSAIN AN",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-30",
       "t": "EFTICE/OBL/ANNNOOR BHUIYAN/ANNNOOR BHUIYAN~0392230",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-29",
@@ -4743,7 +4959,8 @@
       "t": "NPSB IBFT-271024692777-00001311000590786-NPS ONLI",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-27",
@@ -4778,7 +4995,8 @@
       "t": "FOR REVERSAL 498875*7216 AUT H203266 TD 02/10/2024",
       "a": -1100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-10",
@@ -4792,7 +5010,8 @@
       "t": "EFTICE/OBL/ANNNOOR BHUIYAN/ANNNOOR BHUIYAN~0392230",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-07",
@@ -4813,14 +5032,16 @@
       "t": "MB/FT/11068627/1311010372574/1311000590786/",
       "a": -710.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-06",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-10-05",
@@ -4848,28 +5069,34 @@
       "t": "MB/FT/10934598/1311000405548/1311000590786/",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-30",
       "t": "Salary Sep 2024",
       "a": -41170.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-09",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-09-30",
       "t": "EFTICE/OBL/ANNNOOR BHUIYAN/ANNNOOR BHUIYAN~0392230",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-30",
       "t": "EFTICE/OBL/ANNNOOR BHUIYAN/ANNNOOR BHUIYAN~0392230",
       "a": -11500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-30",
@@ -4890,14 +5117,16 @@
       "t": "MB/FT/10913187/1311000584275/1311000590786/Frien",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-28",
       "t": "MB/FT/10895400/1311010372574/1311000590786/",
       "a": -130.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-27",
@@ -4995,7 +5224,8 @@
       "t": "REV/MB/MobileTopup/1311000590786/01744277782/651",
       "a": -10.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-11",
@@ -5009,7 +5239,8 @@
       "t": "MB/FT/10581821/1311001234329/1311000590786/Turjo",
       "a": -800.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-09-05",
@@ -5023,14 +5254,18 @@
       "t": "SALARY AUG 2024",
       "a": -41733.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-08",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2024-08-31",
       "t": "MB/FT/10455220/0170310195671/1311000590786/cash",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-31",
@@ -5044,14 +5279,16 @@
       "t": "MB/FT/10385039/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-25",
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-24",
@@ -5086,7 +5323,8 @@
       "t": "MB/FT/10314857/1311000584275/1311000590786/cash",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-19",
@@ -5121,7 +5359,8 @@
       "t": "MB/FT/10254424/1311010372574/1311000590786/food",
       "a": -240.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-13",
@@ -5142,7 +5381,8 @@
       "t": "MB/FT/10034679/1311010372574/1311000590786/loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-01",
@@ -5156,14 +5396,18 @@
       "t": "MB/FT/10018639/0170310107113/1311000590786/tr",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-08-01",
       "t": "Salary july 2024",
       "a": -41807.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-07",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2024-07-29",
@@ -5226,14 +5470,16 @@
       "t": "NPSB IBFT-120724172599-00001311000590786-NPS ONLI",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-07-10",
       "t": "NPSB IBFT-100724162627-00001311000590786-NPS ONLI",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-07-09",
@@ -5261,21 +5507,26 @@
       "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-30",
       "t": "Salary June 2024",
       "a": -41279.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-06",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-06-30",
       "t": "@TDS Rate : 15.00",
       "a": -339.1,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-30",
@@ -5303,7 +5554,8 @@
       "t": "NPSB IBFT-270624078790-00001311000590786-NPS ONLI",
       "a": -6000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-24",
@@ -5338,7 +5590,8 @@
       "t": "NPSB IBFT-110624012903-00001311000590786-NPS ONLI",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-09",
@@ -5352,14 +5605,16 @@
       "t": "MB/FT/9343180/1311000585210/1311000590786/tk",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-05",
       "t": "NPSB IBFT-050624969278-00001311000590786-NPS ONLI",
       "a": -8000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-03",
@@ -5373,28 +5628,34 @@
       "t": "Salary May 2024",
       "a": -67557.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-05",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2024-06-02",
       "t": "MB/FT/9190234/1311010372574/1311000590786/loan r",
       "a": -3250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-02",
       "t": "IB/FT/9190353/0170310147231/1311000590786/IB/FT/",
       "a": -3005.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-02",
       "t": "MB/FT/9193360/0170310211750/1311000590786/ok",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-06-02",
@@ -5408,14 +5669,16 @@
       "t": "NPSB IBFT-020624945917-00001311000590786-NPS ONLI",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-31",
       "t": "@TDS Rate : 15.00",
       "a": -291.53,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-31",
@@ -5436,7 +5699,8 @@
       "t": "MB/FT/9065892/1311010040235/1311000590786/Parash",
       "a": -230.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-23",
@@ -5450,7 +5714,8 @@
       "t": "EFTICE/BB/SP INTEREST OTHE/S PINTERESTGPO~300017",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-20",
@@ -5471,7 +5736,8 @@
       "t": "NPSB IBFT-120524848892-00001311000590786-NPS ONLI",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-10",
@@ -5492,7 +5758,8 @@
       "t": "VISA POS TXN REV-454201-8931 21-29/04/2024",
       "a": -984.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-05-06",
@@ -5506,14 +5773,18 @@
       "t": "MB/FT/8756730/0170310107113/1311000590786/tr",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-04-30",
       "t": "SALARY APR 2024",
       "a": -41185.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-04",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-04-26",
@@ -5576,7 +5847,8 @@
       "t": "MB/FT/8509625/1311010370790/1311000590786/Eid Mu",
       "a": -101.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-04-11",
@@ -5625,7 +5897,8 @@
       "t": "EFTICE/BB/SP INTERESTGPO/SPINTERESTGPO~300017",
       "a": -9936.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-04-06",
@@ -5653,28 +5926,34 @@
       "t": "REV/MB/MobileTopup/1311000590786/01521560357/624",
       "a": -10.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-31",
       "t": "salary March 2024",
       "a": -67555.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-03",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-03-31",
       "t": "MB/FT/8304446/1311010372574/1311000590786/grocer",
       "a": -1390.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-31",
       "t": "@TDS Rate : 15.00",
       "a": -165.67,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-31",
@@ -5688,7 +5967,8 @@
       "t": "MB/FT/8266691/1311000584275/1311000590786/Medici",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-28",
@@ -5702,14 +5982,16 @@
       "t": "MB/FT/8217836/1311010040235/1311000590786/Iftaar",
       "a": -350.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-21",
       "t": "MB/FT/8154585/1311000584275/1311000590786/Loan",
       "a": -1200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-03-19",
@@ -5751,7 +6033,8 @@
       "t": "MB/FT/7915225/1311000658570/1311000590786/parash",
       "a": -680.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-02-29",
@@ -5765,14 +6048,18 @@
       "t": "salary February 2024",
       "a": -41164.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-02",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-02-29",
       "t": "@TDS Rate : 15.00",
       "a": -94.16,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-02-29",
@@ -5786,7 +6073,8 @@
       "t": "EFTICE/BB/SP INTERESTGPO/SPINTERESTGPO~300017",
       "a": -7452.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-02-20",
@@ -5828,7 +6116,10 @@
       "t": "salary January 2024",
       "a": -40809.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2024-01",
+      "tm": "Paid at month end"
     },
     {
       "d": "2024-01-31",
@@ -5849,14 +6140,16 @@
       "t": "MB/FT/1311010040235/1311000590786/Chaap beef shi",
       "a": -230.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-23",
       "t": "MB/FT/0170310107113/1311000590786/transfer",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-23",
@@ -5898,7 +6191,8 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-12",
@@ -5926,7 +6220,8 @@
       "t": "MB/FT/1311010372574/1311000590786/loan return",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-09",
@@ -5940,7 +6235,8 @@
       "t": "MB/FT/1311001234329/1311000590786/Thanks a lot b",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-03",
@@ -5954,21 +6250,26 @@
       "t": "salary December 2023",
       "a": -52143.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-12",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2024-01-01",
       "t": "MFS/Rocket/017463286210/24010164614461",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2024-01-01",
       "t": "EFTICE/OBL/ANNNOOR BHUIYAN/adjust",
       "a": -6000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-31",
@@ -6059,7 +6360,8 @@
       "t": "MB/FT/1311010040235/1311000590786/Kazi Farm Kitc",
       "a": -250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-20",
@@ -6073,7 +6375,8 @@
       "t": "MB/FT/0170310107113/1311000590786/transfer",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-20",
@@ -6094,7 +6397,8 @@
       "t": "WPPF Payment for the year 20 22-23",
       "a": -53318.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2023-12-17",
@@ -6108,7 +6412,8 @@
       "t": "MB/FT/1311000584275/1311000590786/consumer produ",
       "a": -2080.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-13",
@@ -6122,7 +6427,8 @@
       "t": "MB/FT/0170310107113/1311000590786/ttansfer",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-07",
@@ -6136,7 +6442,8 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-12-06",
@@ -6164,14 +6471,18 @@
       "t": "salary November 2023",
       "a": -32123.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-11",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-11-30",
       "t": "@TDS Rate : 15.00",
       "a": -632.74,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-30",
@@ -6199,14 +6510,16 @@
       "t": "MB/FT/1311010040235/1311000590786/Chaap",
       "a": -250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-22",
       "t": "EFT ICE / BB / SP INTEREST ( GPO /Government",
       "a": -7866.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-22",
@@ -6227,7 +6540,8 @@
       "t": "NPSB IBFT-332004261124-00001311000590786-HEAD OFF",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-11",
@@ -6248,14 +6562,16 @@
       "t": "NPSB IBFT-331415101200-00001311000590786-DC TO NP",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-10",
       "t": "NPSB IBFT-101123026879-00001311000590786-NPS ONLI",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-11-05",
@@ -6276,28 +6592,34 @@
       "t": "SALARY OCT 2023",
       "a": -32195.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-10",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-10-31",
       "t": "MB/FT/0170310211750/1311000590786/ok",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-10-31",
       "t": "MB/FT/0170310107113/1311000590786/transfer",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-10-31",
       "t": "@TDS Rate : 15.00",
       "a": -568.14,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-10-31",
@@ -6339,7 +6661,8 @@
       "t": "IB/FT/0170310107113/1311000590786/transfer",
       "a": -20000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-10-06",
@@ -6360,7 +6683,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -593.39,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-09-30",
@@ -6374,7 +6698,10 @@
       "t": "salary September 2023",
       "a": -31923.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-09",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-09-23",
@@ -6416,7 +6743,8 @@
       "t": "NPSB IBFT-325316654988-00001311000590786-HEAD OFF",
       "a": -15000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-09-09",
@@ -6430,14 +6758,18 @@
       "t": "salary August 2023",
       "a": -32147.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-08",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-08-31",
       "t": "@TDS Rate : 15.00",
       "a": -551.04,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-08-31",
@@ -6451,7 +6783,8 @@
       "t": "EFT ICE / BB / SP INTEREST ( GPO /Government",
       "a": -7866.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-08-23",
@@ -6472,7 +6805,8 @@
       "t": "MB/FT/1311010040235/1311000590786/Khawa dawa",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-08-08",
@@ -6493,14 +6827,18 @@
       "t": "salary july 2023",
       "a": -30837.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-07",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-07-31",
       "t": "MB/FT/0140442000026/1311000590786/personal",
       "a": -17500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-07-31",
@@ -6514,7 +6852,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -570.61,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-07-31",
@@ -6570,7 +6909,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -595.39,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-06-30",
@@ -6619,7 +6959,10 @@
       "t": "Salary June 2023",
       "a": -32236.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-06",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-06-20",
@@ -6633,49 +6976,58 @@
       "t": "IB/FT/0170310107113/1311000590786/transfer",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-06-14",
       "t": "Bonus Eid-UL-Azha 2023",
       "a": -19960.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2023-06-05",
       "t": "IB/FT/0170310107113/1311000590786/transfer",
       "a": -100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-06-05",
       "t": "IB/FT/0170310107113/1311000590786/transfer",
       "a": -6900.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-06-03",
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-31",
       "t": "Salary May 2023",
       "a": -32150.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-05",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-05-31",
       "t": "@TDS Rate : 15.00",
       "a": -500.92,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-31",
@@ -6710,21 +7062,24 @@
       "t": "EFT ICE / BB / SP INTEREST ( GPO /Government",
       "a": -7866.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-22",
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-21",
       "t": "EFT ICE / OBL / ANNNOOR BHUIYAN / loan ret",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-16",
@@ -6738,7 +7093,8 @@
       "t": "MB/FT/1311000584275/1311000590786/kitkat",
       "a": -125.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-14",
@@ -6752,7 +7108,8 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -260.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-05-13",
@@ -6780,7 +7137,10 @@
       "t": "Salary Apr 2023",
       "a": -32395.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-04",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-04-29",
@@ -6794,7 +7154,8 @@
       "t": "MB/FT/0170310211750/1311000590786/ok",
       "a": -6500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-04-27",
@@ -6822,7 +7183,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -3500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-04-18",
@@ -6885,7 +7247,8 @@
       "t": "MB/FT/1311010372574/1311000590786/food",
       "a": -200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-04-04",
@@ -6906,7 +7269,10 @@
       "t": "SALARY MAR 2023",
       "a": -52355.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-03",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2023-04-02",
@@ -6920,14 +7286,16 @@
       "t": "MB/FT/1311010372574/1311000590786/loan ret",
       "a": -1300.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-04-02",
       "t": "MB/FT/1311000585210/1311000590786/dhar",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-03-31",
@@ -6955,7 +7323,8 @@
       "t": "MB/FT/0170310211750/1311000590786/ok",
       "a": -20000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-03-29",
@@ -6997,7 +7366,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -1800.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-03-22",
@@ -7018,7 +7388,8 @@
       "t": "MB/FT/0170310211750/1311000590786/ok",
       "a": -1500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-03-22",
@@ -7067,14 +7438,16 @@
       "t": "MB/FT/1311010372574/1311000590786/adjust",
       "a": -100.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-03-01",
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -3500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-28",
@@ -7088,21 +7461,26 @@
       "t": "SALARY FEB 2023",
       "a": -32395.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-02",
+      "tm": "Paid at month end"
     },
     {
       "d": "2023-02-28",
       "t": "MB/FT/1311010372574/1311000590786/loan ret",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-28",
       "t": "@TDS Rate : 15.00",
       "a": -438.85,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-28",
@@ -7116,21 +7494,24 @@
       "t": "MB/FT/1311010372574/1311000590786/loan ret",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-26",
       "t": "NPSB IBFT-260223086959-00001311000590786-NPS ONLI",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-24",
       "t": "MB/FT/1311010040235/1311000590786/Lunch",
       "a": -370.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-24",
@@ -7151,7 +7532,8 @@
       "t": "EFT ICE / BB / SP INTEREST ( GPO /Government",
       "a": -7866.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-22",
@@ -7172,7 +7554,8 @@
       "t": "MB/FT/1311010040235/1311000590786/Birthday cake",
       "a": -173.33,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-13",
@@ -7207,28 +7590,34 @@
       "t": "SALARY JAN 2023",
       "a": -32395.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2023-01",
+      "tm": "Paid on 1st-5th of next month"
     },
     {
       "d": "2023-02-01",
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-02-01",
       "t": "MB/FT/1311000585210/1311000590786/fund",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-31",
       "t": "MB/FT/170310211750/1311000590786/ok",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-31",
@@ -7242,7 +7631,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -390.28,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-31",
@@ -7277,7 +7667,8 @@
       "t": "MB/FT/170310211750/1311000590786/ok",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-16",
@@ -7298,7 +7689,8 @@
       "t": "MB/FT/170310211750/1311000590786/ok",
       "a": -7000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-12",
@@ -7312,7 +7704,8 @@
       "t": "MB/FT/1311010372574/1311000590786/loan return",
       "a": -5000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-11",
@@ -7326,14 +7719,16 @@
       "t": "MB/FT/1311010372574/1311000590786/loan",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-07",
       "t": "MB/FT/1311010370790/1311000590786/Shuvo",
       "a": -3300.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2023-01-06",
@@ -7354,7 +7749,8 @@
       "t": "INTEREST CREDIT",
       "a": -240.15,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-31",
@@ -7375,28 +7771,34 @@
       "t": "SALARY Dec 2022",
       "a": -43363.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-12",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-12-29",
       "t": "MB/FT/1311000658570/1311000590786/Nasif",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-29",
       "t": "MB/FT/1311010372574/1311000590786/heater money",
       "a": -730.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-27",
       "t": "WPPF 2021-2022",
       "a": -53000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2022-12-25",
@@ -7431,7 +7833,8 @@
       "t": "Credit-498875%7216-006019-bK ashLimited,Visa D",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-15",
@@ -7459,7 +7862,8 @@
       "t": "RM 1007905 C-7216 362919 TID 32622.11.22 CASH RET",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-03",
@@ -7473,7 +7877,8 @@
       "t": "NPSB IBFT-011222840937-00001311000590786-NPS ONLI",
       "a": -1550.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-12-01",
@@ -7487,14 +7892,18 @@
       "t": "SALARY NOV 2022",
       "a": -26748.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-11",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-11-30",
       "t": "@TDS Rate : 15.00",
       "a": -179.59,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-11-30",
@@ -7515,7 +7924,8 @@
       "t": "EFT ICE / BB / SP INTEREST ( GPO /Government",
       "a": -7866.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-11-22",
@@ -7557,28 +7967,34 @@
       "t": "NPSB IBFT-231411744800-00001311000590786-DC TO NP",
       "a": -6000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-11-09",
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-31",
       "t": "SALARY OCT 2022",
       "a": -26628.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-10",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-10-31",
       "t": "@TDS Rate : 15.00",
       "a": -112.56,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-31",
@@ -7592,7 +8008,8 @@
       "t": "NPSB IBFT-261022745395-00001311000590786-NPS ONLI",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-27",
@@ -7606,14 +8023,16 @@
       "t": "NPSB IBFT-261022742070-00001311000590786-NPS ONLI",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-25",
       "t": "MB/FT/1311010372574/1311000590786/return",
       "a": -17500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-25",
@@ -7662,14 +8081,16 @@
       "t": "MB/FT/1311010370085/1311000590786/Akash october",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-13",
       "t": "MB/FT/1311010372574/1311000590786/loan return",
       "a": -500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-11",
@@ -7683,21 +8104,24 @@
       "t": "MB/FT/1311000658570/1311000590786/Nasif",
       "a": -1200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-08",
       "t": "MB/FT/1311010372574/1311000590786/seclo meal bil",
       "a": -2500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-04",
       "t": "MB/FT/1311000584275/1311000590786/Cash",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-10-01",
@@ -7711,7 +8135,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -64.04,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-09-30",
@@ -7732,21 +8157,26 @@
       "t": "SALARY SEP 2022",
       "a": -26793.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-09",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-09-22",
       "t": "MB/FT/1311010370790/1311000590786/Shuvo",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-09-18",
       "t": "MB/FT/1311010370790/1311000590786/Shuvo",
       "a": -6200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-09-17",
@@ -7767,7 +8197,10 @@
       "t": "Salary Aug 2022",
       "a": -26843.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-08",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-08-31",
@@ -7781,7 +8214,8 @@
       "t": "@TDS Rate : 15.00-@TDS Rate :15.00",
       "a": -309.94,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-08-31",
@@ -7816,7 +8250,8 @@
       "t": "CASH DEPOSIT",
       "a": -50000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-08-21",
@@ -7844,7 +8279,8 @@
       "t": "EFT ICE / EBLD / SAKIB ESHRA K /EBL IB SKY",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-08-11",
@@ -7858,7 +8294,8 @@
       "t": "MB/FT/1311000584275/1311000590786/Loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-31",
@@ -7872,14 +8309,18 @@
       "t": "SALARY JULY 2022",
       "a": -26678.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-07",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-07-31",
       "t": "@TDS Rate : 15.00",
       "a": -414.48,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-31",
@@ -7893,7 +8334,8 @@
       "t": "NPSB IBFT-270722510919-00001311000590786-NPS ONLI",
       "a": -19000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-27",
@@ -7907,7 +8349,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-24",
@@ -7928,7 +8371,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-13",
@@ -7963,7 +8407,8 @@
       "t": "MB/FT/1311010370790/1311000590786/Parash Seclo m",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-07-03",
@@ -7977,7 +8422,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -334.88,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-06-30",
@@ -7991,7 +8437,10 @@
       "t": "Salary June 2022",
       "a": -58093.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-06",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-06-20",
@@ -8040,14 +8489,16 @@
       "t": "MB/FT/1311000575892/1311000590786/sadi",
       "a": -15000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-06-08",
       "t": "MB/FT/1311000584275/1311000590786/Loan",
       "a": -10000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-06-05",
@@ -8061,7 +8512,10 @@
       "t": "Salary May 2022",
       "a": -27898.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-05",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-05-31",
@@ -8075,7 +8529,8 @@
       "t": "@TDS Rate : 15.00",
       "a": -321.36,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-05-31",
@@ -8089,7 +8544,8 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -700.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-05-12",
@@ -8103,7 +8559,8 @@
       "t": "MB/FT/1311010370790/1311000590786/Shuvo Cash",
       "a": -10500.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-05-01",
@@ -8117,14 +8574,16 @@
       "t": "MB/FT/1311010370790/1311000590786/Shuvo",
       "a": -11200.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-04-30",
       "t": "@TDS Rate : 15.00",
       "a": -247.5,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-04-30",
@@ -8138,14 +8597,18 @@
       "t": "Salary April 2022",
       "a": -28073.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-04",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-04-28",
       "t": "MB/FT/1311010372574/1311000590786/ifter party",
       "a": -250.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-04-28",
@@ -8173,28 +8636,34 @@
       "t": "Eid Bonus 2022",
       "a": -16520.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Bonus"
     },
     {
       "d": "2022-04-13",
       "t": "MB/FT/1311000584275/1311000590786/Poros",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-03-31",
       "t": "Salary for the month of Marc h 2022",
       "a": -28033.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-03",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-03-31",
       "t": "@TDS Rate : 15.00",
       "a": -211.56,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-03-31",
@@ -8271,21 +8740,26 @@
       "t": "MB/FT/1311000658570/1311000590786/nasif",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-28",
       "t": "Salary For the Month of FEB 2022",
       "a": -28103.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-02",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-02-28",
       "t": "@TDS Rate : 15.00",
       "a": -200.29,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-28",
@@ -8299,7 +8773,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-21",
@@ -8320,7 +8795,8 @@
       "t": "MB/FT/1311000584275/1311000590786/loan",
       "a": -3000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-15",
@@ -8341,35 +8817,42 @@
       "t": "MB/FT/1311000575892/1311000590786/Sadi",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-02",
       "t": "MB/FT/1311000584275/1311000590786/Loan",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-01",
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-02-01",
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-01-31",
       "t": "Salary For the Month of JAN 2022",
       "a": -28063.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2022-01",
+      "tm": "Paid at month end"
     },
     {
       "d": "2022-01-25",
@@ -8453,14 +8936,16 @@
       "t": "NPSB IBFT-200955620495-00001311000590786-DUTCH-BA",
       "a": -1000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-01-09",
       "t": "NPSB IBFT-200955622319-00001311000590786-DUTCH-BA",
       "a": -9000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2022-01-07",
@@ -8474,14 +8959,16 @@
       "t": "MB/FT/1311000584275/1311000590786/Borrowed money",
       "a": -8000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-12-31",
       "t": "INTEREST CREDIT",
       "a": -95.94,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-12-31",
@@ -8495,14 +8982,18 @@
       "t": "Salary For the Month of DEC 2021",
       "a": -23988.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2021-12",
+      "tm": "Paid at month end"
     },
     {
       "d": "2021-12-30",
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -14000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-12-24",
@@ -8537,7 +9028,8 @@
       "t": "EFT ICE / EBLD / SAKIB ESHRA K /EBL IB SKY",
       "a": -30000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-12-08",
@@ -8551,21 +9043,26 @@
       "t": "Salary For the Month of NOV 2021",
       "a": -23963.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2021-11",
+      "tm": "Paid at month end"
     },
     {
       "d": "2021-11-30",
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-11-30",
       "t": "@TDS Rate : 10.00",
       "a": -67.86,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-11-30",
@@ -8642,7 +9139,8 @@
       "t": "MB/FT/1311000584275/1311000590786/Poros",
       "a": -2000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-11-01",
@@ -8656,14 +9154,18 @@
       "t": "Salary For the Month of Oct 2021",
       "a": -25096.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2021-10",
+      "tm": "Paid at month end"
     },
     {
       "d": "2021-10-31",
       "t": "@TDS Rate : 10.00",
       "a": -72.64,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-10-31",
@@ -8691,21 +9193,26 @@
       "t": "MB/FT/1311000584275/1311000590786/Poros",
       "a": -4000.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     },
     {
       "d": "2021-09-30",
       "t": "Salary SEP-2021",
       "a": -34315.0,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Salary",
+      "m": "2021-09",
+      "tm": "Paid at month end"
     },
     {
       "d": "2021-09-30",
       "t": "INTEREST CREDIT",
       "a": -2.14,
       "s": "MTB",
-      "k": "income"
+      "k": "income",
+      "c": "Other income"
     }
   ]
 }
