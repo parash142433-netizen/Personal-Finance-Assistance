@@ -45,7 +45,10 @@
     <li class="nav-item" data-page="transactions" id="nav-transactions">
       <span class="nav-icon">📋</span><span class="nav-label">Transactions</span>
     </li>
-        <li class="nav-item" data-page="feed" id="nav-feed">
+            <li class="nav-item" data-page="insights" id="nav-insights">
+      <span class="nav-icon">💡</span><span class="nav-label">Insights</span>
+    </li>
+    <li class="nav-item" data-page="feed" id="nav-feed">
       <span class="nav-icon">🧾</span><span class="nav-label">Transaction Feed</span>
     </li>
     <li class="nav-item" data-page="scheduled" id="nav-scheduled">
@@ -343,6 +346,23 @@
     </div>
     <input type="search" id="feedSearch" class="feed-search" placeholder="Search transactions" />
     <div id="feedList"></div>
+  </section>
+
+  <!-- ── PAGE: INSIGHTS ── -->
+  <section class="page" id="page-insights">
+    <div class="page-header">
+      <h1>Insights</h1>
+      <p class="subtitle">Spending alert, banks and cards, categories and subscriptions for the month chosen in the Transaction Feed</p>
+    </div>
+    <div class="feed-note" id="insAlert">—</div>
+    <h3 class="ins-h">Where your money goes, by bank and card</h3>
+    <div id="insBanks"></div>
+    <h3 class="ins-h">Your cards</h3>
+    <div id="insCards"></div>
+    <h3 class="ins-h">Spending categories</h3>
+    <div id="insCats"></div>
+    <h3 class="ins-h">Possible subscriptions</h3>
+    <div id="insSubs"></div>
   </section>
 
   <!-- ── PAGE: SAVINGS ── -->
