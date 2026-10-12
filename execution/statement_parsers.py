@@ -77,6 +77,49 @@ def parse_mtb(text):
     return {"kind": "mtb", "rows": rows}
 
 
+HIST_NUM_RE = re.compile(r"\d{1,3}(?:,\d{3})*\.\d{2}")
+
+
+def parse_mtb_history(text):
+    """Older full-history MTB layout: separate Withdrawal, Deposit and Balance columns with no 'Cr'
+    after the balance. The last three amounts of each record are withdrawal, deposit and balance."""
+    body = text.split("=== PAGE 1 ===", 1)[-1]
+    head = re.search(rf"Closing Balance\s*\n\s*({NUM})Cr\s+({NUM})\s+({NUM})\s+({NUM})Cr", text)
+    if not head:
+        raise StatementError("history header totals not found")
+    opening = money(head.group(1))
+    header = {"withdrawals": money(head.group(2)), "deposits": money(head.group(3)), "closing": money(head.group(4))}
+    starts = list(START_RE.finditer(body))
+    rows, prev = [], opening
+    for i, s in enumerate(starts):
+        end = starts[i + 1].start() if i + 1 < len(starts) else len(body)
+        # The amounts are on the first line of each record. Later lines are page footers and wrapped text.
+        line = body[s.end():end].split("\n")[0]
+        nums = list(HIST_NUM_RE.finditer(line))
+        if len(nums) < 3:
+            raise StatementError(f"history record has fewer than 3 amounts: {line[:80]!r}")
+        w, d, b = (money(n.group(0)) for n in nums[-3:])
+        if round(prev - w + d - b, 2) != 0:
+            raise StatementError(f"history balance does not follow on {s.group(3)}/{s.group(2)}: {line[:80]!r}")
+        desc = re.sub(r"^\d{2}/\d{2}/\d{2}\s+", "", line[:nums[-3].start()])
+        rows.append({
+            "date": f"20{s.group(3)}-{s.group(2)}-{s.group(1)}",
+            "description": " ".join(desc.split()),
+            "deposit": d,
+            "withdrawal": w,
+            "balance": b,
+        })
+        prev = b
+    deposits = round(sum(r["deposit"] for r in rows), 2)
+    withdrawals = round(sum(r["withdrawal"] for r in rows), 2)
+    if (deposits, withdrawals, prev) != (header["deposits"], header["withdrawals"], header["closing"]):
+        raise StatementError(
+            f"history totals do not match header: rows D{deposits} W{withdrawals} C{prev} "
+            f"vs header D{header['deposits']} W{header['withdrawals']} C{header['closing']}"
+        )
+    return {"kind": "mtb", "rows": rows}
+
+
 def parse_ebl(text):
     total_m = re.search(rf"Total Outstanding :\s+({NUM})BDT", text)
     if not total_m:

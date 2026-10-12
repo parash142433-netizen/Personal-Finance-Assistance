@@ -16,7 +16,9 @@ import urllib.request
 from pypdf import PdfReader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from statement_parsers import StatementError, build_monthly, build_transactions, parse_ebl, parse_mtb, payload_from_series  # noqa: E402
+from statement_parsers import (  # noqa: E402
+    StatementError, build_monthly, build_transactions, parse_ebl, parse_mtb, parse_mtb_history, payload_from_series,
+)
 
 FOLDER_ID = "195e6CTfUf73ELYA8zlWs-D486xnL3aso"  # the Banking folder
 CF_ACCOUNT = "e8382c2665bb696adbfb91b935627b32"
@@ -163,11 +165,51 @@ def publish_to_repo(payload):
     return True
 
 
+BACKFILL_KEY = "backfill_transactions"  # transactions from the 2021-2026 bank history and the Jun/Jul card statements
+
+
+def backfill(token, files):
+    """One-time read of the history files. Only runs when the workflow is started with backfill on.
+    Nothing is saved unless every file parses and its totals match."""
+    jobs = []
+    for f in files:
+        if f["name"].startswith("Emailing"):
+            jobs.append(("mtb_history", f))
+        elif "JUN2026" in f["name"] or "JUL2026" in f["name"]:
+            jobs.append(("ebl", f))
+    if not jobs:
+        raise StatementError("backfill found no history or Jun/Jul card files in the folder")
+    out = []
+    for kind, f in jobs:
+        _, text = read_statement(download(token, f["id"]))
+        if text is None:
+            raise StatementError(f"backfill could not open {f['name']}")
+        parsed = parse_mtb_history(text) if kind == "mtb_history" else parse_ebl(text)
+        out.extend(build_transactions([parsed], "0000-00"))
+    kv_put(BACKFILL_KEY, out)
+    print(f"Backfill saved {len(out)} transactions from {len(jobs)} files")
+    return out
+
+
+def merge_transactions(*lists):
+    seen, out = set(), []
+    for lst in lists:
+        for t in lst:
+            key = (t["d"], t["t"], t["a"], t["s"], t["k"])
+            if key not in seen:
+                seen.add(key)
+                out.append(t)
+    out.sort(key=lambda x: x["d"], reverse=True)
+    return out
+
+
 def sync():
     state = kv_get_json(STATE_KEY, {})
     token = google_token()
     errors = []
     files = list_pdfs(token)
+    if os.environ.get("BACKFILL") == "1":
+        backfill(token, files)
     for f in files:
         if f["id"] in IGNORED_FILE_IDS:
             continue
@@ -222,7 +264,8 @@ def sync():
         print("No new months after", last_base)
         return 0
     payload = payload_from_series(base_series + new_series)
-    payload["transactions"] = build_transactions(good, last_base)
+    payload["transactions"] = merge_transactions(
+        kv_get_json(BACKFILL_KEY, []), build_transactions(good, last_base))
     kv_put(DATA_KEY, payload)
     rebuilt = publish_to_repo(payload)
     kv_put(ERROR_KEY, {"errors": []})
