@@ -337,6 +337,80 @@ SPLIT_RULES = [
 ]
 
 
+# Checked in order; the first match wins. Spending rows only (income is classified separately).
+EXPENSE_RULES = [
+    ("Card bill payments", r"card ?payment|skybanking|ebl card|ebl credit"),
+    ("Tax deducted", r"^@TDS|\btax\b"),
+    ("Cash withdrawals", r"cash withdraw|\bCW-|\bATM\b|\bRATM|withdrawal"),
+    ("Fees & VAT", r"\bVAT\b|\bfee\b|risk assurance|verification|\bcharges?\b|excise"),
+    ("Installments (EMI)", r"installment"),
+    ("Donations", r"donation"),
+    ("Mobile wallet (bKash)", r"bkash|addmoney|mobile wallet|\bLB\|"),
+    ("Transfers to accounts", r"standing instruction|rtgs|create fd|fixed deposit"),
+    ("Cheques", r"^chq"),
+    ("Entertainment", r"cinema|cineplex|bay watch|entertain"),
+    ("Food & dining", r"foodpanda|domino|chillox|tasty|kudos|restaurant|cafe|coffee|pizza|kfc|sweet|bakery|fried|fry bucket|chicken|burger|hotel|banolata|\bbf\b|sharf|smoothie|\btea\b|food court|khana|runcha|palongki|crust and beans|sailor"),
+    ("Shopping & groceries", r"meena bazar|chaldal|shop|\bmart\b|shwapno|seven to eleven|store|pickaboo|best buy|aarong|daraz|electronics|pharmacy|bazar|fabric|miniso|sony|smart banasree|sumash|\btex\b"),
+    ("Transport & travel", r"uber|pathao|shohoz|railway|gozayaan|share ?trip|airline|fuel|petrol|\bride\b|\bbus\b|dallas express|express mirpur"),
+    ("Bills & utilities", r"dpdc|titas|desco|grameenphone|mobiletopup|topup|internet|\bbill\b|onnorokom"),
+    ("Health", r"hospital|clinic|doctor|medic|diagnostic"),
+    ("Subscriptions & online", r"netflix|spotify|apple|google|openai|icloud|facebook|claude|health connect"),
+]
+# Bank channel words that are not a payee name.
+BANK_CHANNELS = {"npsb", "nps", "ibft", "bdt", "bkash", "ibft npsb", "fro", "gpt", "gp"}
+
+
+def expense_category(desc):
+    """Category of a spending row, from the statement description."""
+    for name, pattern in EXPENSE_RULES:
+        if re.search(pattern, desc, re.I):
+            return name
+    if re.match(r"(MB/|IB/|NPSB|EFT|MFS)", desc, re.I):
+        return "Transfers to people"
+    if re.match(r"(POS-|EBL)", desc, re.I):
+        return "Card purchases (other)"
+    return "Other spending"
+
+
+def expense_payee(desc):
+    """The name in the statement for an expense: a merchant, a person, or a bank transfer."""
+    parts = [p.strip() for p in re.split(r"[/~|]", desc) if p.strip()]
+    if re.match(r"POS-", desc, re.I):
+        name = re.sub(r"^POS-", "", desc, flags=re.I)
+        name = re.split(r"-\d", name)[0]
+        return " ".join(name.split()).title()
+    if re.match(r"(MB/FT|IB/FT|MB/bKash)", desc, re.I) and parts:
+        last = " ".join(parts[-1].split())
+        if last.lower() in GENERIC_NOTES or re.fullmatch(r"[\d\s.]+", last):
+            return "Unnamed transfer"
+        return last.title()
+    if re.match(r"(MB/IBFT|IB/IBFT|MB/BDT|MB/CrCardPayment)", desc, re.I):
+        last = " ".join(parts[-1].split()) if parts else ""
+        if not last or last.lower() in BANK_CHANNELS or re.fullmatch(r"[\d\s.%]+", last):
+            return "Bank transfer"
+        return last.title()
+    if re.match(r"EFT", desc, re.I) and len(parts) > 2:
+        return " ".join(parts[2].split()).title()
+    if re.match(r"NPSB", desc, re.I):
+        return "Bank transfer (NPSB)"
+    return " ".join(re.split(r"\s{2,}|\s\d{4,}", desc)[0].split()).title() or None
+
+
+def annotate_expenses(transactions):
+    """Adds the category and payee to every spending and card payment row. A card bill payment
+    that was saved as spending is moved to payments, so it is not counted twice."""
+    for t in transactions:
+        if t["k"] == "spend":
+            t["e"] = expense_category(t["t"])
+            if t["e"] == "Card bill payments":
+                t["k"] = "payment"
+            else:
+                t["ename"] = expense_payee(t["t"])
+        if t["k"] == "payment":
+            t["e"] = "Card bill payments"
+    return transactions
+
+
 def annotate_income(transactions):
     """Splits known combined deposits, then adds the category to every income row.
     Salary rows also get the salary month and timing."""
@@ -383,7 +457,7 @@ def build_transactions(statements, after_iso):
     return out
 
 
-CARD_PAYMENT_HINTS = ("SKYBANKING", "EBL CARD", "EBL CREDIT", "CARD PAYMENT")
+CARD_PAYMENT_HINTS = ("SKYBANKING", "EBL CARD", "EBL CREDIT", "CARD PAYMENT", "CARDPAYMENT")
 
 
 def _is_card_payment(description):

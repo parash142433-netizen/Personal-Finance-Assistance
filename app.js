@@ -112,7 +112,7 @@ function setCurrentDate() {
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'income', 'insights', 'scheduled', 'summary', 'settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'income', 'expenses', 'insights', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
@@ -124,7 +124,7 @@ function navigate(page) {
   el('topbarTitle').textContent = {
     dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
     budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
-    transactions: 'Transactions', feed: 'Transaction Feed', income: 'Income', insights: 'Insights', scheduled: 'Scheduled', summary: 'Personal Summary',
+    transactions: 'Transactions', feed: 'Transaction Feed', income: 'Income', expenses: 'Expenses', insights: 'Insights', scheduled: 'Scheduled', summary: 'Personal Summary',
     settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
@@ -1223,6 +1223,7 @@ async function initFeed() {
   if (search) search.addEventListener('input', () => { FEED.query = search.value.trim().toLowerCase(); renderFeed(); });
   renderFeed();
   initIncome();
+  initExpenses();
 }
 
 function renderFeed() {
@@ -1456,4 +1457,92 @@ function renderIncome() {
     '<div class="feed-row"><div><div class="feed-desc">' + escHtml(n) + '</div><div class="feed-src">' + e.count + ' deposits</div></div>' +
     '<div class="feed-amt green">' + fmt(e.total) + '</div></div>').join('');
   document.getElementById('incNames').innerHTML = nameHtml || '<div class="feed-note">No named transfers in this period.</div>';
+}
+
+// ── EXPENSE DASHBOARD ────────────────────────────────────────────────────────────
+// Spending rows from the transaction list, grouped by the category the statement text gives them.
+const EXPENSE_GROUPS = [
+  ['Shopping & groceries', ['Shopping & groceries']],
+  ['Food & entertainment', ['Food & dining', 'Entertainment']],
+  ['Transport', ['Transport & travel']],
+  ['Bills, health & online', ['Bills & utilities', 'Health', 'Subscriptions & online']],
+  ['Other card purchases', ['Card purchases (other)', 'Other spending']],
+  ['Cash & fees', ['Cash withdrawals', 'Fees & VAT', 'Tax deducted']],
+  ['Sent to people & wallets', ['Transfers to people', 'Mobile wallet (bKash)', 'Donations']],
+  ['Accounts, EMI & cheques', ['Transfers to accounts', 'Installments (EMI)', 'Cheques']],
+];
+const EXPENSE_COLORS = ['#34d399', '#fbbf24', '#22d3ee', '#60a5fa', '#c4b5fd', '#f87171', '#fb923c', '#94a3b8'];
+const PEOPLE_CATS = ['Transfers to people', 'Mobile wallet (bKash)', 'Donations'];
+let expChart = null;
+
+function expenseRows() {
+  const year = (document.getElementById('expYear') || {}).value || 'all';
+  return FEED.all.filter(t => t.k === 'spend' && (year === 'all' || t.d.startsWith(year)));
+}
+
+function initExpenses() {
+  const sel = document.getElementById('expYear');
+  if (!sel) return;
+  const years = [...new Set(FEED.all.filter(t => t.k === 'spend').map(t => t.d.slice(0, 4)))].sort();
+  sel.innerHTML = '<option value="all">All years</option>' + years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+  sel.value = 'all';
+  sel.addEventListener('change', renderExpenses);
+  renderExpenses();
+}
+
+function renderExpenses() {
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const rows = expenseRows();
+  const amt = list => list.reduce((s, t) => s + t.a, 0);
+  const total = amt(rows);
+  set('expTotal', fmt(total));
+  set('expCard', fmt(amt(rows.filter(t => t.s === 'EBL card'))));
+  set('expPeople', fmt(amt(rows.filter(t => PEOPLE_CATS.includes(t.e)))));
+  set('expCash', fmt(amt(rows.filter(t => t.e === 'Cash withdrawals'))));
+
+  // Monthly chart: one stacked bar per month, one colour per group
+  const year = document.getElementById('expYear').value;
+  set('expChartTitle', year === 'all' ? 'Spending by year' : 'Spending by month, ' + year);
+  const groupBy = year === 'all' ? (t => t.d.slice(0, 4)) : (t => t.d.slice(0, 7));
+  const labels = [...new Set(rows.map(groupBy))].sort();
+  const datasets = EXPENSE_GROUPS.map(([name, cats], i) => ({
+    label: name,
+    data: labels.map(l => amt(rows.filter(t => groupBy(t) === l && cats.includes(t.e)))),
+    backgroundColor: EXPENSE_COLORS[i],
+    borderRadius: 3,
+  }));
+  const canvas = document.getElementById('expChart');
+  if (canvas && typeof Chart !== 'undefined') {
+    if (expChart) expChart.destroy();
+    expChart = new Chart(canvas, {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => fmt(v, true) } } },
+      },
+    });
+  }
+
+  // Category table
+  const catTotals = {};
+  rows.forEach(t => { catTotals[t.e] = (catTotals[t.e] || 0) + t.a; });
+  const catHtml = Object.entries(catTotals).sort((a, b) => b[1] - a[1]).map(([c, v]) =>
+    '<div class="feed-row"><div class="feed-desc">' + escHtml(c) + '</div><div class="feed-amt red">' + fmt(v) +
+    (total ? ' · ' + Math.round(v / total * 100) + '%' : '') + '</div></div>').join('');
+  document.getElementById('expCats').innerHTML = catHtml || '<div class="feed-note">No spending in this period.</div>';
+
+  // Payees on the statements (merchants, people, banks)
+  const names = {};
+  rows.forEach(t => {
+    const key = t.ename || t.t;
+    const e = names[key] = names[key] || { total: 0, count: 0, cat: t.e };
+    e.total += t.a; e.count += 1;
+  });
+  const nameHtml = Object.entries(names).sort((a, b) => b[1].total - a[1].total).slice(0, 25).map(([n, e]) =>
+    '<div class="feed-row"><div><div class="feed-desc">' + escHtml(n) + '</div><div class="feed-src">' + escHtml(e.cat) + ' · ' + e.count + ' payments</div></div>' +
+    '<div class="feed-amt red">' + fmt(e.total) + '</div></div>').join('');
+  document.getElementById('expNames').innerHTML = nameHtml || '<div class="feed-note">No payees in this period.</div>';
 }

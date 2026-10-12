@@ -17,7 +17,7 @@ from pypdf import PdfReader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from statement_parsers import (  # noqa: E402
-    StatementError, annotate_income, build_monthly, build_transactions, parse_ebl, parse_mtb, parse_mtb_history, payload_from_series,
+    StatementError, annotate_expenses, annotate_income, build_monthly, build_transactions, parse_ebl, parse_mtb, parse_mtb_history, payload_from_series,
 )
 
 FOLDER_ID = "195e6CTfUf73ELYA8zlWs-D486xnL3aso"  # the Banking folder
@@ -264,8 +264,8 @@ def sync():
         print("No new months after", last_base)
         return 0
     payload = payload_from_series(base_series + new_series)
-    payload["transactions"] = annotate_income(merge_transactions(
-        kv_get_json(BACKFILL_KEY, []), build_transactions(good, last_base)))
+    payload["transactions"] = annotate_expenses(annotate_income(merge_transactions(
+        kv_get_json(BACKFILL_KEY, []), build_transactions(good, last_base))))
     kv_put(DATA_KEY, payload)
     rebuilt = publish_to_repo(payload)
     kv_put(ERROR_KEY, {"errors": []})
