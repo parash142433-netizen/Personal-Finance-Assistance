@@ -819,20 +819,6 @@
   ],
   "transactions": [
     {
-      "d": "2070-01-01",
-      "t": "HOLD#‡REMOVAL DATED 22/09/2021 REF NO 950069139",
-      "a": 120.0,
-      "s": "MTB",
-      "k": "spend"
-    },
-    {
-      "d": "2070-01-01",
-      "t": "HOLD#‡REMOVAL DATED 22/09/2021 REF NO 950069139",
-      "a": 18.0,
-      "s": "MTB",
-      "k": "spend"
-    },
-    {
       "d": "2026-10-05",
       "t": "Risk Assurance Fee",
       "a": 273.26,
