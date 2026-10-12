@@ -1,74 +1,74 @@
 {
   "overview": {
-    "total_months": 59,
-    "total_income": 4620827.03,
-    "total_spent": 4515989.63,
-    "total_salary": 2471934,
-    "total_savings": 104837.4,
-    "total_transactions": 1065,
-    "latest_balance": 104837.4,
-    "latest_month": "July 2026",
-    "avg_monthly_spend": 76542.2,
-    "avg_monthly_income": 78319.1,
-    "avg_monthly_savings": 1776.91,
-    "positive_months": 40,
-    "negative_months": 19,
-    "savings_rate_pct": 2.27
+    "total_months": 62,
+    "total_income": 4710315.78,
+    "total_spent": 4689255.76,
+    "total_salary": 2532876.0,
+    "total_savings": 21060.02,
+    "total_transactions": 1128,
+    "latest_balance": 140984.15,
+    "latest_month": "Oct 2026",
+    "avg_monthly_spend": 75633.16,
+    "avg_monthly_income": 75972.84,
+    "avg_monthly_savings": 339.68,
+    "positive_months": 41,
+    "negative_months": 21,
+    "savings_rate_pct": 0.45
   },
   "highlights": {
-    "best_month": "August 2025",
+    "best_month": "Aug 2025",
     "best_month_savings": 303746,
-    "worst_month": "October 2025",
+    "worst_month": "Oct 2025",
     "worst_month_savings": -388840.63,
-    "highest_spend_month": "October 2025",
+    "highest_spend_month": "Oct 2025",
     "highest_spend_amount": 459837,
-    "highest_income_month": "August 2025",
+    "highest_income_month": "Aug 2025",
     "highest_income_amount": 332462,
-    "busiest_month": "April 2026",
+    "busiest_month": "Apr 2026",
     "busiest_tx_count": 48
   },
   "yearly": {
     "2021": {
-      "months": 4,
       "income": 176600.58,
-      "spent": 78724,
+      "spent": 78724.0,
       "savings": 97876.58,
-      "tx": 34
+      "tx": 34,
+      "normalizedSavings": 97876.58
     },
     "2022": {
-      "months": 12,
       "income": 698168.35,
-      "spent": 585749,
+      "spent": 585749.0,
       "savings": 112419.35,
-      "tx": 162
+      "tx": 162,
+      "normalizedSavings": 112419.35
     },
     "2023": {
-      "months": 12,
       "income": 687642.69,
-      "spent": 506799,
+      "spent": 506799.0,
       "savings": 180843.69,
-      "tx": 198
+      "tx": 198,
+      "normalizedSavings": 180843.69
     },
     "2024": {
-      "months": 12,
       "income": 889176.53,
-      "spent": 1033539,
+      "spent": 1033539.0,
       "savings": -144362.47,
-      "tx": 220
+      "tx": 220,
+      "normalizedSavings": -144362.47
     },
     "2025": {
-      "months": 12,
       "income": 1427584.27,
       "spent": 1266288.45,
       "savings": 161295.82,
-      "tx": 253
+      "tx": 253,
+      "normalizedSavings": 161295.82
     },
     "2026": {
-      "months": 7,
-      "income": 741654.61,
-      "spent": 1044890.18,
-      "savings": -303235.57,
-      "tx": 198
+      "income": 831143.36,
+      "spent": 1218156.31,
+      "savings": -387012.95,
+      "tx": 261,
+      "normalizedSavings": -387012.95
     }
   },
   "monthly_series": [
@@ -779,6 +779,42 @@
       "normalizedSavings": -70937.07,
       "balance": 104837.4,
       "tx": 34
+    },
+    {
+      "label": "Aug 2026",
+      "iso": "2026-08",
+      "spent": 83792.94,
+      "income": 89488.75,
+      "salary": 60942.0,
+      "accrualSalary": 60942.0,
+      "savings": 5695.81,
+      "normalizedSavings": 5695.81,
+      "balance": 140984.15,
+      "tx": 45
+    },
+    {
+      "label": "Sep 2026",
+      "iso": "2026-09",
+      "spent": 72495.6,
+      "income": 0.0,
+      "salary": 0.0,
+      "accrualSalary": 0.0,
+      "savings": -72495.6,
+      "normalizedSavings": -72495.6,
+      "balance": 140984.15,
+      "tx": 15
+    },
+    {
+      "label": "Oct 2026",
+      "iso": "2026-10",
+      "spent": 16977.59,
+      "income": 0.0,
+      "salary": 0.0,
+      "accrualSalary": 0.0,
+      "savings": -16977.59,
+      "normalizedSavings": -16977.59,
+      "balance": 140984.15,
+      "tx": 3
     }
   ]
 }
