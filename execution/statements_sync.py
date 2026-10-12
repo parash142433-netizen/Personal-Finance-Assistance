@@ -125,7 +125,8 @@ def sync():
     files = list_pdfs(token)
     for f in files:
         prev = state.get(f["id"])
-        if prev and prev.get("modifiedTime") == f["modifiedTime"]:
+        # Files that already parsed are kept; files that failed are retried every run.
+        if prev and prev.get("modifiedTime") == f["modifiedTime"] and "rows" in prev:
             continue
         text = None
         try:
