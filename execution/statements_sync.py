@@ -4,6 +4,7 @@ the dashboard data to Cloudflare KV (read by ledgr-finance-proxy).
 Runs in GitHub Actions every 5 minutes. PDFs are only held in memory and never committed.
 Secrets come from environment variables: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
 GOOGLE_REFRESH_TOKEN, MTB_PDF_PASSWORD, EBL_PDF_PASSWORD, CLOUDFLARE_API_TOKEN."""
+import base64
 import io
 import json
 import os
@@ -117,8 +118,49 @@ def kv_put(key, value):
         raise StatementError(f"Cloudflare KV write failed for {key}: HTTP {status} {raw[:200]!r}")
 
 
-def statement_fingerprint(parsed):
-    return json.dumps(parsed["rows"], sort_keys=True)
+REPO = "parash142433-netizen/Personal-Finance-Assistance"
+DATA_PATH = "data/finance_data.json"  # the website is built from this file
+
+
+def publish_to_repo(payload):
+    """Save the dashboard data to the repo and start the site build. The site is baked from
+    this file at build time. Commits made with GITHUB_TOKEN don't start other workflows,
+    so the build is started directly. Returns False if nothing changed."""
+    token = os.environ.get("GITHUB_TOKEN", "")
+    if not token:
+        raise StatementError("GITHUB_TOKEN is not set, so the site cannot be rebuilt")
+    content = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+    api = f"https://api.github.com/repos/{REPO}/contents/{DATA_PATH}"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "ledgr-statements-sync",
+    }
+    status, raw = http("GET", api + "?ref=main", headers)
+    sha = None
+    if status == 200:
+        current = json.loads(raw)
+        sha = current["sha"]
+        if base64.b64decode(current["content"]).decode("utf-8") == content:
+            return False
+    elif status != 404:
+        raise StatementError(f"GitHub read failed for {DATA_PATH}: HTTP {status}")
+    body = {
+        "message": f"data: statements up to {payload['overview']['latest_month']}",
+        "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+        "branch": "main",
+    }
+    if sha:
+        body["sha"] = sha
+    status, raw = http("PUT", api, {**headers, "Content-Type": "application/json"}, json.dumps(body).encode())
+    if status not in (200, 201):
+        raise StatementError(f"GitHub commit failed for {DATA_PATH}: HTTP {status}")
+    status, raw = http("POST", f"https://api.github.com/repos/{REPO}/actions/workflows/deploy.yml/dispatches",
+                       {**headers, "Content-Type": "application/json"},
+                       json.dumps({"ref": "main"}).encode())
+    if status != 204:
+        raise StatementError(f"could not start the site build: HTTP {status}")
+    return True
 
 
 def sync():
@@ -181,8 +223,10 @@ def sync():
         return 0
     payload = payload_from_series(base_series + new_series)
     kv_put(DATA_KEY, payload)
+    rebuilt = publish_to_repo(payload)
     kv_put(ERROR_KEY, {"errors": []})
-    print(f"Published {len(payload['monthly_series'])} months from {len(good)} statements")
+    print(f"Published {len(payload['monthly_series'])} months from {len(good)} statements; "
+          f"site rebuild {'started' if rebuilt else 'not needed'}")
     return 0
 
 
