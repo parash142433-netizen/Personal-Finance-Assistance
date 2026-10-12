@@ -1090,3 +1090,20 @@ body {
     width: 100%;
   }
 }
+
+/* Transaction feed */
+.feed-toolbar { display: flex; align-items: center; gap: 12px; margin: 8px 0 16px; }
+.feed-nav { border: 1px solid var(--border, #d0d5dd); background: transparent; border-radius: 8px; padding: 6px 12px; cursor: pointer; color: inherit; }
+.feed-month { font-weight: 600; min-width: 160px; text-align: center; }
+.feed-tabs { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.feed-tab { border: 1px solid var(--border, #d0d5dd); background: transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer; color: inherit; }
+.feed-tab.active { background: #4f52b2; color: #fff; border-color: #4f52b2; }
+.feed-search { width: 100%; max-width: 420px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border, #d0d5dd); margin-bottom: 12px; }
+.feed-day { margin-bottom: 14px; }
+.feed-dayhead { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; opacity: 0.75; padding: 6px 2px; border-bottom: 1px solid rgba(128,128,128,0.25); }
+.feed-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 2px; border-bottom: 1px solid rgba(128,128,128,0.15); gap: 12px; }
+.feed-desc { font-weight: 500; }
+.feed-src { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+.feed-amt { font-weight: 600; white-space: nowrap; }
+.feed-amt.muted { opacity: 0.6; }
+.feed-note { padding: 14px; border-radius: 10px; background: rgba(128,128,128,0.08); }

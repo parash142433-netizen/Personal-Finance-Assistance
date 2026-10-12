@@ -112,7 +112,7 @@ function setCurrentDate() {
 // ─────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────
-const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'scheduled', 'summary', 'settings'];
+const PAGES = ['dashboard', 'analytics', 'calendar', 'budget', 'savings', 'debts', 'transactions', 'feed', 'scheduled', 'summary', 'settings'];
 
 function navigate(page) {
   PAGES.forEach(p => {
@@ -124,7 +124,7 @@ function navigate(page) {
   el('topbarTitle').textContent = {
     dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Calendar View',
     budget: 'Budget Planner', savings: 'Savings Goals', debts: 'Debts & Loans',
-    transactions: 'Transactions', scheduled: 'Scheduled', summary: 'Personal Summary',
+    transactions: 'Transactions', feed: 'Transaction Feed', scheduled: 'Scheduled', summary: 'Personal Summary',
     settings: 'Settings'
   }[page] || page;
   // Close sidebar & backdrop on mobile navigation
@@ -1040,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // After initial render, try to refresh with live data from Cloudflare Worker.
   // If WORKER_URL is null or fetch fails, stays on baked-in data silently.
   updateSummary();
+  initFeed();
 });
 
 // ── SUMMARY CARDS ──────────────────────────────────────────────────────────────
@@ -1169,4 +1170,69 @@ function updateAnalysis() {
         '</td><td class="' + cls + '">' + (s.net >= 0 ? '+' : '') + signed(s.net) + '</td><td>' + verdict + '</td></tr>';
     }).join('');
   }
+}
+
+// ── TRANSACTION FEED ───────────────────────────────────────────────────────────
+// Reads the per-transaction list published with the statements (data/finance_data.json).
+const FEED = { all: [], months: [], idx: -1, tab: 'all', query: '' };
+const escHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+async function initFeed() {
+  try {
+    const r = await fetch('data/finance_data.json?v=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) FEED.all = (await r.json()).transactions || [];
+  } catch (e) { FEED.all = []; }
+  FEED.months = [...new Set(FEED.all.map(t => t.d.slice(0, 7)))].sort();
+  FEED.idx = FEED.months.length - 1;
+  const on = (id, fn) => { const e = document.getElementById(id); if (e) e.addEventListener('click', fn); };
+  on('feedPrev', () => { if (FEED.idx > 0) { FEED.idx--; renderFeed(); } });
+  on('feedNext', () => { if (FEED.idx < FEED.months.length - 1) { FEED.idx++; renderFeed(); } });
+  document.querySelectorAll('.feed-tab').forEach(b => b.addEventListener('click', () => {
+    FEED.tab = b.dataset.f;
+    document.querySelectorAll('.feed-tab').forEach(x => x.classList.toggle('active', x === b));
+    renderFeed();
+  }));
+  const search = document.getElementById('feedSearch');
+  if (search) search.addEventListener('input', () => { FEED.query = search.value.trim().toLowerCase(); renderFeed(); });
+  renderFeed();
+}
+
+function renderFeed() {
+  const set = (id, text) => { const e = document.getElementById(id); if (e) e.textContent = text; };
+  const m = FEED.months[FEED.idx];
+  const longMonth = m ? new Date(m + '-01T00:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' }) : 'No transactions yet';
+  set('feedMonth', longMonth);
+  const rows = m ? FEED.all.filter(t => t.d.startsWith(m)) : [];
+  const sumOf = k => rows.filter(t => t.k === k).reduce((s, t) => s + Math.abs(t.a), 0);
+  const spent = sumOf('spend'), income = sumOf('income'), payments = sumOf('payment');
+  set('feedSpent', fmt(spent));
+  set('feedIncome', fmt(income));
+  set('feedPayments', fmt(payments));
+
+  const list = document.getElementById('feedList');
+  if (!list) return;
+  if (FEED.tab === 'savings') {
+    const net = income - spent;
+    list.innerHTML = '<div class="feed-note">Net savings for ' + escHtml(longMonth) + ': <strong>' +
+      (net < 0 ? '–' : '') + fmt(Math.abs(net)) + '</strong> (income minus spending). Savings are not tagged per transaction in the statements.</div>';
+    return;
+  }
+  let shown = rows.filter(t => FEED.tab === 'all' || (FEED.tab === 'spend' && t.k === 'spend') || (FEED.tab === 'income' && t.k === 'income'));
+  if (FEED.query) shown = shown.filter(t => t.t.toLowerCase().includes(FEED.query));
+  if (!shown.length) { list.innerHTML = '<div class="feed-note">No transactions match.</div>'; return; }
+  const days = {};
+  shown.forEach(t => { (days[t.d] = days[t.d] || []).push(t); });
+  list.innerHTML = Object.keys(days).sort().reverse().map(d => {
+    const items = days[d];
+    const dayTotal = items.reduce((s, t) => s + (t.k === 'spend' ? t.a : 0), 0);
+    const day = new Date(d + 'T00:00:00').toLocaleString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    const rowsHtml = items.map(t => {
+      const cls = t.k === 'income' ? 'green' : (t.k === 'payment' ? 'muted' : '');
+      const sign = t.k === 'income' ? '+' : (t.k === 'payment' ? '' : '–');
+      return '<div class="feed-row"><div><div class="feed-desc">' + escHtml(t.t) + '</div><div class="feed-src">' +
+        escHtml(t.s) + ' · ' + escHtml(t.k) + '</div></div><div class="feed-amt ' + cls + '">' + sign + fmt(Math.abs(t.a)) + '</div></div>';
+    }).join('');
+    return '<div class="feed-day"><div class="feed-dayhead"><span>' + escHtml(day) + '</span><span>' +
+      (dayTotal ? fmt(dayTotal) + ' spent' : '') + '</span></div>' + rowsHtml + '</div>';
+  }).join('');
 }

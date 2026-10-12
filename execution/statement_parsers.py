@@ -208,6 +208,27 @@ def payload_from_series(series):
     return {"overview": overview, "highlights": highlights, "yearly": yearly, "monthly_series": series}
 
 
+def build_transactions(statements, after_iso):
+    """Individual transactions for the Transactions page. a > 0 is money out, a < 0 is money in.
+    k: spend (purchase or withdrawal), income (deposit), payment (card bill payment or card credit)."""
+    out = []
+    for st in statements:
+        for r in st["rows"]:
+            if r["date"][:7] <= after_iso:
+                continue
+            if st["kind"] == "mtb":
+                if r["deposit"] > 0:
+                    out.append({"d": r["date"], "t": r["description"], "a": -r["deposit"], "s": "MTB", "k": "income"})
+                if r["withdrawal"] > 0:
+                    kind = "payment" if _is_card_payment(r["description"]) else "spend"
+                    out.append({"d": r["date"], "t": r["description"], "a": r["withdrawal"], "s": "MTB", "k": kind})
+            else:
+                kind = "spend" if r["amount"] > 0 else "payment"
+                out.append({"d": r["date"], "t": r["description"], "a": r["amount"], "s": "EBL card", "k": kind})
+    out.sort(key=lambda x: x["d"], reverse=True)
+    return out
+
+
 CARD_PAYMENT_HINTS = ("SKYBANKING", "EBL CARD", "EBL CREDIT", "CARD PAYMENT")
 
 

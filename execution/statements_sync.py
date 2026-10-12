@@ -16,7 +16,7 @@ import urllib.request
 from pypdf import PdfReader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from statement_parsers import StatementError, build_monthly, parse_ebl, parse_mtb, payload_from_series  # noqa: E402
+from statement_parsers import StatementError, build_monthly, build_transactions, parse_ebl, parse_mtb, payload_from_series  # noqa: E402
 
 FOLDER_ID = "195e6CTfUf73ELYA8zlWs-D486xnL3aso"  # the Banking folder
 CF_ACCOUNT = "e8382c2665bb696adbfb91b935627b32"
@@ -222,6 +222,7 @@ def sync():
         print("No new months after", last_base)
         return 0
     payload = payload_from_series(base_series + new_series)
+    payload["transactions"] = build_transactions(good, last_base)
     kv_put(DATA_KEY, payload)
     rebuilt = publish_to_repo(payload)
     kv_put(ERROR_KEY, {"errors": []})
