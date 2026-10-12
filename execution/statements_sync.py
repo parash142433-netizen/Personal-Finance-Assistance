@@ -127,6 +127,7 @@ def sync():
         prev = state.get(f["id"])
         if prev and prev.get("modifiedTime") == f["modifiedTime"]:
             continue
+        text = None
         try:
             kind, text = read_statement(download(token, f["id"]))
             if kind is None:
@@ -137,6 +138,8 @@ def sync():
         except StatementError as e:
             errors.append(f"{f['name']}: {e}")
             state[f["id"]] = {"name": f["name"], "modifiedTime": f["modifiedTime"], "error": str(e)}
+            if text:  # kept temporarily so the parser can be fixed; removed once the file parses
+                kv_put(f"debug:{f['id']}", text)
     # Drop statements that were deleted from the folder.
     current = {f["id"] for f in files}
     for fid in list(state):
