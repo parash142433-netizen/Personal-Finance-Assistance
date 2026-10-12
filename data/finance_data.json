@@ -816,5 +816,469 @@
       "balance": 140984.15,
       "tx": 3
     }
+  ],
+  "transactions": [
+    {
+      "d": "2026-10-05",
+      "t": "Risk Assurance Fee",
+      "a": 273.26,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-10-05",
+      "t": "Installment no. 5 out of total 6 install",
+      "a": 7871.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-10-05",
+      "t": "Installment no. 1 out of total 6 install",
+      "a": 8833.33,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-22",
+      "t": "HEALTH CONNECT",
+      "a": 202.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-17",
+      "t": "PMT RECV SKYBANKING - THANK YOU",
+      "a": -31480.7,
+      "s": "EBL card",
+      "k": "payment"
+    },
+    {
+      "d": "2026-09-16",
+      "t": "MEENA BAZAR-AFTABNAGAR",
+      "a": 1228.9,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-16",
+      "t": "MEENA BAZAR-AFTABNAGAR",
+      "a": 270.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-14",
+      "t": "CIRCLE R MART & PHARMA",
+      "a": 160.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-14",
+      "t": "REVE TEX LIMITED",
+      "a": 4017.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-13",
+      "t": "SEVEN TO ELEVEN",
+      "a": 885.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-13",
+      "t": "SONY SMART BANASREE",
+      "a": 53000.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-13",
+      "t": "SONY SMART BANASREE",
+      "a": -53000.0,
+      "s": "EBL card",
+      "k": "payment"
+    },
+    {
+      "d": "2026-09-12",
+      "t": "AMIR MINI MART DHAKA BD",
+      "a": 248.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-12",
+      "t": "ALFRESCO FOOD COURT",
+      "a": 1050.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-10",
+      "t": "SOFTWARE SHOP LTD",
+      "a": 817.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-09",
+      "t": "SHWAPNO",
+      "a": 455.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-05",
+      "t": "Risk Assurance Fee",
+      "a": 164.7,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-05",
+      "t": "Installment no. 4 out of total 6 install",
+      "a": 7871.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-04",
+      "t": "FARAZY HOSPITAL LIMITED",
+      "a": 1500.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-09-03",
+      "t": "MEENA BAZAR-AFTABNAGAR",
+      "a": 627.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-31",
+      "t": "POS-Foodpanda Banglade-624312335606-017189-916392",
+      "a": 422.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-31",
+      "t": "BRAC AARONG",
+      "a": 5569.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-30",
+      "t": "MB/IBFT/12491695/1051450002864/1311000590786/ai yt",
+      "a": 1090.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-30",
+      "t": "EFTICE/NRBC/NA/SHAHINA ANWAR~31100003845~Fund Tran",
+      "a": -5000.0,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-27",
+      "t": "SHOHOZ SYNESIS VINCEN",
+      "a": 730.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-25",
+      "t": "BANGLADESH RAILWAY",
+      "a": 2649.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "MB/FT/28199252/1311000590786/0170310195868/champ",
+      "a": 300.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "MB/FT/28199285/1311000590786/1311000405548/",
+      "a": 100.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "MB/FT/28199289/1311000590786/7110310002010/",
+      "a": 150.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "MB/FT/28199341/1311000590786/0210310074939/",
+      "a": 150.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "CW-Aftabnagar RATM-623512886385-356676-519752",
+      "a": 10000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "VISA CASH WITHDRAWL",
+      "a": 13.04,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-23",
+      "t": "VAT",
+      "a": 1.96,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "MB/MobileTopup/1311000590786/01744277782/7692552",
+      "a": 20.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "MB/IBFT/12385820/1331050002523/1311000590786/npsb",
+      "a": 1000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "MB/IBFT/12385823/1331050002523/1311000590786/npsb",
+      "a": 23000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "MB/IBFT/12385842/1331050002523/1311000590786/npsb",
+      "a": 250.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "CW-MTB Square Pharma-000472910731-107847-367358",
+      "a": 5000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "Standing Instruction To Account1308001492385",
+      "a": 5000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-20",
+      "t": "PMT RECV SKYBANKING - THANK YOU",
+      "a": -23963.9,
+      "s": "EBL card",
+      "k": "payment"
+    },
+    {
+      "d": "2026-08-19",
+      "t": "EFTICE/BB/TREASURY SINGLE/TREASURY SINGLE ACCOUN~3",
+      "a": -7944.75,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-19",
+      "t": "pickaboo.com",
+      "a": 7690.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-17",
+      "t": "BEST BUY",
+      "a": 1265.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-17",
+      "t": "BEST BUY",
+      "a": 585.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-15",
+      "t": "CHILLOX - AFTANBAGAR",
+      "a": 620.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-15",
+      "t": "KUDOS BADDA",
+      "a": 1020.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-12",
+      "t": "TASTY TREAT",
+      "a": 240.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-11",
+      "t": "MB/IBFT/12281272/1331050002523/1311000590786/npsb",
+      "a": 1000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-11",
+      "t": "POS-api.dominos.com.bd-622315002464-399843-930395",
+      "a": 447.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-10",
+      "t": "MB/FT/27772814/0210310074939/1311000590786/",
+      "a": -8872.0,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-10",
+      "t": "SEVEN TO ELEVEN",
+      "a": 950.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-06",
+      "t": "POS-Foodpanda Banglade-621703374322-750122-510821",
+      "a": 1141.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-06",
+      "t": "MB/bKash/10639573/1786025109537747/Md Nasif Fuad",
+      "a": 1000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-05",
+      "t": "MB/bKash/10617355/1785887711925744/Nasif Bank jo",
+      "a": 650.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-05",
+      "t": "POS-Foodpanda Banglade-621602135770-652764-449442",
+      "a": 592.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-05",
+      "t": "MB/FT/27589230/1311010040235/1311000590786/Sharf",
+      "a": -1400.0,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-05",
+      "t": "Risk Assurance Fee",
+      "a": 165.94,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-05",
+      "t": "Installment no. 3 out of total 6 install",
+      "a": 7871.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-04",
+      "t": "FRY BUCKET DESH LOGIST",
+      "a": 280.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-03",
+      "t": "COFFEELICIOUS COFFEE U",
+      "a": 816.0,
+      "s": "EBL card",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-02",
+      "t": "Salary For July 2026",
+      "a": -60942.0,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-02",
+      "t": "MB/FT/27451310/0140442000026/1311000590786/",
+      "a": -5000.0,
+      "s": "MTB",
+      "k": "income"
+    },
+    {
+      "d": "2026-08-01",
+      "t": "CW-EBL PALLABI MRT AT-621321609650-252661-197466",
+      "a": 2000.0,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-01",
+      "t": "VISA CASH WITHDRAWL",
+      "a": 13.04,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-01",
+      "t": "VAT",
+      "a": 1.96,
+      "s": "MTB",
+      "k": "spend"
+    },
+    {
+      "d": "2026-08-01",
+      "t": "NPSB IBFT-621321178871-00001311000590786-DC TO NP",
+      "a": -330.0,
+      "s": "MTB",
+      "k": "income"
+    }
   ]
 }
