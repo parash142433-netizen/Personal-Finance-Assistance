@@ -2127,9 +2127,7 @@
       "t": "MB/FT/24411624/1311000658570/1311000590786/paras",
       "a": -3400.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2026-04-30",
@@ -2336,9 +2334,7 @@
       "t": "MB/FT/23989102/1311010040235/1311000590786/Paras",
       "a": -1015.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2026-04-19",
@@ -2471,9 +2467,7 @@
       "t": "MB/FT/23610016/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2026-04-06",
@@ -3143,9 +3137,7 @@
       "t": "MB/FT/21176098/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2026-01-11",
@@ -3741,9 +3733,7 @@
       "t": "MB/FT/19259763/1311000658570/1311000590786/paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-11-02",
@@ -4206,9 +4196,7 @@
       "t": "MB/FT/17452677/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-08-22",
@@ -4350,9 +4338,7 @@
       "t": "MB/FT/17064023/1311000658570/1311000590786/paras",
       "a": -560.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-08-05",
@@ -4588,9 +4574,7 @@
       "t": "MB/FT/16165175/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-06-27",
@@ -4743,9 +4727,7 @@
       "t": "MB/FT/15378153/1311010040235/1311000590786/Paras",
       "a": -5750.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-05-23",
@@ -4806,9 +4788,7 @@
       "t": "MB/FT/15271763/1311000590786/0170310072277/Paras",
       "a": 2000.0,
       "s": "MTB",
-      "k": "self",
-      "e": "Transfers to people",
-      "ename": "Paras"
+      "k": "self"
     },
     {
       "d": "2025-05-18",
@@ -5590,9 +5570,7 @@
       "t": "MB/FT/12309245/1311010040235/1311000590786/Paras",
       "a": -2000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2024-12-18",
@@ -6300,9 +6278,7 @@
       "t": "MB/FT/10385039/1311000658570/1311000590786/paras",
       "a": -1000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Paras"
+      "k": "self"
     },
     {
       "d": "2024-08-25",
@@ -6810,9 +6786,7 @@
       "t": "MB/FT/9065892/1311010040235/1311000590786/Parash",
       "a": -230.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2024-05-23",
@@ -7219,9 +7193,7 @@
       "t": "MB/FT/7915225/1311000658570/1311000590786/parash",
       "a": -680.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2024-02-29",
@@ -7412,9 +7384,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -1500.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2024-01-12",
@@ -7720,9 +7690,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -500.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2023-12-06",
@@ -8526,9 +8494,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -260.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2023-05-13",
@@ -8944,9 +8910,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -3500.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2023-02-28",
@@ -9128,9 +9092,7 @@
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -3000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2023-02-01",
@@ -10269,9 +10231,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -700.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2022-05-12",
@@ -10617,18 +10577,14 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -4000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2022-02-01",
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2022-01-31",
@@ -10810,9 +10766,7 @@
       "t": "MB/FT/1311000658570/1311000590786/parash",
       "a": -14000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2021-12-24",
@@ -10884,9 +10838,7 @@
       "t": "MB/FT/1311000658570/1311000590786/Parash",
       "a": -11000.0,
       "s": "MTB",
-      "k": "self",
-      "c": "Transfers from people",
-      "src": "Parash"
+      "k": "self"
     },
     {
       "d": "2021-11-30",
@@ -11048,9 +11000,7 @@
       "t": "MB/FT/1311000590786/1311000584275/Parash",
       "a": 2000.0,
       "s": "MTB",
-      "k": "self",
-      "e": "Transfers to people",
-      "ename": "Parash"
+      "k": "self"
     },
     {
       "d": "2021-10-02",
