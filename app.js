@@ -538,6 +538,33 @@ function lsGet(key, def = []) {
 }
 function lsSet(key, val) { localStorage.setItem('ledgr_' + key, JSON.stringify(val)); }
 
+// In-page dialogs. The browser's own confirm() and notify() pop-ups can be blocked, which made deletes do nothing.
+function confirmDialog(message) {
+  return new Promise(resolve => {
+    const wrap = document.createElement('div');
+    wrap.className = 'app-dialog-backdrop';
+    wrap.innerHTML = '<div class="app-dialog" role="dialog" aria-modal="true"><p></p><div class="app-dialog-actions">' +
+      '<button type="button" class="app-dialog-btn" data-r="0">Cancel</button>' +
+      '<button type="button" class="app-dialog-btn app-dialog-danger" data-r="1">Confirm</button></div></div>';
+    wrap.querySelector('p').textContent = message;
+    const done = v => { wrap.remove(); resolve(v); };
+    wrap.addEventListener('click', e => {
+      if (e.target.dataset.r !== undefined) done(e.target.dataset.r === '1');
+      else if (e.target === wrap) done(false);
+    });
+    document.body.appendChild(wrap);
+  });
+}
+function notify(message) {
+  const wrap = document.createElement('div');
+  wrap.className = 'app-dialog-backdrop';
+  wrap.innerHTML = '<div class="app-dialog" role="alertdialog" aria-modal="true"><p></p><div class="app-dialog-actions">' +
+    '<button type="button" class="app-dialog-btn" data-r="ok">OK</button></div></div>';
+  wrap.querySelector('p').textContent = message;
+  wrap.addEventListener('click', e => { if (e.target.dataset.r !== undefined || e.target === wrap) wrap.remove(); });
+  document.body.appendChild(wrap);
+}
+
 // ─────────────────────────────────────────────
 // BUDGET
 // ─────────────────────────────────────────────
@@ -600,8 +627,8 @@ function openBudgetModal(index = null) {
   modal.classList.remove('hidden');
 }
 
-function deleteBudget(index) {
-  if (confirm(`Are you sure you want to delete "${budgets[index]?.cat || 'this category'}"?`)) {
+async function deleteBudget(index) {
+  if (await confirmDialog(`Are you sure you want to delete "${budgets[index]?.cat || 'this category'}"?`)) {
     budgets.splice(index, 1);
     lsSet('budgets', budgets);
     renderBudgets();
@@ -618,11 +645,11 @@ function initBudget() {
     const spent = el('budgetSpentInput') ? (parseFloat(el('budgetSpentInput').value) || 0) : (editBudgetIndex !== null ? (budgets[editBudgetIndex]?.spent || 0) : 0);
     const icon = el('budgetIconInput').value.trim() || '💳';
     if (!cat) {
-      alert('Please enter a category name.');
+      notify('Please enter a category name.');
       return;
     }
     if (limit <= 0) {
-      alert('Please enter a valid monthly limit amount.');
+      notify('Please enter a valid monthly limit amount.');
       return;
     }
     if (editBudgetIndex !== null && budgets[editBudgetIndex]) {
@@ -698,8 +725,8 @@ function openGoalModal(index = null) {
   modal.classList.remove('hidden');
 }
 
-function deleteGoal(index) {
-  if (confirm(`Are you sure you want to delete goal "${goals[index]?.name || 'this goal'}"?`)) {
+async function deleteGoal(index) {
+  if (await confirmDialog(`Are you sure you want to delete goal "${goals[index]?.name || 'this goal'}"?`)) {
     goals.splice(index, 1);
     lsSet('goals', goals);
     renderGoals();
@@ -717,11 +744,11 @@ function initSavings() {
     const deadline = el('goalDeadlineInput').value;
     const emoji = el('goalEmojiInput') ? (el('goalEmojiInput').value.trim() || '🎯') : '🎯';
     if (!name) {
-      alert('Please enter a goal name.');
+      notify('Please enter a goal name.');
       return;
     }
     if (target <= 0) {
-      alert('Please enter a valid target amount.');
+      notify('Please enter a valid target amount.');
       return;
     }
     if (editGoalIndex !== null && goals[editGoalIndex]) {
@@ -796,8 +823,8 @@ function openDebtModal(index = null) {
   modal.classList.remove('hidden');
 }
 
-function deleteDebt(index) {
-  if (confirm(`Are you sure you want to delete the entry for "${debts[index]?.person || 'this person'}"?`)) {
+async function deleteDebt(index) {
+  if (await confirmDialog(`Are you sure you want to delete the entry for "${debts[index]?.person || 'this person'}"?`)) {
     debts.splice(index, 1);
     lsSet('debts', debts);
     renderDebts();
@@ -823,11 +850,11 @@ function initDebts() {
     const due = el('debtDueInput').value;
     const note = el('debtNoteInput').value.trim();
     if (!person) {
-      alert('Please enter a person or institution name.');
+      notify('Please enter a person or institution name.');
       return;
     }
     if (amount <= 0) {
-      alert('Please enter a valid amount.');
+      notify('Please enter a valid amount.');
       return;
     }
     if (editDebtIndex !== null && debts[editDebtIndex]) {
@@ -908,8 +935,8 @@ function openScheduledModal(index = null) {
   modal.classList.remove('hidden');
 }
 
-function deleteScheduled(index) {
-  if (confirm(`Are you sure you want to delete recurring item "${scheduled[index]?.name || 'this item'}"?`)) {
+async function deleteScheduled(index) {
+  if (await confirmDialog(`Are you sure you want to delete recurring item "${scheduled[index]?.name || 'this item'}"?`)) {
     scheduled.splice(index, 1);
     lsSet('scheduled', scheduled);
     renderScheduled();
@@ -927,11 +954,11 @@ function initScheduled() {
     const freq = el('schedFreqInput').value;
     const due = el('schedDueInput').value;
     if (!name) {
-      alert('Please enter a transaction name.');
+      notify('Please enter a transaction name.');
       return;
     }
     if (amount <= 0) {
-      alert('Please enter a valid amount.');
+      notify('Please enter a valid amount.');
       return;
     }
     if (editSchedIndex !== null && scheduled[editSchedIndex]) {
@@ -974,8 +1001,8 @@ function initRangeFilters() {
 // ─────────────────────────────────────────────
 function initSettings() {
   el('exportCSVBtn').addEventListener('click', exportCSV);
-  el('clearDataBtn').addEventListener('click', () => {
-    if (confirm('Clear all locally stored data (budgets, goals, debts, scheduled)?')) {
+  el('clearDataBtn').addEventListener('click', async () => {
+    if (await confirmDialog('Clear all locally stored data (budgets, goals, debts, scheduled)?')) {
       ['budgets', 'goals', 'debts', 'scheduled'].forEach(k => localStorage.removeItem('ledgr_' + k));
       location.reload();
     }
