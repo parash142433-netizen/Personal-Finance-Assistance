@@ -9,10 +9,13 @@ import io
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding
 from pypdf import PdfReader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -48,16 +51,34 @@ def env(name):
 
 
 def google_token():
+    """Sign a JWT with the service account key and exchange it for a Drive access token.
+    The key does not expire, unlike the refresh token it replaces."""
+    key = json.loads(env("GCP_SERVICE_ACCOUNT_JSON"))
+    now = int(time.time())
+
+    def b64(data):
+        return base64.urlsafe_b64encode(data).rstrip(b"=")
+
+    header = b64(json.dumps({"alg": "RS256", "typ": "JWT"}).encode())
+    claims = b64(json.dumps({
+        "iss": key["client_email"],
+        "scope": "https://www.googleapis.com/auth/drive.readonly",
+        "aud": "https://oauth2.googleapis.com/token",
+        "iat": now,
+        "exp": now + 3600,
+    }).encode())
+    signing_input = header + b"." + claims
+    private_key = serialization.load_pem_private_key(key["private_key"].encode(), password=None)
+    signature = private_key.sign(signing_input, padding.PKCS1v15(), hashes.SHA256())
+    assertion = (signing_input + b"." + b64(signature)).decode()
     body = urllib.parse.urlencode({
-        "client_id": env("GOOGLE_CLIENT_ID"),
-        "client_secret": env("GOOGLE_CLIENT_SECRET"),
-        "refresh_token": env("GOOGLE_REFRESH_TOKEN"),
-        "grant_type": "refresh_token",
+        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "assertion": assertion,
     }).encode()
     status, raw = http("POST", "https://oauth2.googleapis.com/token",
                        {"Content-Type": "application/x-www-form-urlencoded"}, body)
     if status != 200:
-        raise StatementError(f"Google token refresh failed: HTTP {status}")
+        raise StatementError(f"Google token request failed: HTTP {status}")
     return json.loads(raw)["access_token"]
 
 
