@@ -4,11 +4,6 @@ on:
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
-    inputs:
-      backfill:
-        description: "One-time: read the 2021-2026 bank history and Jun/Jul card statements"
-        type: boolean
-        default: false
 
 permissions:
   contents: write  # save the dashboard data file to the repo
@@ -41,4 +36,3 @@ jobs:
           EBL_PDF_PASSWORD: ${{ secrets.EBL_PDF_PASSWORD }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BACKFILL: ${{ inputs.backfill && '1' || '0' }}
